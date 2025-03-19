@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon, User, ChevronDown } from "lucide-react";
 
+type SectionType = "about" | "journey" | "qualifications" | "certifications" | "skills" | "education" | "gallery" | "cubing" | "inspirations" | "futureGoals" | "funFacts" | "Gaming" | "projects" | "testimonials" | "contact";
+
 interface NavbarProps {
   isDark: boolean;
   toggleTheme: () => void;
-  scrollToSection: (section: string) => void;
+  scrollToSection: (section: SectionType) => void;
 }
 
 export default function Navbar({
@@ -15,17 +17,17 @@ export default function Navbar({
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [activeSection, setActiveSection] = useState<SectionType | null>(null);
 
   // Updated to match sectionRefs keys from App.tsx
-  const navItems = [
+  const navItems: SectionType[] = [
     "about",
     "journey",
     "skills",
     "gallery",
     "cubing",
     "projects",
-    "gaming",
+    "Gaming",
     "testimonials",
     "contact",
   ];
@@ -52,22 +54,28 @@ export default function Navbar({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [navItems]);
 
-  const getDisplayName = (section: string) => {
-    const names: { [key: string]: string } = {
+  const getDisplayName = (section: SectionType) => {
+    const names: Record<SectionType, string> = {
       about: "About",
       journey: "Journey",
+      qualifications: "Qualifications",
+      certifications: "Certifications",
       skills: "Skills",
+      education: "Education",
       gallery: "Gallery",
       cubing: "Cubing",
+      inspirations: "Inspirations",
+      futureGoals: "Future Goals",
+      funFacts: "Fun Facts",
+      Gaming: "Gaming",
       projects: "Projects",
-      gaming: "Gaming",
       testimonials: "Testimonials",
-      contact: "Contact",
+      contact: "Contact"
     };
     return names[section] || section;
   };
 
-  const handleLinkClick = (section: string) => {
+  const handleLinkClick = (section: SectionType) => {
     scrollToSection(section);
     setIsOpen(false);
     setActiveSection(section);

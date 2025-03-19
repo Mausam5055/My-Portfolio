@@ -6,14 +6,23 @@ interface ThemeState {
   toggleTheme: () => void;
 }
 
+const defaultTheme = true; // Default to dark mode
+
 export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
-      isDark: true, // Default to dark mode
+      isDark: defaultTheme,
       toggleTheme: () => set((state) => ({ isDark: !state.isDark })),
     }),
     {
       name: 'theme-storage',
+      onRehydrateStorage: () => (state) => {
+        // Ensure theme is properly initialized
+        if (state) {
+          document.documentElement.classList.toggle('dark', state.isDark);
+        }
+        return state;
+      },
     }
   )
 );

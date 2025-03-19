@@ -50,6 +50,7 @@ export default function Hero() {
   const [currentName, setCurrentName] = useState(0);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [hoveredIcon, setHoveredIcon] = useState<number | null>(null);
+  const [videoError, setVideoError] = useState(false);
 
   useEffect(() => {
     const nameInterval = setInterval(() => {
@@ -68,20 +69,29 @@ export default function Hero() {
 
   return (
     <header className="relative min-h-screen" role="banner">
-      {/* Video Background with Overlay Pattern */}
+      {/* Background with Fallback */}
       <div className="absolute inset-0 overflow-hidden">
-        <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
-          autoPlay
-          loop
-          muted
-          playsInline
-          aria-hidden="true"
-        >
-          <source src="/assets/video3.webm" type="video/webm" />
-          <source src="/assets/video3.mp4" type="video/mp4" />
-          <p>Your browser doesn't support HTML5 video.</p>
-        </video>
+        {!videoError ? (
+          <video
+            className="absolute top-0 left-0 w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/assets/video-poster.jpg"
+            onError={() => setVideoError(true)}
+          >
+            <source src="/assets/video3.webm" type="video/webm" />
+            <source src="/assets/video3.mp4" type="video/mp4" />
+            <p>Your browser doesn't support HTML5 video.</p>
+          </video>
+        ) : (
+          <div 
+            className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-black"
+            aria-hidden="true"
+          />
+        )}
         <div 
           className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.8)_100%)]" 
           aria-hidden="true"
@@ -107,6 +117,10 @@ export default function Hero() {
                 className="w-full h-full object-cover"
                 loading="eager"
                 fetchPriority="high"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = "/assets/fallback-profile.jpg";
+                }}
               />
             </motion.div>
 

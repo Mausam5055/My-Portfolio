@@ -239,6 +239,8 @@ export const Gallery: React.FC = () => {
                 alt={image.title}
                 className="w-full h-full object-cover transform transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
+                decoding="async"
+                fetchPriority="low"
               />
               <div
                 className={cn(
@@ -321,6 +323,8 @@ export const Gallery: React.FC = () => {
                       }
                       className="w-full max-h-[70vh] object-contain"
                       loading="lazy"
+                      decoding="async"
+                      fetchPriority="low"
                     />
                   </motion.div>
 
@@ -381,6 +385,9 @@ export const Gallery: React.FC = () => {
                             src={subphoto.url}
                             alt={subphoto.title}
                             className="w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                            fetchPriority="low"
                           />
                         </motion.button>
                       ))}

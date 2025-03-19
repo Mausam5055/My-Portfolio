@@ -27,9 +27,15 @@
     <!-- Performance & Resource Hints -->
     <link rel="preload" href="/assets/mausam.svg" as="image" type="image/svg+xml" fetchpriority="high" />
     <link rel="preload" href="/styles.css" as="style" />
-    <link rel="preload" as="font" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    
+    <!-- Optimized Font Loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" />
+    </noscript>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -82,7 +88,6 @@
     <link rel="preconnect" href="https://mausam03.vercel.app" crossorigin>
     
     <!-- Fonts & Styling -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Noto+Sans+Bengali:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/styles.css" />
 
     <!-- Favicon -->
@@ -94,7 +99,7 @@
 
     <!-- Performance Optimization Script -->
     <script>
-      // Lazy loading for images
+      // Enhanced lazy loading for images with blur-up effect
       document.addEventListener("DOMContentLoaded", function() {
         var lazyImages = [].slice.call(document.querySelectorAll("img[data-src]"));
 
@@ -103,17 +108,126 @@
             entries.forEach(function(entry) {
               if (entry.isIntersecting) {
                 let lazyImage = entry.target;
+                // Add blur-up effect
+                if (lazyImage.dataset.placeholder) {
+                  lazyImage.style.filter = 'blur(10px)';
+                  lazyImage.style.transition = 'filter 0.3s ease-out';
+                }
+                // Load the actual image
                 lazyImage.src = lazyImage.dataset.src;
+                lazyImage.onload = function() {
+                  this.style.filter = 'none';
+                };
                 lazyImage.removeAttribute("data-src");
                 lazyImageObserver.unobserve(lazyImage);
               }
             });
+          }, {
+            rootMargin: '50px 0px',
+            threshold: 0.1
           });
 
           lazyImages.forEach(function(lazyImage) {
             lazyImageObserver.observe(lazyImage);
           });
         }
+      });
+
+      // Defer non-critical JavaScript
+      window.addEventListener('load', function() {
+        // Load analytics after page load
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'page_load_complete', {
+            'event_category': 'Performance',
+            'event_label': 'Page Load Complete'
+          });
+        }
+      });
+    </script>
+
+    <!-- Google Analytics - Optimized Loading -->
+    <script>
+      // Defer GA loading
+      window.addEventListener('load', function() {
+        const gaScript = document.createElement('script');
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX';
+        gaScript.async = true;
+        document.head.appendChild(gaScript);
+        
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX', {
+          'anonymize_ip': true,
+          'transport_url': 'https://www.google-analytics.com'
+        });
+      });
+
+      // Performance Monitoring
+      window.addEventListener('load', function() {
+        // Report Web Vitals
+        function sendToAnalytics({ name, delta, value, id }) {
+          if (typeof gtag !== 'undefined') {
+            gtag('event', name, {
+              event_category: 'Web Vitals',
+              event_label: id,
+              value: Math.round(name === 'CLS' ? value * 1000 : value),
+              non_interaction: true,
+            });
+          }
+        }
+
+        // Report First Contentful Paint
+        const paint = performance.getEntriesByType('paint');
+        const fcp = paint.find(entry => entry.name === 'first-contentful-paint');
+        if (fcp) {
+          sendToAnalytics({
+            name: 'FCP',
+            value: fcp.startTime,
+            id: fcp.id
+          });
+        }
+
+        // Report Largest Contentful Paint
+        new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1];
+          sendToAnalytics({
+            name: 'LCP',
+            value: lastEntry.startTime,
+            id: lastEntry.id
+          });
+        }).observe({ entryTypes: ['largest-contentful-paint'] });
+
+        // Report First Input Delay
+        new PerformanceObserver((entryList) => {
+          for (const entry of entryList.getEntries()) {
+            if (!entry.processingStart) continue;
+            const fid = entry.processingStart - entry.startTime;
+            sendToAnalytics({
+              name: 'FID',
+              value: fid,
+              id: entry.id
+            });
+          }
+        }).observe({ entryTypes: ['first-input'] });
+
+        // Report Cumulative Layout Shift
+        let clsValue = 0;
+        let clsEntries = [];
+        new PerformanceObserver((entryList) => {
+          for (const entry of entryList.getEntries()) {
+            if (!entry.hadRecentInput) {
+              clsEntries.push(entry);
+              clsValue += entry.value;
+              sendToAnalytics({
+                name: 'CLS',
+                value: clsValue,
+                id: entry.id
+              });
+            }
+          }
+        }).observe({ entryTypes: ['layout-shift'] });
       });
     </script>
   </head>
