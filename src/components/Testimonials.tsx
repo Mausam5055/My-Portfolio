@@ -107,28 +107,29 @@ export const Testimonials: React.FC = () => {
   const slideVariants = {
     enter: (direction: number) => ({
       opacity: 0,
-      scale: 0.8,
-      y: 50,
-      filter: "blur(10px)",
+      scale: 0.95,
+      filter: "blur(20px)",
+      transition: {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
+      }
     }),
     center: {
       opacity: 1,
       scale: 1,
-      y: 0,
       filter: "blur(0px)",
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         ease: [0.4, 0, 0.2, 1],
         staggerChildren: 0.1
       }
     },
     exit: (direction: number) => ({
       opacity: 0,
-      scale: 0.8,
-      y: -50,
-      filter: "blur(10px)",
+      scale: 0.95,
+      filter: "blur(20px)",
       transition: {
-        duration: 0.6,
+        duration: 0.4,
         ease: [0.4, 0, 0.2, 1]
       }
     })
@@ -137,14 +138,16 @@ export const Testimonials: React.FC = () => {
   const cardVariants = {
     enter: {
       opacity: 0,
-      scale: 0.8,
-      y: 20,
-      filter: "blur(5px)",
+      scale: 0.95,
+      filter: "blur(10px)",
+      transition: {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
+      }
     },
     center: {
       opacity: 1,
       scale: 1,
-      y: 0,
       filter: "blur(0px)",
       transition: {
         duration: 0.5,
@@ -153,9 +156,12 @@ export const Testimonials: React.FC = () => {
     },
     exit: {
       opacity: 0,
-      scale: 0.8,
-      y: -20,
-      filter: "blur(5px)",
+      scale: 0.95,
+      filter: "blur(10px)",
+      transition: {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
+      }
     }
   };
 
@@ -172,7 +178,7 @@ export const Testimonials: React.FC = () => {
         
         setTimeout(() => {
           isTransitioning.current = false;
-        }, 1500);
+        }, 1000);
       }
     };
 
@@ -270,7 +276,7 @@ export const Testimonials: React.FC = () => {
           </motion.button>
 
           <div className="flex transition-transform duration-500 ease-in-out">
-            <AnimatePresence initial={false} custom={direction} mode="wait">
+            <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.div
                 key={currentIndex}
                 custom={direction}
