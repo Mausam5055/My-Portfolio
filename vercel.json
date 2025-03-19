@@ -11,6 +11,21 @@
           "value": "application/xml"
         }
       ]
+    },
+    {
+      "source": "/google36eec2c3690b6d17.html",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html"
+        }
+      ]
+    }
+  ],
+  "routes": [
+    {
+      "src": "/google36eec2c3690b6d17.html",
+      "dest": "/google36eec2c3690b6d17.html"
     }
   ]
 } 
