@@ -104,6 +104,61 @@ export const Testimonials: React.FC = () => {
   const autoScrollTimer = useRef<NodeJS.Timeout>();
   const isTransitioning = useRef(false);
 
+  const slideVariants = {
+    enter: (direction: number) => ({
+      opacity: 0,
+      scale: 0.8,
+      y: 50,
+      filter: "blur(10px)",
+    }),
+    center: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.8,
+        ease: [0.4, 0, 0.2, 1],
+        staggerChildren: 0.1
+      }
+    },
+    exit: (direction: number) => ({
+      opacity: 0,
+      scale: 0.8,
+      y: -50,
+      filter: "blur(10px)",
+      transition: {
+        duration: 0.6,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    })
+  };
+
+  const cardVariants = {
+    enter: {
+      opacity: 0,
+      scale: 0.8,
+      y: 20,
+      filter: "blur(5px)",
+    },
+    center: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.5,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8,
+      y: -20,
+      filter: "blur(5px)",
+    }
+  };
+
   useEffect(() => {
     if (autoScrollTimer.current) {
       clearInterval(autoScrollTimer.current);
@@ -164,34 +219,6 @@ export const Testimonials: React.FC = () => {
     currentIndex * 3 + 3,
   );
 
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1200 : -1200,
-      opacity: 0,
-      scale: 0.8
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1200 : -1200,
-      opacity: 0,
-      scale: 0.8,
-      transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
-      }
-    })
-  };
-
   return (
     <section
       id="testimonials"
@@ -251,30 +278,12 @@ export const Testimonials: React.FC = () => {
                 initial="enter"
                 animate="center"
                 exit="exit"
-                transition={{
-                  x: { 
-                    type: "spring", 
-                    stiffness: 400, 
-                    damping: 35,
-                    mass: 1
-                  },
-                  opacity: { 
-                    duration: 0.3,
-                    ease: [0.4, 0, 0.2, 1]
-                  },
-                  scale: {
-                    duration: 0.3,
-                    ease: [0.4, 0, 0.2, 1]
-                  }
-                }}
                 className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
                 {currentTestimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    variants={cardVariants}
                     whileHover={{
                       scale: 1.05,
                       rotateY: 5,
