@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /styles.css
+Allow: /manifest.json
+Allow: /browserconfig.xml
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /backup_components/
+
+Sitemap: https://my-portfolio-v-03.vercel.app/sitemap.xml 

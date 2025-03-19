@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased bg-white dark:bg-amoled-black transition-colors duration-300;
+  }
+
+  @font-face {
+    font-family: 'Dancing Script';
+    src: url('https://fonts.gstatic.com/s/dancingscript/v24/If2cXTr6YS-zF4S-kcSWSVi_sxjsohD9F50Ruu7BMSo3Rep8ltA.woff2') format('woff2');
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .font-signature {
+    font-family: 'Dancing Script', cursive;
+  }
+
+  /* AMOLED Text Hierarchy */
+  .prose h1 {
+    @apply text-3xl font-bold text-gray-900 dark:text-amoled-white mb-4;
+  }
+
+  .prose h2 {
+    @apply text-2xl font-semibold text-gray-800 dark:text-amoled-white mb-3;
+  }
+
+  .prose p {
+    @apply text-gray-700 dark:text-amoled-gray mb-4;
+  }
+
+  .prose ul {
+    @apply list-disc list-inside mb-4;
+  }
+
+  .prose li {
+    @apply text-gray-700 dark:text-amoled-gray;
+  }
+
+  /* AMOLED Scrollbars */
+  .horizontal-scroll-container::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .horizontal-scroll-container::-webkit-scrollbar-track {
+    @apply bg-gray-200 dark:bg-amoled-black;
+  }
+
+  .horizontal-scroll-container::-webkit-scrollbar-thumb {
+    @apply bg-gray-500 dark:bg-amoled-gray rounded-lg;
+  }
+
+  .horizontal-scroll-container::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-700 dark:bg-amoled-accent;
+  }
+}
+
+/* Global AMOLED Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply dark:bg-amoled-black;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply dark:bg-amoled-gray rounded-lg;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply dark:bg-amoled-accent;
+}
+
+/* Firefox Scrollbars */
+.scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.amoled-gray') theme('colors.amoled-black');
+}
+
+/* AMOLED Footer */
+footer {
+  @apply py-12;
+}
+
+.footer-light {
+  @apply bg-pink-50;
+}
+
+.footer-dark {
+  @apply bg-amoled-black text-amoled-white;
+}
+
+.footer-dark .footer-text {
+  @apply m-0 text-amoled-gray;
+}
+
+.footer-dark .footer-links {
+  @apply list-none p-0 mt-2.5 flex justify-center gap-4;
+}
+
+.footer-dark .footer-links a {
+  @apply text-amoled-white font-bold no-underline transition-colors duration-300;
+}
+
+.footer-dark .footer-links a:hover {
+  @apply text-amoled-accent;
+  text-shadow: 0 0 10px rgba(124, 58, 237, 0.6);
+}
+
+/* AMOLED Specific Additions */
+@layer utilities {
+  .amoled-gradient-border {
+    @apply relative before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-r before:from-amoled-accent before:to-amoled-gray before:p-1 before:-z-10;
+  }
+
+  .neon-filter {
+    filter: drop-shadow(0 0 4px theme('colors.amoled-accent'));
+  }
+}
+.truncate-3-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@keyframes shine {
+  0% { transform: translateX(-100%) rotate(15deg); }
+  100% { transform: translateX(100%) rotate(15deg); }
+}
+
+.animate-shine {
+  animation: shine 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
