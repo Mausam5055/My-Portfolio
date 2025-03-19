@@ -1,0 +1,54 @@
+{
+  "name": "Mausam Kar Portfolio",
+  "short_name": "Mausam Kar",
+  "description": "Professional portfolio of Mausam Kar - Expert Web Developer & UI/UX Designer",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/assets/mausam-192x192.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/mausam-512x512.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "About Me",
+      "url": "/#about",
+      "description": "Learn more about Mausam Kar"
+    },
+    {
+      "name": "Projects",
+      "url": "/#projects",
+      "description": "View my portfolio projects"
+    },
+    {
+      "name": "Contact",
+      "url": "/#contact",
+      "description": "Get in touch with me"
+    }
+  ],
+  "categories": ["portfolio", "web development", "design"],
+  "screenshots": [
+    {
+      "src": "/assets/screenshots/home.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "scope": "/",
+  "dir": "ltr",
+  "lang": "en-US"
+} 

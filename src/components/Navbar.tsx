@@ -78,6 +78,8 @@ export default function Navbar({
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : "bg-transparent"
       }`}
+      role="navigation"
+      aria-label="Main navigation"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -93,7 +95,7 @@ export default function Navbar({
               transition={{ duration: 0.5 }}
               className="p-2 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm shadow-lg"
             >
-              <User className="w-6 h-6 text-white" />
+              <User className="w-6 h-6 text-white" aria-hidden="true" />
             </motion.div>
             <motion.h1
               className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent"
@@ -106,7 +108,7 @@ export default function Navbar({
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <div className="flex items-center bg-white/5 backdrop-blur-sm rounded-full p-1.5">
+            <div className="flex items-center bg-white/5 backdrop-blur-sm rounded-full p-1.5" role="menubar">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item}
@@ -121,6 +123,8 @@ export default function Navbar({
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
+                  role="menuitem"
+                  aria-current={activeSection === item ? "page" : undefined}
                 >
                   {getDisplayName(item)}
                   {activeSection === item && (
@@ -132,6 +136,7 @@ export default function Navbar({
                         bounce: 0.2,
                         duration: 0.6,
                       }}
+                      aria-hidden="true"
                     />
                   )}
                 </motion.button>
@@ -145,6 +150,7 @@ export default function Navbar({
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
+              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </motion.button>
@@ -157,6 +163,7 @@ export default function Navbar({
               className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm text-white shadow-lg"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
+              aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
             </motion.button>
@@ -167,6 +174,7 @@ export default function Navbar({
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle mobile menu"
+              aria-expanded={isOpen}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -197,25 +205,67 @@ export default function Navbar({
                 opacity: { duration: 0.2 },
               },
             }}
-            exit={{ opacity: 0, height: 0 }}
-            className="bg-black/80 backdrop-blur-lg shadow-lg"
+            exit={{
+              opacity: 0,
+              height: 0,
+              transition: {
+                height: { duration: 0.3 },
+                opacity: { duration: 0.2 },
+              },
+            }}
+            className="md:hidden fixed top-16 left-4 right-4 overflow-hidden bg-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl shadow-lg"
+            role="dialog"
+            aria-label="Mobile navigation menu"
           >
-            <div className="px-4 pt-2 pb-3 space-y-1">
+            <motion.div
+              className="p-4 space-y-2"
+              variants={{
+                open: {
+                  transition: { staggerChildren: 0.07, delayChildren: 0.2 },
+                },
+                closed: {
+                  transition: { staggerChildren: 0.05, staggerDirection: -1 },
+                },
+              }}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              role="menu"
+            >
               {navItems.map((item) => (
                 <motion.button
                   key={item}
                   onClick={() => handleLinkClick(item)}
-                  className={`w-full text-left px-3 py-2 rounded-md text-base font-medium ${
+                  className={`block w-full text-left px-4 py-3 rounded-xl text-white transition-all duration-200 capitalize ${
                     activeSection === item
-                      ? "text-white bg-purple-500/20"
-                      : "text-white/70 hover:text-white hover:bg-white/5"
+                      ? "bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg"
+                      : "hover:bg-white/5"
                   }`}
-                  whileHover={{ x: 5 }}
+                  variants={{
+                    open: {
+                      y: 0,
+                      opacity: 1,
+                      transition: {
+                        y: { stiffness: 1000, velocity: -100 },
+                      },
+                    },
+                    closed: {
+                      y: 50,
+                      opacity: 0,
+                      transition: {
+                        y: { stiffness: 1000 },
+                      },
+                    },
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  role="menuitem"
+                  aria-current={activeSection === item ? "page" : undefined}
                 >
-                  {getDisplayName(item)}
+                  <span className="font-medium">{getDisplayName(item)}</span>
                 </motion.button>
               ))}
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

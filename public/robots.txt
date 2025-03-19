@@ -1,11 +1,39 @@
+# Allow all robots complete access
 User-agent: *
 Allow: /
+
+# Allow access to static assets
 Allow: /assets/
 Allow: /styles.css
 Allow: /manifest.json
 Allow: /browserconfig.xml
+Allow: /sitemap.xml
+
+# Block access to development files and private areas
 Disallow: /src/
 Disallow: /node_modules/
 Disallow: /backup_components/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+Disallow: /*.json$
+Disallow: /*.js$
+Disallow: /*.ts$
+Disallow: /*.tsx$
+Disallow: /*.map$
 
-Sitemap: https://my-portfolio-v-03.vercel.app/sitemap.xml 
+# Sitemap location
+Sitemap: https://mausam03.vercel.app/sitemap.xml
+
+# Crawl-delay recommendation
+Crawl-delay: 10
+
+# Additional settings for specific bots
+User-agent: GPTBot
+Disallow: /private/
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /assets/
+Allow: /public/
+Disallow: / 

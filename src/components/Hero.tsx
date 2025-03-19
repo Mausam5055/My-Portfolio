@@ -24,25 +24,29 @@ const socialLinks = [
     icon: Github,
     url: "https://github.com/Mausam5055",
     color: "#333",
+    label: "GitHub Profile",
   },
   {
     icon: Instagram,
     url: "https://www.instagram.com/_mausam__kar___/",
     color: "#E1306C",
+    label: "Instagram Profile",
   },
   {
     icon: Linkedin,
     url: "https://www.linkedin.com/in/mausam-kar-6388861a7/",
     color: "#0077B5",
+    label: "LinkedIn Profile",
   },
   {
     icon: Send,
     url: "https://t.me/yourusername",
     color: "#0088cc",
+    label: "Telegram Contact",
   },
 ];
 
-export default function Profile() {
+export default function Hero() {
   const [currentName, setCurrentName] = useState(0);
   const [currentQuote, setCurrentQuote] = useState(0);
   const [hoveredIcon, setHoveredIcon] = useState<number | null>(null);
@@ -63,7 +67,7 @@ export default function Profile() {
   }, []);
 
   return (
-    <div className="relative min-h-screen">
+    <header className="relative min-h-screen" role="banner">
       {/* Video Background with Overlay Pattern */}
       <div className="absolute inset-0 overflow-hidden">
         <video
@@ -72,10 +76,16 @@ export default function Profile() {
           loop
           muted
           playsInline
+          aria-hidden="true"
         >
-          <source src="/assets/video3.webm" type="video/mp4" />
+          <source src="/assets/video3.webm" type="video/webm" />
+          <source src="/assets/video3.mp4" type="video/mp4" />
+          <p>Your browser doesn't support HTML5 video.</p>
         </video>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.8)_100%)]" />
+        <div 
+          className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(0,0,0,0.8)_100%)]" 
+          aria-hidden="true"
+        />
       </div>
 
       {/* Content */}
@@ -93,14 +103,16 @@ export default function Profile() {
             >
               <img
                 src="/assets/profile.jpg"
-                alt="profile"
+                alt="Mausam Kar - Web Developer and UI/UX Designer"
                 className="w-full h-full object-cover"
+                loading="eager"
+                fetchPriority="high"
               />
             </motion.div>
 
             {/* Name and Language */}
             <div className="text-center space-y-3">
-              <motion.h2
+              <motion.h1
                 key={currentName}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -115,7 +127,7 @@ export default function Profile() {
                 }}
               >
                 {names[currentName].text}
-              </motion.h2>
+              </motion.h1>
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.8 }}
@@ -127,38 +139,34 @@ export default function Profile() {
           </div>
 
           {/* Quote Section */}
-          <motion.div
+          <motion.figure
             key={currentQuote}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="max-w-2xl text-center space-y-4"
           >
-            <p className="text-2xl md:text-3xl italic tracking-wide leading-relaxed text-white">
+            <blockquote className="text-2xl md:text-3xl italic tracking-wide leading-relaxed text-white">
               "{quotes[currentQuote].text}"
-            </p>
-            <div className="flex items-center justify-center space-x-4">
-              <div className="w-12 h-px bg-gray-400" />
+            </blockquote>
+            <figcaption className="flex items-center justify-center space-x-4">
+              <div className="w-12 h-px bg-gray-400" aria-hidden="true" />
               <p className="text-white tracking-wider">
                 {quotes[currentQuote].author}
               </p>
-              <div className="w-12 h-px bg-gray-400" />
-            </div>
-          </motion.div>
+              <div className="w-12 h-px bg-gray-400" aria-hidden="true" />
+            </figcaption>
+          </motion.figure>
 
           {/* Social Icons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="flex gap-8"
-          >
+          <nav className="flex gap-8" aria-label="Social Links">
             {socialLinks.map((social, index) => (
               <motion.a
                 key={index}
                 href={social.url}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label={social.label}
                 className="relative p-4 rounded-full bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-300"
                 whileHover={{ scale: 1.15 }}
                 onHoverStart={() => setHoveredIcon(index)}
@@ -178,9 +186,9 @@ export default function Profile() {
                 />
               </motion.a>
             ))}
-          </motion.div>
+          </nav>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
