@@ -72,7 +72,7 @@ const testimonials: Testimonial[] = [
     company: "Media Group",
     image: "/assets/testimonials/abhijit.jpg",
     content:
-      "✔️Mausam’s ability to blend storytelling with design is exceptional. He brings ideas to life in a unique way.",
+      "✔️Mausam's ability to blend storytelling with design is exceptional. He brings ideas to life in a unique way.",
     rating: 4,
   },
   {
@@ -92,7 +92,7 @@ const testimonials: Testimonial[] = [
     company: "Global Enterprises",
     image: "/assets/testimonials/raj.webp",
     content:
-      "✔️Mausam’s professionalism and dedication to his work are truly inspiring. He consistently delivers high-quality results.",
+      "✔️Mausam's professionalism and dedication to his work are truly inspiring. He consistently delivers high-quality results.",
     rating: 3.9,
   },
 ];
@@ -100,34 +100,63 @@ const testimonials: Testimonial[] = [
 export const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoScrolling, setIsAutoScrolling] = useState(true);
+  const [direction, setDirection] = useState(0);
   const autoScrollTimer = useRef<NodeJS.Timeout>();
+  const isTransitioning = useRef(false);
 
   useEffect(() => {
     if (autoScrollTimer.current) {
       clearInterval(autoScrollTimer.current);
     }
-    autoScrollTimer.current = setInterval(() => {
-      if (isAutoScrolling) {
-        setCurrentIndex(
-          (prev) => (prev + 1) % Math.ceil(testimonials.length / 3),
-        );
+
+    const startAutoScroll = () => {
+      if (!isTransitioning.current && isAutoScrolling) {
+        isTransitioning.current = true;
+        setDirection(1);
+        setCurrentIndex((prev) => (prev + 1) % Math.ceil(testimonials.length / 3));
+        
+        setTimeout(() => {
+          isTransitioning.current = false;
+        }, 1500);
       }
-    }, 5000);
-    return () => clearInterval(autoScrollTimer.current);
+    };
+
+    autoScrollTimer.current = setInterval(startAutoScroll, 5000);
+    return () => {
+      if (autoScrollTimer.current) {
+        clearInterval(autoScrollTimer.current);
+      }
+    };
   }, [isAutoScrolling]);
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % Math.ceil(testimonials.length / 3));
-    setIsAutoScrolling(false);
-    setTimeout(() => setIsAutoScrolling(true), 10000);
+    if (!isTransitioning.current) {
+      isTransitioning.current = true;
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % Math.ceil(testimonials.length / 3));
+      setIsAutoScrolling(false);
+      
+      setTimeout(() => {
+        isTransitioning.current = false;
+        setIsAutoScrolling(true);
+      }, 1500);
+    }
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? Math.ceil(testimonials.length / 3) - 1 : prev - 1,
-    );
-    setIsAutoScrolling(false);
-    setTimeout(() => setIsAutoScrolling(true), 10000);
+    if (!isTransitioning.current) {
+      isTransitioning.current = true;
+      setDirection(-1);
+      setCurrentIndex((prev) =>
+        prev === 0 ? Math.ceil(testimonials.length / 3) - 1 : prev - 1,
+      );
+      setIsAutoScrolling(false);
+      
+      setTimeout(() => {
+        isTransitioning.current = false;
+        setIsAutoScrolling(true);
+      }, 1500);
+    }
   };
 
   const currentTestimonials = testimonials.slice(
@@ -135,12 +164,40 @@ export const Testimonials: React.FC = () => {
     currentIndex * 3 + 3,
   );
 
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1200 : -1200,
+      opacity: 0,
+      scale: 0.8
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1200 : -1200,
+      opacity: 0,
+      scale: 0.8,
+      transition: {
+        duration: 0.4,
+        ease: [0.4, 0, 0.2, 1]
+      }
+    })
+  };
+
   return (
     <section
       id="testimonials"
-      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
+      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-500"
       style={{
-        backgroundColor: "rgba(255, 255, 204, 0.05)", // Light yellow accent in light theme
+        backgroundColor: "rgba(255, 255, 204, 0.05)",
       }}
     >
       <div className="container mx-auto">
@@ -148,69 +205,129 @@ export const Testimonials: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="mb-16 text-center space-y-4"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-black dark:text-white" // Set to black in light mode and white in dark mode
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="text-4xl md:text-5xl font-bold text-black dark:text-white"
           >
             Testimonials
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "180px" }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full"
           />
         </motion.div>
 
         <div className="relative">
-          <button
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handlePrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-blue-500/80 hover:bg-blue-600/80 text-white hidden md:block"
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white hidden md:block transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <ChevronLeft size={24} />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.95 }}
             onClick={handleNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-blue-500/80 hover:bg-blue-600/80 text-white hidden md:block"
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white hidden md:block transition-all duration-300 shadow-lg hover:shadow-xl"
           >
             <ChevronRight size={24} />
-          </button>
+          </motion.button>
 
           <div className="flex transition-transform duration-500 ease-in-out">
-            <AnimatePresence mode="wait">
+            <AnimatePresence initial={false} custom={direction} mode="wait">
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
+                custom={direction}
+                variants={slideVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { 
+                    type: "spring", 
+                    stiffness: 400, 
+                    damping: 35,
+                    mass: 1
+                  },
+                  opacity: { 
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1]
+                  },
+                  scale: {
+                    duration: 0.3,
+                    ease: [0.4, 0, 0.2, 1]
+                  }
+                }}
                 className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
               >
-                {currentTestimonials.map((testimonial) => (
+                {currentTestimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                     whileHover={{
                       scale: 1.05,
-                      boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
+                      rotateY: 5,
+                      rotateX: 5,
+                      boxShadow: "0px 20px 40px rgba(0,0,0,0.2)",
+                      y: -10,
                     }}
-                    transition={{ duration: 0.3 }}
-                    className="bg-blue-50/50 dark:bg-gray-900 rounded-lg p-6 shadow-lg hover:shadow-xl transform transition-all duration-300 relative"
+                    className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg rounded-2xl p-8 shadow-xl hover:shadow-2xl transform transition-all duration-500 relative overflow-hidden"
+                    style={{
+                      perspective: "1000px",
+                      transformStyle: "preserve-3d",
+                    }}
                   >
-                    <Quote
-                      size={40}
-                      className="text-blue-300 dark:text-blue-700 absolute top-4 right-4 opacity-20"
+                    {/* Gradient border effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                    
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 0.2, scale: 1 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute -top-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-full blur-xl"
                     />
-                    <div className="flex items-center space-x-4 mb-6">
-                      <img
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
+                    
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="flex items-center space-x-4 mb-6 relative z-10"
+                    >
+                      <div className="relative">
+                        <motion.div
+                          whileHover={{ scale: 1.1 }}
+                          className="w-16 h-16 rounded-full overflow-hidden ring-2 ring-blue-500/20"
+                        >
+                          <img
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
+                          />
+                        </motion.div>
+                        <motion.div
+                          animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.5, 0.8, 0.5],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                          className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-purple-500/20 blur-sm"
+                        />
+                      </div>
                       <div>
                         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
                           {testimonial.name}
@@ -222,24 +339,43 @@ export const Testimonials: React.FC = () => {
                           {testimonial.company}
                         </p>
                       </div>
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300 mb-6">
+                    </motion.div>
+                    
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
+                      className="text-gray-700 dark:text-gray-300 mb-6 relative z-10 text-left whitespace-normal break-words"
+                      style={{ 
+                        textAlign: 'left',
+                        lineHeight: '1.6',
+                        maxWidth: '100%',
+                        wordWrap: 'break-word',
+                        overflowWrap: 'break-word'
+                      }}
+                    >
                       {testimonial.content}
-                    </p>
-                    <div className="flex items-center space-x-1">
+                    </motion.p>
+                    
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.5, delay: 0.4 }}
+                      className="flex items-center space-x-1 relative z-10"
+                    >
                       {[...Array(5)].map((_, i) => (
                         <Star
                           key={i}
                           size={16}
                           className={cn(
-                            "fill-current",
+                            "fill-current transition-all duration-300",
                             i < testimonial.rating
-                              ? "text-blue-500 dark:text-blue-400"
+                              ? "text-yellow-400 drop-shadow-lg"
                               : "text-gray-300 dark:text-gray-600",
                           )}
                         />
                       ))}
-                    </div>
+                    </motion.div>
                   </motion.div>
                 ))}
               </motion.div>
