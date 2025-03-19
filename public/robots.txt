@@ -16,16 +16,17 @@ Disallow: /backup_components/
 Disallow: /api/
 Disallow: /admin/
 Disallow: /private/
-
-# Allow important JS and JSON files (React needs them)
-Allow: /*.js$
-Allow: /*.json$
-
-# Block map files (optional, for security)
+Disallow: /*.json$
+Disallow: /*.js$
+Disallow: /*.ts$
+Disallow: /*.tsx$
 Disallow: /*.map$
 
 # Sitemap location
 Sitemap: https://mausam03.vercel.app/sitemap.xml
+
+# Crawl-delay recommendation
+Crawl-delay: 10
 
 # Additional settings for specific bots
 User-agent: GPTBot
@@ -33,4 +34,6 @@ Disallow: /private/
 Allow: /
 
 User-agent: Googlebot-Image
-Allow: /
+Allow: /assets/
+Allow: /public/
+Disallow: / 
