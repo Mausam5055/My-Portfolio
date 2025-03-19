@@ -1,124 +1,110 @@
-import { motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import type { ContentBox } from "../types";
+import { motion } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import type { ContentBox } from '../types';
 
 const boxes: ContentBox[] = [
   {
     id: 1,
     title: "About",
     description: "Learn more about me and my background.",
-    image: "/assets/about3.jpg",
+    image: "/assets/about3.jpg"
   },
   {
     id: 2,
     title: "Journey",
     description: "My professional journey and experiences.",
-    image:
-      "https://images.unsplash.com/photo-1508169351866-777fc0047ac5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MDY1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1508169351866-777fc0047ac5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MDY1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 3,
     title: "Qualifications",
     description: "My academic and professional qualifications.",
-    image:
-      "https://plus.unsplash.com/premium_photo-1682125773446-259ce64f9dd7?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://plus.unsplash.com/premium_photo-1682125773446-259ce64f9dd7?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 4,
     title: "Certifications",
     description: "Certifications I have earned through dedicated learning.",
-    image:
-      "https://media.istockphoto.com/id/2164485793/photo/cropped-hands-of-businessman-holding-certificate.jpg?s=2048x2048&w=is&k=20&c=Vr0RidPPf0nca75MlWjSUgyd26-eDENomwsxIeIEDCk=",
+    image: "https://media.istockphoto.com/id/2164485793/photo/cropped-hands-of-businessman-holding-certificate.jpg?s=2048x2048&w=is&k=20&c=Vr0RidPPf0nca75MlWjSUgyd26-eDENomwsxIeIEDCk="
   },
   {
     id: 5,
     title: "Skills",
     description: "Technical and professional skills I've mastered.",
-    image:
-      "https://images.unsplash.com/photo-1516116216624-53e697fedbea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2ODQ1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1516116216624-53e697fedbea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2ODQ1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 6,
     title: "Academic Resources",
     description: "Academic background and educational journey.",
-    image:
-      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2ODk1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2ODk1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 7,
     title: "Gallery",
     description: "Visual showcase of my projects and achievements.",
-    image:
-      "https://images.unsplash.com/photo-1497215728101-856f4ea42174?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2OTQ1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2OTQ1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 8,
     title: "Cubing Skills",
     description: "Speedcubing achievements and competition history.",
-    image:
-      "https://images.unsplash.com/photo-1567646303972-f7de3a9c0a05?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJ1YmlrJTIwY3ViZXxlbnwwfHwwfHx8MA%3D%3D",
+    image: "https://images.unsplash.com/photo-1567646303972-f7de3a9c0a05?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJ1YmlrJTIwY3ViZXxlbnwwfHwwfHx8MA%3D%3D"
   },
   {
     id: 9,
     title: "Projects",
     description: "Notable technical projects and implementations.",
-    image:
-      "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 10,
     title: "Gaming",
     description: "Gameplay highlights and gaming achievements.",
-    image:
-      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MzA1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MzA1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 11,
     title: "Fun Facts",
     description: "Interesting personal trivia and quirks.",
-    image:
-      "https://images.unsplash.com/photo-1489367874814-f5d040621dd8?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://images.unsplash.com/photo-1489367874814-f5d040621dd8?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 12,
     title: "Inspirations",
     description: "People and ideas that drive my creativity.",
-    image:
-      "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 13,
     title: "Future Goals",
     description: "Aspirations and roadmap for coming years.",
-    image:
-      "https://images.unsplash.com/photo-1506784365847-bbad939e9335?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTg1&ixlib=rb-1.2.1&q=80&w=400",
+    image: "https://images.unsplash.com/photo-1506784365847-bbad939e9335?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTg1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
     id: 14,
     title: "Testimonials",
     description: "Endorsements from colleagues and clients.",
-    image:
-      "https://plus.unsplash.com/premium_photo-1682310144714-cb77b1e6d64a?q=80&w=1824&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "https://plus.unsplash.com/premium_photo-1682310144714-cb77b1e6d64a?q=80&w=1824&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 15,
     title: "Contact",
     description: "Let's connect and collaborate!",
-    image:
-      "https://images.unsplash.com/photo-1528747045269-390fe33c19f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3NDI1&ixlib=rb-1.2.1&q=80&w=400",
-  },
+    image: "https://images.unsplash.com/photo-1528747045269-390fe33c19f2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3NDI1&ixlib=rb-1.2.1&q=80&w=400"
+  }
 ];
 
 export default function ContentBoxes({ refs }: { refs: any }) {
   const [hoveredBox, setHoveredBox] = useState<number | null>(null);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const isTouchDevice = "ontouchstart" in window;
+  const isTouchDevice = 'ontouchstart' in window;
 
   const handleBoxClick = (id: number) => {
     const sectionKeys = Object.keys(refs);
     if (sectionKeys[id - 1] && refs[sectionKeys[id - 1]].current) {
-      refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: "smooth" });
+      refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -138,9 +124,9 @@ export default function ContentBoxes({ refs }: { refs: any }) {
       const scrollThreshold = width * 0.15;
 
       if (clientX < left + scrollThreshold) {
-        container.scrollBy({ left: -scrollSpeed, behavior: "smooth" });
+        container.scrollBy({ left: -scrollSpeed, behavior: 'smooth' });
       } else if (clientX > right - scrollThreshold) {
-        container.scrollBy({ left: scrollSpeed, behavior: "smooth" });
+        container.scrollBy({ left: scrollSpeed, behavior: 'smooth' });
       }
     };
 
@@ -156,7 +142,7 @@ export default function ContentBoxes({ refs }: { refs: any }) {
       const touch = event.touches[0];
       const deltaX = touch.clientX - startX;
 
-      container.scrollBy({ left: -deltaX, behavior: "smooth" });
+      container.scrollBy({ left: -deltaX, behavior: 'smooth' });
       startX = touch.clientX;
     };
 
@@ -170,7 +156,7 @@ export default function ContentBoxes({ refs }: { refs: any }) {
       container.addEventListener("touchmove", handleTouchMove);
       container.addEventListener("touchend", handleTouchEnd);
     }
-
+    
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       if (isTouchDevice) {
@@ -182,11 +168,11 @@ export default function ContentBoxes({ refs }: { refs: any }) {
   }, [containerRef, isMouseOver]);
 
   return (
-    <section
+    <section 
       id="content-boxes"
       className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
       style={{
-        backgroundColor: "rgba(255, 255, 204, 0.05)",
+        backgroundColor: "rgba(255, 255, 204, 0.05)"
       }}
     >
       {/* Section Title */}
@@ -222,25 +208,25 @@ export default function ContentBoxes({ refs }: { refs: any }) {
               opacity: [0, 0.3, 0],
               scale: [0, 1, 0],
               x: Math.random() * 200 - 100,
-              y: Math.random() * 200 - 100,
+              y: Math.random() * 200 - 100
             }}
             transition={{
               duration: 4 + Math.random() * 4,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: "easeInOut"
             }}
             className="absolute w-48 h-48 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-xl"
             style={{
               top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`
             }}
           />
         ))}
       </div>
 
       {/* Content Boxes Container */}
-      <div
-        ref={containerRef}
+      <div 
+        ref={containerRef} 
         className="w-full overflow-x-auto scrollbar-hide scroll-snap-x scroll-snap-mandatory relative z-10"
         onMouseEnter={() => setIsMouseOver(true)}
         onMouseLeave={() => setIsMouseOver(false)}
@@ -254,10 +240,10 @@ export default function ContentBoxes({ refs }: { refs: any }) {
             {boxes.map((box) => (
               <motion.div
                 key={box.id}
-                whileHover={{
-                  scale: isTouchDevice ? 1 : 1.05,
+                whileHover={{ 
+                  scale: isTouchDevice ? 1 : 1.05, 
                   y: isTouchDevice ? 0 : -5,
-                  transition: { duration: 0.3 },
+                  transition: { duration: 0.3 }
                 }}
                 onHoverStart={() => !isTouchDevice && setHoveredBox(box.id)}
                 onHoverEnd={() => !isTouchDevice && setHoveredBox(null)}
@@ -266,15 +252,15 @@ export default function ContentBoxes({ refs }: { refs: any }) {
               >
                 {/* Background Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-
+                
                 {/* Image */}
-                <img
-                  src={box.image}
-                  alt={box.title}
+                <img 
+                  src={box.image} 
+                  alt={box.title} 
                   className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
                   loading="lazy"
                 />
-
+                
                 {/* Content Overlay */}
                 <div className="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
                   <div className="transform transition-all duration-300">

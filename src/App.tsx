@@ -12,11 +12,11 @@ import { Certifications } from './components/Certifications';
 import { Skills } from './components/Skills';
 import { Education } from './components/Education';
 import { Gallery } from './components/Gallery';
-import { Artwork } from './components/Artwork';
+import { CubingContent } from './components/CubingContent';
 import { Inspirations } from './components/Inspirations';
 import { FutureGoals } from './components/FutureGoals';
 import { FunFacts } from './components/FunFacts';
-import { Blog } from './components/Blog';
+import { Gaming } from './components/Gaming';
 import { Testimonials } from './components/Testimonials';
 import { Projects } from './components/Projects';
 import { Contact } from './components/Contact';
@@ -28,32 +28,22 @@ function App() {
   const { isDark, toggleTheme } = useThemeStore();
   const [showIntro, setShowIntro] = useState(true);
 
-  // Section refs
   const sectionRefs = {
     about: useRef<HTMLDivElement>(null),
     journey: useRef<HTMLDivElement>(null),
+    qualifications: useRef<HTMLDivElement>(null),
+    certifications: useRef<HTMLDivElement>(null),
     skills: useRef<HTMLDivElement>(null),
+    education: useRef<HTMLDivElement>(null),
     gallery: useRef<HTMLDivElement>(null),
     cubing: useRef<HTMLDivElement>(null),
+    inspirations: useRef<HTMLDivElement>(null),
+    futureGoals: useRef<HTMLDivElement>(null),
+    funFacts: useRef<HTMLDivElement>(null),
+    Gaming: useRef<HTMLDivElement>(null),
     projects: useRef<HTMLDivElement>(null),
-    gaming: useRef<HTMLDivElement>(null),
     testimonials: useRef<HTMLDivElement>(null),
     contact: useRef<HTMLDivElement>(null),
-  };
-
-  // Scroll to section function
-  const scrollToSection = (section: string) => {
-    const element = sectionRefs[section as keyof typeof sectionRefs]?.current;
-    if (element) {
-      const navbarHeight = 64; // Height of your fixed navbar
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
   };
 
   useEffect(() => {
@@ -71,29 +61,37 @@ function App() {
     }
   }, [isDark]);
 
+  const scrollToSection = (section: keyof typeof sectionRefs) => {
+    sectionRefs[section].current?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
   return (
     <Router>
       {showIntro ? (
         <FlashIntro onComplete={() => setShowIntro(false)} />
       ) : (
         <div className="min-h-screen bg-white dark:bg-black transition-colors duration-200">
-          <Navbar 
-            isDark={isDark} 
-            toggleTheme={toggleTheme} 
-            scrollToSection={scrollToSection}
-          />
+          <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />
           <Hero />
-          
-          {/* Sections */}
-          <div id="about" ref={sectionRefs.about}><About /></div>
-          <div id="journey" ref={sectionRefs.journey}><Journey /></div>
-          <div id="skills" ref={sectionRefs.skills}><Skills /></div>
-          <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
-          <div id="cubing" ref={sectionRefs.cubing}><FunFacts /></div>
-          <div id="projects" ref={sectionRefs.projects}><Projects /></div>
-          <div id="gaming" ref={sectionRefs.gaming}><Artwork /></div>
-          <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
-          <div id="contact" ref={sectionRefs.contact}><Contact /></div>
+          <ContentBoxes refs={sectionRefs} />
+          <div ref={sectionRefs.about}><About /></div>
+          <div ref={sectionRefs.journey}><Journey /></div>
+          <div ref={sectionRefs.qualifications}><Qualifications /></div>
+          <div ref={sectionRefs.certifications}><Certifications /></div>
+          <div ref={sectionRefs.skills}><Skills /></div>
+          <div ref={sectionRefs.education}><Education /></div>
+          <div ref={sectionRefs.gallery}><Gallery /></div>
+          <div ref={sectionRefs.cubing}><CubingContent /></div>
+          <div ref={sectionRefs.inspirations}><Inspirations /></div>
+          <div ref={sectionRefs.Gaming}><Gaming /></div>
+          <div ref={sectionRefs.funFacts}><FunFacts /></div>
+          <div ref={sectionRefs.projects}><Projects /></div> {/* Swapped position */}
+          <div ref={sectionRefs.futureGoals}><FutureGoals /></div> {/* Swapped position */}
+          <div ref={sectionRefs.testimonials}><Testimonials /></div>
+          <div ref={sectionRefs.contact}><Contact /></div>
           <Footer />
         </div>
       )}
