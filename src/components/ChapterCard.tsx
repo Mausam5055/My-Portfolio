@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { cn } from "../lib/utils";
-import type { Chapter } from "../types";
+import type { Chapter } from "../data/subjects";
 
 interface ChapterCardProps {
   chapter: Chapter;
@@ -31,6 +31,8 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, index }) => {
 
     return () => observer.disconnect();
   }, [chapter.id]);
+
+  const links = chapter.driveLink || [];
 
   return (
     <motion.div
@@ -93,8 +95,8 @@ const ChapterCard: React.FC<ChapterCardProps> = ({ chapter, index }) => {
           {chapter.description}
         </p>
         <div className="flex flex-wrap gap-2">
-          {chapter.driveLinks?.length > 0 ? (
-            chapter.driveLinks.map((link, partIndex) => (
+          {links.length > 0 ? (
+            links.map((link, partIndex) => (
               <motion.a
                 key={partIndex}
                 whileHover={{ x: 5 }}
