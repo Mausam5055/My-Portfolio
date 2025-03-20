@@ -36,29 +36,41 @@ const preconnectLinks = [
   'https://plus.unsplash.com'
 ];
 
-// Add preload links
+// Add preload links with error handling
 preloadLinks.forEach(link => {
-  const linkElement = document.createElement('link');
-  Object.entries(link).forEach(([key, value]) => {
-    linkElement.setAttribute(key, value);
-  });
-  document.head.appendChild(linkElement);
+  try {
+    const linkElement = document.createElement('link');
+    Object.entries(link).forEach(([key, value]) => {
+      linkElement.setAttribute(key, value);
+    });
+    document.head.appendChild(linkElement);
+  } catch (error) {
+    console.warn('Failed to add preload link:', link, error);
+  }
 });
 
 // Add DNS prefetch links
 dnsPrefetchLinks.forEach(href => {
-  const linkElement = document.createElement('link');
-  linkElement.setAttribute('rel', 'dns-prefetch');
-  linkElement.setAttribute('href', href);
-  document.head.appendChild(linkElement);
+  try {
+    const linkElement = document.createElement('link');
+    linkElement.setAttribute('rel', 'dns-prefetch');
+    linkElement.setAttribute('href', href);
+    document.head.appendChild(linkElement);
+  } catch (error) {
+    console.warn('Failed to add DNS prefetch:', href, error);
+  }
 });
 
 // Add preconnect links
 preconnectLinks.forEach(href => {
-  const linkElement = document.createElement('link');
-  linkElement.setAttribute('rel', 'preconnect');
-  linkElement.setAttribute('href', href);
-  document.head.appendChild(linkElement);
+  try {
+    const linkElement = document.createElement('link');
+    linkElement.setAttribute('rel', 'preconnect');
+    linkElement.setAttribute('href', href);
+    document.head.appendChild(linkElement);
+  } catch (error) {
+    console.warn('Failed to add preconnect:', href, error);
+  }
 });
 
 // Initialize performance monitoring

@@ -21,6 +21,9 @@
     {
       "src": "/sitemap.xml",
       "dest": "/sitemap.xml"
+    },
+    {
+      "handle": "filesystem"
     }
   ],
   "builds": [
@@ -28,5 +31,8 @@
       "src": "public/sitemap.xml",
       "use": "@vercel/static"
     }
-  ]
+  ],
+  "env": {
+    "VITE_GA_ID": "G-XXXXXXXXXX"
+  }
 } 

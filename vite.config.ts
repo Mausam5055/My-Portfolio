@@ -16,6 +16,21 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
       },
     },
+    sourcemap: true,
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true
+      }
+    }
   },
   publicDir: 'public',
+  base: '/',
+  server: {
+    port: 5173,
+    host: '0.0.0.0',
+    strictPort: true,
+    open: true
+  }
 });
