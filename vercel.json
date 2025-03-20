@@ -17,21 +17,14 @@
       ]
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/sitemap.xml",
-      "dest": "/sitemap.xml"
-    },
-    {
-      "handle": "filesystem"
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
     }
   ],
-  "builds": [
-    {
-      "src": "public/sitemap.xml",
-      "use": "@vercel/static"
-    }
-  ],
+  "cleanUrls": true,
+  "trailingSlash": false,
   "env": {
     "VITE_GA_ID": "G-XXXXXXXXXX"
   }
