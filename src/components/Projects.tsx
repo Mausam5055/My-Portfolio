@@ -127,12 +127,22 @@ export const Projects: React.FC = () => {
                     <motion.div
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
-                      transition={{ delay: 0.2 }}
+                      transition={{ 
+                        delay: 0.2,
+                        duration: 1.2,
+                        ease: "easeOut"
+                      }}
                       className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
                     >
-                      <div
+                      <motion.div
+                        initial={{ width: "0%" }}
+                        whileInView={{ width: `${tech.percentage}%` }}
+                        transition={{
+                          duration: 1.5,
+                          ease: [0.34, 1.56, 0.64, 1],
+                          delay: 0.3
+                        }}
                         className="h-full bg-gradient-to-r from-green-400 to-emerald-600 rounded-full"
-                        style={{ width: `${tech.percentage}%` }}
                       />
                     </motion.div>
                   </div>
