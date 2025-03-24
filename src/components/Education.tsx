@@ -824,6 +824,7 @@ const subjects: Subject[] = [
           'https://drive.google.com/part3'
         ]
       },
+      
       {
         id: 'math-6',
         title: 'Sequences and Series',
@@ -1413,6 +1414,26 @@ export const Education = () => {
       className="py-20 bg-gray-50 dark:bg-[#020817] relative overflow-hidden transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          className="mb-16 text-center space-y-4"
+        >
+          <motion.h2
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-4xl md:text-5xl font-bold text-black dark:text-white"
+          >
+            Academic Resources
+          </motion.h2>
+          <motion.div
+            initial={{ width: 0 }}
+            whileInView={{ width: "200px" }}
+            transition={{ duration: 0.8 }}
+            className="h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"
+          />
+        </motion.div>
         {!selectedSubject ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {subjects.map((subject) => (
