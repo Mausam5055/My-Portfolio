@@ -1,54 +1,63 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ExternalLink, Award, CheckCircle, Sparkle, CalendarDays } from 'lucide-react';
-import { cn } from '../lib/utils';
-import type { Certification } from '../types';
+import React from "react";
+import { motion } from "framer-motion";
+import {
+  ExternalLink,
+  Award,
+  CheckCircle,
+  Sparkle,
+  CalendarDays,
+} from "lucide-react";
+import { cn } from "../lib/utils";
+import type { Certification } from "../types";
 
 const certifications: Certification[] = [
   {
-    id: 'aws-sa',
+    id: "aws-sa",
     title: "AWS Solutions Architect",
     organization: "Amazon Web Services",
     date: "2024",
     logo: "https://images.unsplash.com/photo-1633356122544-f134324a6cee",
     link: "https://aws.amazon.com/certification/",
-    description: "Professional certification for designing distributed systems on AWS. Demonstrated ability to design secure, robust systems using AWS services. Validated expertise in cloud best practices and architectural principles.",
+    description:
+      "Professional certification for designing distributed systems on AWS. Demonstrated ability to design secure, robust systems using AWS services. Validated expertise in cloud best practices and architectural principles.",
     skills: ["AWS", "Cloud Architecture", "Serverless", "DevOps"],
-    credentialId: "AWS-SA-12345"
+    credentialId: "AWS-SA-12345",
   },
   {
-    id: 'gcp-pro',
+    id: "gcp-pro",
     title: "Google Cloud Professional",
     organization: "Google Cloud",
     date: "2025",
     logo: "https://images.unsplash.com/photo-1573164713988-8665fc963095",
     link: "https://cloud.google.com/certification",
-    description: "Advanced certification for Google Cloud Platform services. Proven skills in implementing and managing cloud infrastructure. Expertise in GCP services including Compute Engine, Kubernetes, and BigQuery.",
+    description:
+      "Advanced certification for Google Cloud Platform services. Proven skills in implementing and managing cloud infrastructure. Expertise in GCP services including Compute Engine, Kubernetes, and BigQuery.",
     skills: ["GCP", "Cloud Computing", "Data Analytics", "Kubernetes"],
-    credentialId: "GCP-PRO-67890"
+    credentialId: "GCP-PRO-67890",
   },
   {
-    id: 'azure-dev',
+    id: "azure-dev",
     title: "Azure Developer Associate",
     organization: "Microsoft",
     date: "2024",
     logo: "https://images.unsplash.com/photo-1633419461186-7d40a38105ec",
     link: "https://learn.microsoft.com/certifications/",
-    description: "Certification for developing solutions on Microsoft Azure. Validated skills in Azure services implementation, storage solutions, and security management. Expertise in .NET ecosystem integration.",
+    description:
+      "Certification for developing solutions on Microsoft Azure. Validated skills in Azure services implementation, storage solutions, and security management. Expertise in .NET ecosystem integration.",
     skills: ["Azure", ".NET", "Cloud Security", "CI/CD"],
-    credentialId: "AZ-204-11111"
-  }
+    credentialId: "AZ-204-11111",
+  },
 ];
 
 export const Certifications: React.FC = () => {
   return (
     <section
-    id="Journey"
-    className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
-    style={{
-      backgroundColor: "rgba(255, 255, 204, 0.05)" // Light yellow accent in light theme
-    }}
-  >
+      id="Journey"
+      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
+      style={{
+        backgroundColor: "rgba(255, 255, 204, 0.05)", // Light yellow accent in light theme
+      }}
+    >
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -93,14 +102,18 @@ export const Certifications: React.FC = () => {
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               whileHover={{ y: -10, scale: 1.02 }}
               viewport={{ once: true, margin: "-100px" }}
-              transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
+              transition={{
+                delay: index * 0.1,
+                type: "spring",
+                stiffness: 100,
+              }}
               className={cn(
                 "relative group bg-purple-50 dark:bg-gray-900",
                 "rounded-xl overflow-hidden",
                 "shadow-2xl hover:shadow-3xl dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]",
                 "transform transition-all duration-300",
                 "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800 dark:hover:border-indigo-500/30",
-                "before:absolute before:inset-0 before:bg-gradient-to-br before:from-indigo-900/30 before:to-purple-900/30 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300"
+                "before:absolute before:inset-0 before:bg-gradient-to-br before:from-indigo-900/30 before:to-purple-900/30 before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-300",
               )}
             >
               <div className="p-6 relative z-10">
@@ -122,7 +135,7 @@ export const Certifications: React.FC = () => {
                     >
                       {cert.title}
                     </motion.h3>
-                    <motion.div 
+                    <motion.div
                       className="flex items-center gap-2"
                       whileHover={{ scale: 1.02 }}
                     >
@@ -131,7 +144,7 @@ export const Certifications: React.FC = () => {
                         {cert.organization}
                       </p>
                     </motion.div>
-                    <motion.p 
+                    <motion.p
                       className="text-purple-600 dark:text-purple-300 text-sm font-medium mt-1 flex items-center gap-1"
                       whileHover={{ scale: 1.05 }}
                     >
@@ -153,16 +166,17 @@ export const Certifications: React.FC = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.4 }}
                   >
-                    {cert.description.split('. ').map((line, i) => (
-                      line && (
-                        <div key={i} className="flex items-start gap-2">
-                          <Sparkle className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-1" />
-                          <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
-                            {line.trim()}.
-                          </p>
-                        </div>
-                      )
-                    ))}
+                    {cert.description.split(". ").map(
+                      (line, i) =>
+                        line && (
+                          <div key={i} className="flex items-start gap-2">
+                            <Sparkle className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-1" />
+                            <p className="text-gray-700 dark:text-gray-200 text-sm leading-relaxed">
+                              {line.trim()}.
+                            </p>
+                          </div>
+                        ),
+                    )}
                   </motion.div>
 
                   <div className="mb-4">
@@ -182,7 +196,7 @@ export const Certifications: React.FC = () => {
                             "text-blue-700 dark:text-blue-300",
                             "hover:bg-blue-200 dark:hover:bg-blue-900",
                             "border border-blue-200 dark:border-blue-800",
-                            "transition-colors duration-200"
+                            "transition-colors duration-200",
                           )}
                         >
                           # {skill}
@@ -198,7 +212,9 @@ export const Certifications: React.FC = () => {
                     >
                       <Award className="w-5 h-5 text-purple-600 dark:text-purple-300" />
                       <div>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">Credential ID</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Credential ID
+                        </p>
                         <p className="font-mono text-xs text-gray-800 dark:text-blue-300">
                           {cert.credentialId}
                         </p>
@@ -218,7 +234,7 @@ export const Certifications: React.FC = () => {
                       "rounded-lg hover:bg-blue-200 dark:hover:bg-blue-900",
                       "border border-blue-200 dark:border-blue-800",
                       "transition-all duration-300",
-                      "group/link relative overflow-hidden"
+                      "group/link relative overflow-hidden",
                     )}
                   >
                     <span className="relative z-10">Verify Credential</span>
@@ -237,11 +253,15 @@ export const Certifications: React.FC = () => {
           ))}
         </div>
       </div>
-      
+
       <style jsx global>{`
         @keyframes shine {
-          0% { transform: translateX(-100%) rotate(15deg); }
-          100% { transform: translateX(100%) rotate(15deg); }
+          0% {
+            transform: translateX(-100%) rotate(15deg);
+          }
+          100% {
+            transform: translateX(100%) rotate(15deg);
+          }
         }
         .animate-shine {
           animation: shine 1.5s infinite;

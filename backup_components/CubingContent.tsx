@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown, ChevronUp } from 'lucide-react';
-import type { CubingContent as CubingContentType } from '../types';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ChevronDown, ChevronUp } from "lucide-react";
+import type { CubingContent as CubingContentType } from "../types";
 
 const cubingContent: CubingContentType[] = [
   {
@@ -10,15 +10,17 @@ const cubingContent: CubingContentType[] = [
     description: "Quick 2x2 solve using Ortega method.",
     videoUrl: "",
     cubeType: "2x2 Cube",
-    solveTime: "3.21 seconds"
+    solveTime: "3.21 seconds",
   },
   {
     title: "3x3 Speed Solve",
-    image: "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=2048&auto=format&fit=crop",
-    description: "Personal best solve on the 3x3 Rubik's cube using CFOP method.",
+    image:
+      "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=2048&auto=format&fit=crop",
+    description:
+      "Personal best solve on the 3x3 Rubik's cube using CFOP method.",
     videoUrl: "https://www.youtube.com/embed/ERZ5y3xPcWw",
     cubeType: "3x3 Rubik's Cube",
-    solveTime: "10.45 seconds"
+    solveTime: "10.45 seconds",
   },
   {
     title: "4x4 Solve",
@@ -26,33 +28,36 @@ const cubingContent: CubingContentType[] = [
     description: "4x4 cube solve demonstration with Yau method.",
     videoUrl: "",
     cubeType: "4x4 Cube",
-    solveTime: "45.32 seconds"
+    solveTime: "45.32 seconds",
   },
- 
+
   {
     title: "5x5 Solve",
-    image: "https://plus.unsplash.com/premium_photo-1668736594225-55e292fdd95e?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image:
+      "https://plus.unsplash.com/premium_photo-1668736594225-55e292fdd95e?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     description: "5x5 cube solve with reduction method.",
     videoUrl: "",
     cubeType: "5x5 Cube",
-    solveTime: "1:45.67"
+    solveTime: "1:45.67",
   },
 ];
 
 export const CubingContent: React.FC = () => {
-  const [selectedCube, setSelectedCube] = useState<CubingContentType | null>(null);
+  const [selectedCube, setSelectedCube] = useState<CubingContentType | null>(
+    null,
+  );
   const [showAll, setShowAll] = useState(false);
-  
+
   const displayedContent = showAll ? cubingContent : cubingContent.slice(0, 3);
 
   const openModal = (cube: CubingContentType) => {
     setSelectedCube(cube);
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   };
 
   const closeModal = () => {
     setSelectedCube(null);
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 
   return (
@@ -86,37 +91,37 @@ export const CubingContent: React.FC = () => {
               key={index}
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ 
-                duration: 0.5, 
+              transition={{
+                duration: 0.5,
                 delay: index * 0.1,
-                type: 'spring',
+                type: "spring",
                 stiffness: 150,
-                damping: 15
+                damping: 15,
               }}
               onClick={() => openModal(cube)}
               className="group bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl cursor-pointer relative"
-              whileHover={{ 
+              whileHover={{
                 y: -8,
                 scale: 1.02,
-                transition: { duration: 0.3 }
+                transition: { duration: 0.3 },
               }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               <div className="aspect-video relative overflow-hidden">
                 <motion.img
                   src={cube.image}
                   alt={cube.title}
                   className="w-full h-full object-cover"
                   initial={{ scale: 1 }}
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.1,
-                    transition: { duration: 0.5, ease: "easeOut" }
+                    transition: { duration: 0.5, ease: "easeOut" },
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/30 to-transparent" />
               </div>
-              
+
               <div className="p-6 relative z-10">
                 <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
                   {cube.title}
@@ -128,8 +133,14 @@ export const CubingContent: React.FC = () => {
                   {cube.description}
                 </motion.p>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                  <span className="font-medium text-blue-500 dark:text-blue-400">Cube:</span> {cube.cubeType} <br />
-                  <span className="font-medium text-purple-500 dark:text-purple-400">Time:</span> {cube.solveTime}
+                  <span className="font-medium text-blue-500 dark:text-blue-400">
+                    Cube:
+                  </span>{" "}
+                  {cube.cubeType} <br />
+                  <span className="font-medium text-purple-500 dark:text-purple-400">
+                    Time:
+                  </span>{" "}
+                  {cube.solveTime}
                 </p>
               </div>
             </motion.div>
@@ -174,10 +185,10 @@ export const CubingContent: React.FC = () => {
                 initial={{ scale: 0.8, opacity: 0, rotate: -5 }}
                 animate={{ scale: 1, opacity: 1, rotate: 0 }}
                 exit={{ scale: 0.8, opacity: 0, rotate: 5 }}
-                transition={{ 
-                  type: 'spring', 
+                transition={{
+                  type: "spring",
                   stiffness: 300,
-                  damping: 20
+                  damping: 20,
                 }}
               >
                 <button
@@ -210,12 +221,20 @@ export const CubingContent: React.FC = () => {
                   </p>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="space-y-1">
-                      <p className="text-blue-500 dark:text-blue-400 font-medium">Cube Type</p>
-                      <p className="text-gray-600 dark:text-gray-400">{selectedCube.cubeType}</p>
+                      <p className="text-blue-500 dark:text-blue-400 font-medium">
+                        Cube Type
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {selectedCube.cubeType}
+                      </p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-purple-500 dark:text-purple-400 font-medium">Solve Time</p>
-                      <p className="text-gray-600 dark:text-gray-400">{selectedCube.solveTime}</p>
+                      <p className="text-purple-500 dark:text-purple-400 font-medium">
+                        Solve Time
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {selectedCube.solveTime}
+                      </p>
                     </div>
                   </div>
                 </div>

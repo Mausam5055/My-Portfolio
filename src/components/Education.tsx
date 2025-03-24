@@ -1305,8 +1305,8 @@ const getSubjectIcon = (iconName: string): React.ReactNode => {
     }
   })();
   return (
-    <div className="w-16 h-16 rounded-2xl bg-[#1e1b4b] dark:bg-[#1e1b4b] flex items-center justify-center">
-      <Icon className="w-8 h-8 text-blue-400" />
+    <div className="w-16 h-16 rounded-2xl bg-blue-100/80 dark:bg-[#1A1B4B] flex items-center justify-center shadow-sm">
+      <Icon className="w-8 h-8 text-blue-500 dark:text-blue-400" />
     </div>
   );
 };
@@ -1315,7 +1315,7 @@ const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-[#1e293b] bg-[#0f172a] transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
+    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-[#1e293b] bg-white dark:bg-[#0f172a] transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
       <div className="relative h-48 w-full">
         {!imageLoaded && <LoadingImageSkeleton className="absolute inset-0 h-full w-full" />}
         <img
@@ -1327,13 +1327,13 @@ const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
           )}
           onLoad={() => setImageLoaded(true)}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0f172a] to-transparent" />
       </div>
       <div className="p-6">
-        <h4 className="text-lg font-semibold text-white mb-2">
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
           {chapter.title}
         </h4>
-        <p className="text-gray-400 text-sm mb-4">
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
           {chapter.description}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -1343,7 +1343,7 @@ const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 text-blue-400 rounded-md hover:bg-blue-500/20 border border-blue-500/20 transition-colors duration-200 text-sm"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 transition-colors duration-200 text-sm"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -1376,22 +1376,24 @@ export const Education = () => {
     setCurrentPage(1);
   };
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = async (page: number) => {
     setIsLoading(true);
     setCurrentPage(page);
     
-    // Smooth scroll to the top of the chapters section
+    // Smooth scroll with offset to account for mobile headers/navigation
     if (chaptersRef.current) {
-      chaptersRef.current.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+      const yOffset = -100; // Offset to account for fixed headers
+      const y = chaptersRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
       });
     }
 
-    // Add a small delay to show loading state
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 300);
+    // Add a slight delay before showing new content for smoother transition
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setIsLoading(false);
   };
 
   const getPaginatedChapters = () => {
@@ -1408,7 +1410,7 @@ export const Education = () => {
   return (
     <section
       id="Journey"
-      className="py-20 bg-[#020817] relative overflow-hidden transition-colors duration-300"
+      className="py-20 bg-gray-50 dark:bg-[#020817] relative overflow-hidden transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {!selectedSubject ? (
@@ -1419,15 +1421,15 @@ export const Education = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-[#0f172a] rounded-xl p-8 cursor-pointer border border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
+                className="bg-white dark:bg-[#0f172a] rounded-xl p-8 cursor-pointer border border-gray-200 dark:border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
                 onClick={() => handleSubjectClick(subject)}
               >
                 <div className="flex flex-col items-center text-center">
                   {getSubjectIcon(subject.icon)}
-                  <h3 className="mt-6 text-2xl font-semibold text-white">
+                  <h3 className="mt-6 text-2xl font-semibold text-gray-900 dark:text-white">
                     {subject.name}
                   </h3>
-                  <p className="mt-2 text-gray-400 text-sm">
+                  <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
                     {subject.description}
                   </p>
                 </div>
@@ -1438,7 +1440,7 @@ export const Education = () => {
           <div>
             <motion.button
               onClick={handleBack}
-              className="mb-8 flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              className="mb-8 flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
               whileHover={{ x: -5 }}
             >
               <ArrowLeft className="w-5 h-5" />
@@ -1448,62 +1450,67 @@ export const Education = () => {
             <motion.h3
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-3xl font-bold text-white text-center mb-8"
+              className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8"
             >
               {selectedSubject.name}
             </motion.h3>
 
-            <div ref={chaptersRef}>
+            <div ref={chaptersRef} className="transition-all duration-300 ease-in-out">
               {isLoading ? (
                 <div className="min-h-[400px] flex items-center justify-center">
                   <LoadingSpinner />
                 </div>
               ) : (
-                <>
-                  <motion.div 
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentPage}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.3 }}
                   >
-                    {getPaginatedChapters().map((chapter, index) => (
-                      <motion.div
-                        key={chapter.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                      >
-                        <ChapterCard chapter={chapter} />
-                      </motion.div>
-                    ))}
-                  </motion.div>
-
-                  {totalPages > 1 && (
                     <motion.div 
-                      className="flex justify-center mt-8 space-x-2"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
+                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
                     >
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <motion.button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={cn(
-                            "px-4 py-2 rounded-md text-sm transition-all duration-200",
-                            currentPage === page
-                              ? "bg-blue-500 text-white"
-                              : "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20"
-                          )}
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                      {getPaginatedChapters().map((chapter, index) => (
+                        <motion.div
+                          key={chapter.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
                         >
-                          {page}
-                        </motion.button>
+                          <ChapterCard chapter={chapter} />
+                        </motion.div>
                       ))}
                     </motion.div>
-                  )}
-                </>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+
+              {totalPages > 1 && (
+                <motion.div 
+                  className="flex justify-center mt-8 space-x-2 overflow-x-auto px-4 py-2 -mx-4 sm:mx-0 sm:px-0"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <motion.button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={cn(
+                        "px-4 py-2 rounded-md text-sm transition-all duration-200 min-w-[40px]",
+                        currentPage === page
+                          ? "bg-blue-500 text-white"
+                          : "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20"
+                      )}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {page}
+                    </motion.button>
+                  ))}
+                </motion.div>
               )}
             </div>
           </div>

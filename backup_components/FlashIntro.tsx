@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const greetings = [
   { text: 'Namaste', lang: 'Hindi' },
@@ -20,21 +20,24 @@ interface FlashIntroProps {
 
 export default function FlashIntro({ onComplete }: FlashIntroProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isExiting, setIsExiting] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => {
         const next = prev + 1;
         if (next >= greetings.length) {
-          onComplete();
+          setIsExiting(true);
+          setTimeout(onComplete, 500); // Wait for exit animation
         }
         return next % greetings.length;
       });
-    }, 250); // Faster interval
+    }, 250);
 
     const timeout = setTimeout(() => {
-      onComplete();
-    }, 2500); // Shorter total duration
+      setIsExiting(true);
+      setTimeout(onComplete, 500); // Wait for exit animation
+    }, 2500);
 
     return () => {
       clearInterval(interval);
@@ -73,7 +76,7 @@ export default function FlashIntro({ onComplete }: FlashIntroProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 bg-gradient-to-br from-black to-gray-900 flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 bg-gradient-to-br from-black to-gray-900 flex flex-col items-center justify-center overflow-hidden z-50"
     >
       <div className="relative w-full h-48 flex items-center justify-center">
         <AnimatePresence mode="popLayout">

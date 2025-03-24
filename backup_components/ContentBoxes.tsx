@@ -225,13 +225,17 @@ export default function ContentBoxes({ refs }: { refs: any }) {
       </div>
 
       {/* Content Boxes Container */}
-      <div 
-        ref={containerRef} 
-        className="w-full overflow-x-auto scrollbar-hide scroll-snap-x scroll-snap-mandatory relative z-10"
-        onMouseEnter={() => setIsMouseOver(true)}
-        onMouseLeave={() => setIsMouseOver(false)}
-      >
-        <div className="flex gap-4 md:gap-6 px-4 md:px-8">
+      <div className="relative">
+        <div 
+          ref={containerRef}
+          className="flex gap-6 overflow-x-auto px-4 py-2 no-scrollbar"
+          style={{
+            scrollbarWidth: 'none',  /* Firefox */
+            msOverflowStyle: 'none'  /* IE and Edge */
+          }}
+          onMouseEnter={() => setIsMouseOver(true)}
+          onMouseLeave={() => setIsMouseOver(false)}
+        >
           <motion.div
             animate={{ x: [0, -10, 0] }}
             transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
@@ -283,8 +287,8 @@ export default function ContentBoxes({ refs }: { refs: any }) {
         </div>
       </div>
 
-      {/* Shine Animation */}
-      <style jsx global>{`
+      {/* Shine Animation and Scrollbar Hiding */}
+      <style>{`
         @keyframes shine {
           from {
             transform: translateX(-100%) rotate(45deg);
@@ -292,6 +296,17 @@ export default function ContentBoxes({ refs }: { refs: any }) {
           to {
             transform: translateX(100%) rotate(45deg);
           }
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
         }
       `}</style>
     </section>

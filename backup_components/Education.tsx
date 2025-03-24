@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Atom, TestTube, Calculator,Code, ArrowLeft, ExternalLink, } from 'lucide-react';
+import { LoadingSpinner } from './LoadingSpinner';
+import { Book, Atom, TestTube, Calculator, Code, ArrowLeft, ExternalLink } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Subject, Chapter } from '../types';
- 
+import { LoadingImageSkeleton } from './LoadingImageSkeleton';
 
 const subjects: Subject[] = [
   {
@@ -428,9 +429,10 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1661430659143-ffbb5ce2b6a7?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Introduction to chemistry fundamentals',
         driveLinks: [ 
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1A2ANXYBnStPGXEoBAGDwKJWdnkxFNL1J/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AAV88PjWeGRtYiJPVbLc61woAsx_8sxp/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AT7kwyEXzt5_ijJIYN8UNcNkx05gAtaN/view?usp=drive_link',
+          'https://drive.google.com/file/d/1B15sQAjDg6987mJEn9E2vkPGJya2BhJg/view?usp=drive_link'
         ]
       },
       {
@@ -439,9 +441,9 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1673892648202-2dbdc2a3a955?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Understanding atomic structure and models',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1HBV48aPViyb6CDYd9Ltd7c_NezKULelC/view?usp=drive_link',
+          'https://drive.google.com/file/d/1HRzOs_mWDvce2NgIL2J8VIzIROUAsDLU/view?usp=drive_link',
+          'https://drive.google.com/file/d/1RFLbCwHeOWNfVtpkjvBaiRJ_ARzH4kB7/view?usp=drive_link'
         ]
       },
       {
@@ -450,7 +452,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1627389955611-70c92a5d2e2b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of the periodic table and periodic trends',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/1LqiuEz3oPMabFwxQ-kTZwWbhv8-5xnl4/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -461,8 +463,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6',
         description: 'Understanding molecular structures',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/1LzaxedvWBK7K230UNJPfWRGgcDND9aya/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M7Vyc3BHa7omrK1wj9DsPKFvzNGSI07W/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -472,8 +474,8 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1720189952226-5d72d4b73554?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The properties and behaviors of gases and liquids',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/1eGLkzUkKbO2cOfDwW9xF06_JLggtpgaV/view?usp=drive_link',
+          'https://drive.google.com/file/d/1eHtK20843lYquIpLWvO1Iktg-pkmJpUS/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -483,9 +485,9 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1539186607619-df476afe6ff1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of heat, energy, and work',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1epTO60wsKrZXj6D8K8O-2EX0bvTiYg4S/view?usp=drive_link',
+          'https://drive.google.com/file/d/1fHl0jup82BsU6rElcJzcaVNXSeEHt-ZY/view?usp=drive_link',
+          'https://drive.google.com/file/d/1X_yiLmn9gBHt8-TMfjXJR9eKKt5OjhPD/view?usp=drive_link'
         ]
       },
       {
@@ -494,9 +496,70 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1433439216031-9571132ce719?q=80&w=2003&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1eCOxFBxnFEZNQ-LZLxdjKoCqJcB9-yVZ/view?usp=drive_link',
+          'https://drive.google.com/file/d/18BNnVwIf_1LVzgsKrn7hKxH7l2r5qnHY/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M9GfjB6J5fEzPmm12EgdSKMtb5gXt9ga/view?usp=drive_link',
+          'https://drive.google.com/file/d/1rRDqcayWoL7i7qinqM90X_pvll6W9Mb4/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'Solid State',
+        image: 'https://plus.unsplash.com/premium_photo-1671707015865-5460da84b32e?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1LF0x4qPIO2lRetXGXzmK2K7dhAbLwCcX/view?usp=drive_link',
+          'https://drive.google.com/file/d/12ZQZidIkjJ42tiAI_AKhSt768mYoCnXh/view?usp=drive_link',
+          'https://drive.google.com/file/d/12JRULMhnLP9SYc9--euNOpwLZVMkdhEJ/view?usp=drive_link',
+          'https://drive.google.com/file/d/119DTsoFLdZdSYZNDred9DVe9mNnfhb4d/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'Solutions',
+        image: 'https://images.unsplash.com/photo-1459802071246-377c0346da93?q=80&w=1795&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1LDTcpcOvAxZN7LOdkk4tmHE-jTFN3vUQ/view?usp=drive_link',
+          'https://drive.google.com/file/d/1eCOKIViJ70G7CS1JXtLjY_dOEmR2pftX/view?usp=drive_link',
+          ''
+        
+        ]
+      },     
+      {
+        id: 'chemistry-7',
+        title: 'Chemical Kinetics',
+        image: 'https://images.unsplash.com/photo-1643625757115-a712ca47a3af?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1g8JeN9F6z7nX-COx1uc4jJooS1gPYoac/view?usp=drive_link',
+          'https://drive.google.com/file/d/1ETVVALehPDVcFRscI5Xt8cN05stYfDOd/view?usp=drive_link',
+          'https://drive.google.com/file/d/1ljIw50cR9SgnvhiI93BYwZ378EZf9hvO/view?usp=drive_link'
+        
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'ElectroChemistry',
+        image: 'https://plus.unsplash.com/premium_photo-1675662138450-e76e39cc0ef9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1rlANKpOjy6WOUQIaEz3FJR4i1oLh5P6H/view?usp=drive_link',
+          'https://drive.google.com/file/d/1gHm2f4skPtOvO946lKo1VHfYtEoHzvF-/view?usp=drive_link',
+          ''
+        
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'SurfaceChemistry',
+        image: 'https://images.unsplash.com/photo-1451188214936-ec16af5ca155?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/15vz5nmVPLnN-RI9WdwX11gqjFefbsxXn/view?usp=drive_link',
+          '',
+          ''
+        
         ]
       },
       {
@@ -505,8 +568,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1532187643603-ba119ca4109e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of oxidation and reduction processes',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/18bsrGXgKY9ehNropm8NgWVvhxUbvmdW4/view?usp=drive_link',
+          'https://drive.google.com/file/d/1bxL6VIIMxbKahrUY3nPoKez1jekDO9r6/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -516,8 +579,8 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1673830981161-16872c70df8d?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The chemistry and uses of hydrogen',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/17w9TcUkEV4xkUiCADoZVrejpSuzgxDc5/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M7_9R0G7eGDiaT4JZIJfaM88f9saiwFp/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -527,7 +590,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1671068039583-ebbcfa1bc670?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alkali and alkaline earth metals',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/180mSdwTGTjMl18GMZ6LCBpFFRCc4jLBi/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -538,20 +601,33 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1668736594225-55e292fdd95e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHMlMjBibG9jayUyMGVsZW1lbnRzfGVufDB8fDB8fHww',
         description: 'Study of p-block elements and their chemistry',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/181IDw92m5S4eLDNJmwRCBAlfOwQg5l7X/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
       },
       {
         id: 'chemistry-12',
-        title: 'Hydrocarbons',
+        title: 'General Organic Chemitry-1',
         image: 'https://plus.unsplash.com/premium_photo-1715107534372-0711eae7153c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alkanes, alkenes, and alkynes',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1EcYSvzg1aeDGK48KTAb_4LisHFrPGtmb/view?usp=drive_link',
+          'https://drive.google.com/file/d/1EdL4_gZG7yXe7iRNpZxNjAIj3FnAMWVP/view?usp=drive_link',
+          'https://drive.google.com/file/d/1Humg-YcE0DOlRpzPV4h-qtGJoCJjomKT/view?usp=drive_link',
+          'https://drive.google.com/file/d/1STt6S8jDSpYIKi9qxKRhYD3OAklpLrc8/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-12',
+        title: 'General Organic Chemitry-2',
+        image: 'https://plus.unsplash.com/premium_photo-1715107534372-0711eae7153c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Study of alkanes, alkenes, and alkynes',
+        driveLinks:  [ // Changed to array
+          'https://drive.google.com/file/d/1EA_b6m1LvdIveykuWlSCpz17IeIKhcJe/view?usp=drive_link',
+          'https://drive.google.com/file/d/1DtvG1JSxt0yTGvhkNDEpQwQN-aPBcfyG/view?usp=drive_link',
+          'https://drive.google.com/file/d/1EKUc5PXAaIbOfTwaOX4R9qO0QVlpQKNx/view?usp=drive_link',
+          'https://drive.google.com/file/d/1E5NsOPhs69Ga46NuRyOsZGVIgvjMT04l/view?usp=drive_link'
         ]
       },
       {
@@ -560,7 +636,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1723244684626-5623fb0d8295?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The study of chemistry in the environment',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17qZXV9VSXULheutppz31wfBq4j4oNoRn/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -571,7 +647,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1700068553658-5bed4f670451?q=80&w=1925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of transition metals and inner transition elements',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17_FrzKsOs262d-vmFQ-LPOBztGS1BsKl/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -582,7 +658,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1562411052-105105232432?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of complex compounds formed by metals',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17Wt4ntDZVuSzgqcbho0A0ST4wTWZPnCQ/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -593,9 +669,9 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1663100641774-cb51237207c6?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Fundamental principles and techniques in organic chemistry',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1A4p-koLwoyPoSR07F00AnPLnTTq5mP2H/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AFcsW0cfYdToAFXiI36VwRWJ0aFBnpe4/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AGwqrdvIAYdG1bGtO-azfJAYmOEhXA6Y/view?usp=drive_link'
         ]
       },
       {
@@ -604,7 +680,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1531956656798-56686eeef3d4?q=80&w=2054&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of different types of hydrocarbons',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/18mhTAg5jOaEjDbC5Kd5AVJ_cN5tRqg8V/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -615,8 +691,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1534744971734-e1628d37ea01?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of halogenated organic compounds',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/18r8RC67yLrjtbLUVUBiyK-ceyv9x236V/view?usp=drive_link',
+          'https://drive.google.com/file/d/18pbwCGIDZgZy70WkQuK92XUOc-JNJfmT/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -626,7 +702,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alcohols, phenols, and ethers',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/19x26H9EOZU5jP1O3K9cCO29PC0CG_oyK/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -637,7 +713,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1631106321638-d94d9a8f3e1f?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of carbonyl compounds and carboxylic acids',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/1jiJGWVOtHfHp8M77eTBZGBwVPDqkhF2K/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -648,7 +724,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1653226539322-55de1cc336be?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of nitrogen-containing organic compounds',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/19y2yVPKeeHiTwWrQVQnxbyCHq0NOqjxw/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -659,7 +735,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1475906089153-644d9452ce87?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of biological molecules and their functions',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17TOgYSFI0t1aUdKjDMGLmiglSJ5vEr4p/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -670,7 +746,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1681505601897-5171f4baf000?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of macromolecules and their properties',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17bJgRlh7CTCbTU6UyOg1OGPvcpdHIfi5/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -1209,211 +1285,236 @@ const subjects: Subject[] = [
   // },
 ];
 
-const getSubjectIcon = (iconName) => {
-  switch (iconName) {
-    case 'Atom':
-      return Atom; // Ensure Atom is defined
-    case 'TestTube':
-      return TestTube; // Ensure TestTube is defined
-    case 'Calculator':
-      return Calculator; // Ensure Calculator is defined
-    case 'Code': // Adding an icon for coding
-      return Code; // Ensure Code is defined
-    default:
-      return Book; // Ensure Book is defined
-  }
+const ITEMS_PER_PAGE = 8;
+
+const getSubjectIcon = (iconName: string): React.ReactNode => {
+  const Icon = (() => {
+    switch (iconName) {
+      case 'Book':
+        return Book;
+      case 'Atom':
+        return Atom;
+      case 'TestTube':
+        return TestTube;
+      case 'Calculator':
+        return Calculator;
+      case 'Code':
+        return Code;
+      default:
+        return Book;
+    }
+  })();
+  return (
+    <div className="w-16 h-16 rounded-2xl bg-blue-100/80 dark:bg-[#1A1B4B] flex items-center justify-center shadow-sm">
+      <Icon className="w-8 h-8 text-blue-500 dark:text-blue-400" />
+    </div>
+  );
 };
 
+const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-gray-200 dark:border-[#1e293b] bg-white dark:bg-[#0f172a] transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
+      <div className="relative h-48 w-full">
+        {!imageLoaded && <LoadingImageSkeleton className="absolute inset-0 h-full w-full" />}
+        <img
+          src={chapter.image}
+          alt={chapter.title}
+          className={cn(
+            "h-full w-full object-cover transition-opacity duration-300",
+            imageLoaded ? "opacity-100" : "opacity-0"
+          )}
+          onLoad={() => setImageLoaded(true)}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0f172a] to-transparent" />
+      </div>
+      <div className="p-6">
+        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+          {chapter.title}
+        </h4>
+        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+          {chapter.description}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {chapter.driveLinks?.map((link, index) => (
+            <motion.a
+              key={index}
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-md hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20 transition-colors duration-200 text-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Part {index + 1}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const Education = () => {
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const chaptersRef = useRef<HTMLDivElement>(null);
 
-  const handleSubjectClick = (subject) => {
+  const handleSubjectClick = async (subject: Subject) => {
+    setIsLoading(true);
     setSelectedSubject(subject);
+    setCurrentPage(1);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setIsLoading(false);
   };
 
   const handleBack = () => {
     setSelectedSubject(null);
+    setCurrentPage(1);
   };
+
+  const handlePageChange = async (page: number) => {
+    setIsLoading(true);
+    setCurrentPage(page);
+    
+    // Smooth scroll with offset to account for mobile headers/navigation
+    if (chaptersRef.current) {
+      const yOffset = -100; // Offset to account for fixed headers
+      const y = chaptersRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      
+      window.scrollTo({
+        top: y,
+        behavior: 'smooth'
+      });
+    }
+
+    // Add a slight delay before showing new content for smoother transition
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setIsLoading(false);
+  };
+
+  const getPaginatedChapters = () => {
+    if (!selectedSubject) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return selectedSubject.chapters.slice(startIndex, endIndex);
+  };
+
+  const totalPages = selectedSubject 
+    ? Math.ceil(selectedSubject.chapters.length / ITEMS_PER_PAGE) 
+    : 0;
 
   return (
     <section
-  id="Journey"
-  className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
-  style={{
-    backgroundColor: "rgba(255, 255, 204, 0.05)" // Light yellow accent in light theme
-  }}
->
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-16 text-center space-y-4"
-        >
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-4xl md:text-5xl font-bold text-black dark:text-white"
-          >
-            Academic Resources
-          </motion.h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "200px" }}
-            transition={{ duration: 0.8 }}
-            className="h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"
-          />
-        </motion.div>
-
-        <AnimatePresence mode="wait">
-          {!selectedSubject ? (
-            <motion.div
-              key="subjects"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {subjects.map((subject, index) => {
-                const Icon = getSubjectIcon(subject.icon);
-                return (
-                  <motion.div
-                    key={subject.id}
-                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    whileHover={{ y: -10, scale: 1.02 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                    onClick={() => handleSubjectClick(subject)}
-                    className={cn(
-                      "group relative bg-white dark:bg-gray-900",
-                      "rounded-2xl p-8 cursor-pointer",
-                      "shadow-2xl hover:shadow-3xl dark:hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)]",
-                      "transform transition-all duration-300",
-                      "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800",
-                      "before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/10 before:to-purple-500/10 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300"
-                    )}
-                  >
-                    <div className="relative z-10">
-                      <motion.div
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 flex items-center justify-center mx-auto mb-6 shadow-lg"
-                      >
-                        <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-2">
-                        {subject.name}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-center">
-                        {subject.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="chapters"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-8"
-            >
-              <motion.button
-                whileHover={{ x: -5 }}
-                onClick={handleBack}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2",
-                  "text-blue-400 hover:text-blue-300",
-                  "transition-colors duration-200"
-                )}
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span className="font-semibold">Back to Subjects</span>
-              </motion.button>
-
-              <motion.h3
+      id="Journey"
+      className="py-20 bg-gray-50 dark:bg-[#020817] relative overflow-hidden transition-colors duration-300"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {!selectedSubject ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {subjects.map((subject) => (
+              <motion.div
+                key={subject.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-3xl font-bold text-black dark:text-white text-center"
+                whileHover={{ scale: 1.02 }}
+                className="bg-white dark:bg-[#0f172a] rounded-xl p-8 cursor-pointer border border-gray-200 dark:border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
+                onClick={() => handleSubjectClick(subject)}
               >
-                {selectedSubject.name} 
-              </motion.h3>
+                <div className="flex flex-col items-center text-center">
+                  {getSubjectIcon(subject.icon)}
+                  <h3 className="mt-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                    {subject.name}
+                  </h3>
+                  <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                    {subject.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <motion.button
+              onClick={handleBack}
+              className="mb-8 flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              whileHover={{ x: -5 }}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Subjects</span>
+            </motion.button>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {selectedSubject.chapters.map((chapter, index) => (
+            <motion.h3
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold text-gray-900 dark:text-white text-center mb-8"
+            >
+              {selectedSubject.name}
+            </motion.h3>
+
+            <div ref={chaptersRef} className="transition-all duration-300 ease-in-out">
+              {isLoading ? (
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <AnimatePresence mode="wait">
                   <motion.div
-                    key={chapter.id}
-                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    whileHover={{ y: -10, scale: 1.02 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                    className={cn(
-                      "group relative bg-white dark:bg-gray-900",
-                      "rounded-2xl overflow-hidden",
-                      "shadow-xl hover:shadow-2xl dark:hover:shadow-[0_8px_30px_rgba(59,130,246,0.1)]",
-                      "transform transition-all duration-300",
-                      "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800"
-                    )}
+                    key={currentPage}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="relative h-48 overflow-hidden">
-                      <motion.img
-                        src={chapter.image}
-                        alt={chapter.title}
-                        className="w-full h-full object-cover"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-blue-900/20 to-transparent" />
-                    </div>
-                    <div className="p-6">
-                      <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                        {chapter.title}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {chapter.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {chapter.driveLinks?.length > 0 ? (
-                          chapter.driveLinks.map((link, partIndex) => (
-                            <motion.a
-                              key={partIndex}
-                              whileHover={{ x: 5 }}
-                              whileTap={{ scale: 0.95 }}
-                              href={link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={cn(
-                                "inline-flex items-center gap-2 px-3 py-1.5",
-                                "bg-blue-100 dark:bg-blue-900/30",
-                                "text-blue-700 dark:text-blue-400",
-                                "rounded-md hover:bg-blue-200 dark:hover:bg-blue-900/50",
-                                "border border-blue-200 dark:border-blue-800",
-                                "transition-colors duration-200",
-                                "text-sm"
-                              )}
-                            >
-                              <span>Part {partIndex + 1}</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </motion.a>
-                          ))
-                        ) : (
-                          <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Coming Soon
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    <motion.div 
+                      className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    >
+                      {getPaginatedChapters().map((chapter, index) => (
+                        <motion.div
+                          key={chapter.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <ChapterCard chapter={chapter} />
+                        </motion.div>
+                      ))}
+                    </motion.div>
                   </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                </AnimatePresence>
+              )}
+
+              {totalPages > 1 && (
+                <motion.div 
+                  className="flex justify-center mt-8 space-x-2 overflow-x-auto px-4 py-2 -mx-4 sm:mx-0 sm:px-0"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <motion.button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={cn(
+                        "px-4 py-2 rounded-md text-sm transition-all duration-200 min-w-[40px]",
+                        currentPage === page
+                          ? "bg-blue-500 text-white"
+                          : "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20 border border-blue-200 dark:border-blue-500/20"
+                      )}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {page}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
 const projects = [
   {
@@ -105,9 +106,12 @@ export const Projects: React.FC = () => {
                 />
               </div>
 
-              <h3 className="text-xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">
+              <motion.h3 
+                className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent"
+                whileHover={{ scale: 1.05 }}
+              >
                 {project.name}
-              </h3>
+              </motion.h3>
               
               <p className="text-black dark:text-gray-300 mb-4 text-sm leading-relaxed">
                 {project.description}
@@ -123,12 +127,22 @@ export const Projects: React.FC = () => {
                     <motion.div
                       initial={{ scaleX: 0 }}
                       whileInView={{ scaleX: 1 }}
-                      transition={{ delay: 0.2 }}
+                      transition={{ 
+                        delay: 0.2,
+                        duration: 1.2,
+                        ease: "easeOut"
+                      }}
                       className="h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden"
                     >
-                      <div
+                      <motion.div
+                        initial={{ width: "0%" }}
+                        whileInView={{ width: `${tech.percentage}%` }}
+                        transition={{
+                          duration: 1.5,
+                          ease: [0.34, 1.56, 0.64, 1],
+                          delay: 0.3
+                        }}
                         className="h-full bg-gradient-to-r from-green-400 to-emerald-600 rounded-full"
-                        style={{ width: `${tech.percentage}%` }}
                       />
                     </motion.div>
                   </div>
@@ -145,16 +159,18 @@ export const Projects: React.FC = () => {
                   href={project.github} 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 text-center py-2 px-4 text-sm font-medium rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+                  className="flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
                 >
+                  <FaGithub className="text-lg" />
                   GitHub
                 </a>
                 <a 
                   href={project.liveDemo} 
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 text-center py-2 px-4 text-sm font-medium rounded-lg border border-blue-500 text-blue-500 hover:bg-blue-500/10 dark:hover:bg-blue-500/20 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
+                  className="flex-1 flex items-center justify-center gap-2 py-2 px-4 text-sm font-medium rounded-lg border border-blue-500 text-blue-500 hover:bg-blue-500/10 dark:hover:bg-blue-500/20 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
                 >
+                  <FaExternalLinkAlt className="text-lg" />
                   Live Demo
                 </a>
               </motion.div>
@@ -174,7 +190,7 @@ export const Projects: React.FC = () => {
                     <img 
                       src={contributor.profilePic} 
                       alt={contributor.name} 
-                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 hover:border-blue-400 transition-all duration-300" 
+                      className="w-8 h-8 rounded-full border-2 border-white dark:border-gray-800 hover:border-blue-400 transition-all duration-300 transform hover:scale-110 hover:shadow-lg" 
                     />
                     <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {contributor.name}

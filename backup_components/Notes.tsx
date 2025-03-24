@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Book } from 'lucide-react';
-import { cn } from '../lib/utils';
-import type { EducationalNote } from '../types';
+import React from "react";
+import { motion } from "framer-motion";
+import { Book } from "lucide-react";
+import { cn } from "../lib/utils";
+import type { EducationalNote } from "../types";
 
 const educationalNotes: EducationalNote[] = [
   {
@@ -12,15 +12,15 @@ const educationalNotes: EducationalNote[] = [
         title: "Classical Mechanics",
         description: "Understanding Newton's laws and their applications",
         image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb",
-        driveLink: "https://drive.google.com/example1"
+        driveLink: "https://drive.google.com/example1",
       },
       {
         title: "Thermodynamics",
         description: "Heat, energy, and their transformations",
         image: "https://images.unsplash.com/photo-1612178537253-bccd437b730e",
-        driveLink: "https://drive.google.com/example2"
-      }
-    ]
+        driveLink: "https://drive.google.com/example2",
+      },
+    ],
   },
   {
     subject: "Chemistry",
@@ -29,15 +29,15 @@ const educationalNotes: EducationalNote[] = [
         title: "Organic Chemistry",
         description: "Study of carbon-based compounds",
         image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69",
-        driveLink: "https://drive.google.com/example3"
+        driveLink: "https://drive.google.com/example3",
       },
       {
         title: "Chemical Bonding",
         description: "Understanding molecular structures",
         image: "https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6",
-        driveLink: "https://drive.google.com/example4"
-      }
-    ]
+        driveLink: "https://drive.google.com/example4",
+      },
+    ],
   },
   {
     subject: "Mathematics",
@@ -46,16 +46,16 @@ const educationalNotes: EducationalNote[] = [
         title: "Calculus",
         description: "Derivatives and integrals",
         image: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb",
-        driveLink: "https://drive.google.com/example5"
+        driveLink: "https://drive.google.com/example5",
       },
       {
         title: "Linear Algebra",
         description: "Matrices and vector spaces",
         image: "https://images.unsplash.com/photo-1509228468518-180dd4864904",
-        driveLink: "https://drive.google.com/example6"
-      }
-    ]
-  }
+        driveLink: "https://drive.google.com/example6",
+      },
+    ],
+  },
 ];
 
 export const Notes: React.FC = () => {
@@ -83,7 +83,7 @@ export const Notes: React.FC = () => {
                 "bg-white dark:bg-gray-900",
                 "rounded-lg overflow-hidden",
                 "shadow-lg hover:shadow-xl",
-                "transform transition-all duration-300"
+                "transform transition-all duration-300",
               )}
             >
               <div className="p-6">
@@ -106,11 +106,13 @@ export const Notes: React.FC = () => {
                           alt={chapter.title}
                           className="w-full h-full object-cover"
                         />
-                        <div className={cn(
-                          "absolute inset-0 bg-black/0 group-hover:bg-black/40",
-                          "flex items-center justify-center",
-                          "transition-all duration-200"
-                        )}>
+                        <div
+                          className={cn(
+                            "absolute inset-0 bg-black/0 group-hover:bg-black/40",
+                            "flex items-center justify-center",
+                            "transition-all duration-200",
+                          )}
+                        >
                           <Book
                             size={40}
                             className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200"

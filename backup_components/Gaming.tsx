@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '../lib/utils';
-import ReactMarkdown from 'react-markdown';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { cn } from "../lib/utils";
+import ReactMarkdown from "react-markdown";
 
 type GamingPost = {
   id: string;
@@ -17,11 +17,13 @@ type GamingPost = {
 
 const gamingPosts: GamingPost[] = [
   {
-    id: '1',
-    title: 'Spider-Man: Miles Morales – Ultimate Web-Swinging Experience',
-    image: 'https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.youtube.com/embed/26QPeXoWzLM',
-    excerpt: 'Watch my thrilling gameplay of Spider-Man: Miles Morales with epic web-swinging and combat!',
+    id: "1",
+    title: "Spider-Man: Miles Morales – Ultimate Web-Swinging Experience",
+    image:
+      "https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&q=80&w=800",
+    videoUrl: "https://www.youtube.com/embed/26QPeXoWzLM",
+    excerpt:
+      "Watch my thrilling gameplay of Spider-Man: Miles Morales with epic web-swinging and combat!",
     content: `
     Spider-Man: Miles Morales –  
     Ultimate Web-Swinging 
@@ -45,15 +47,17 @@ const gamingPosts: GamingPost[] = [
     saves the city, and embraces his 
     role as Spider-Man! 🕷️🔥
     `,
-    date: '2024-03-20',
-    author: 'Mausam Kar'
+    date: "2024-03-20",
+    author: "Mausam Kar",
   },
   {
-    id: '2',
-    title: 'BGMI – Intense Battle Royale Action',
-    image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.youtube.com/embed/W5ueSz1I9cY',
-    excerpt: 'Epic BGMI gameplay showcasing intense gunfights and survival tactics!',
+    id: "2",
+    title: "BGMI – Intense Battle Royale Action",
+    image:
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
+    videoUrl: "https://www.youtube.com/embed/W5ueSz1I9cY",
+    excerpt:
+      "Epic BGMI gameplay showcasing intense gunfights and survival tactics!",
     content: `
     BGMI – Battlegrounds Mobile 
            India Gameplay
@@ -73,15 +77,17 @@ const gamingPosts: GamingPost[] = [
     on enemies, explore maps, and push 
     for victory! 🎯🔥
     `,
-    date: '2024-03-18',
-    author: 'Mausam Kar'
+    date: "2024-03-18",
+    author: "Mausam Kar",
   },
   {
-    id: '3',
-    title: 'Asphalt 9: Legends – High-Speed Racing Action',
-    image: 'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800',
-    videoUrl: 'https://www.youtube.com/embed/diznkP7_iEo',
-    excerpt: 'Experience the adrenaline rush of Asphalt 9: Legends with breathtaking races and stunning visuals!',
+    id: "3",
+    title: "Asphalt 9: Legends – High-Speed Racing Action",
+    image:
+      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800",
+    videoUrl: "https://www.youtube.com/embed/diznkP7_iEo",
+    excerpt:
+      "Experience the adrenaline rush of Asphalt 9: Legends with breathtaking races and stunning visuals!",
     content: `
     Asphalt 9: Legends – Ultimate 
                Racing Experience
@@ -103,15 +109,15 @@ const gamingPosts: GamingPost[] = [
     exciting tracks, pulling off epic 
     drifts and securing first place! 🏎️🔥
     `,
-    date: '2024-03-15',
-    author: 'Mausam Kar'
-  }
+    date: "2024-03-15",
+    author: "Mausam Kar",
+  },
 ];
 
 export const Gaming: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<GamingPost | null>(null);
   const [showAll, setShowAll] = useState(false);
-  
+
   const displayedPosts = showAll ? gamingPosts : gamingPosts.slice(0, 3);
 
   return (
@@ -119,7 +125,7 @@ export const Gaming: React.FC = () => {
       id="gaming"
       className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
       style={{
-        backgroundColor: "rgba(255, 255, 204, 0.2)"
+        backgroundColor: "rgba(255, 255, 204, 0.2)",
       }}
     >
       <div className="container mx-auto px-4">
@@ -152,25 +158,25 @@ export const Gaming: React.FC = () => {
               initial={{ opacity: 0, y: 20, rotateX: -10 }}
               whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
               viewport={{ once: true }}
-              transition={{ type: 'spring', stiffness: 100 }}
+              transition={{ type: "spring", stiffness: 100 }}
               className={cn(
                 "bg-white/90 dark:bg-gray-900/80 backdrop-blur-sm",
                 "aspect-square rounded-xl overflow-hidden",
                 "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
                 "transform transition-all duration-300",
                 "border border-white/20 dark:border-gray-700/50",
-                "group relative cursor-pointer z-10"
+                "group relative cursor-pointer z-10",
               )}
               onClick={() => setSelectedPost(post)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               <div className="h-full w-full overflow-hidden relative">
                 <motion.div
                   className="h-full"
                   initial={{ scale: 1 }}
                   whileHover={{ scale: 1.05 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 10 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
                 >
                   <img
                     src={post.image}
@@ -180,7 +186,7 @@ export const Gaming: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </motion.div>
               </div>
-              
+
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/60 to-transparent">
                 <h3 className="text-xl font-semibold text-white mb-2">
                   {post.title}
@@ -194,14 +200,14 @@ export const Gaming: React.FC = () => {
                     "text-blue-400 font-medium",
                     "hover:text-blue-300",
                     "transition-colors duration-300",
-                    "group/link relative flex items-center gap-2"
+                    "group/link relative flex items-center gap-2",
                   )}
                 >
                   <span className="relative z-10">Watch Gameplay</span>
                   <motion.span
                     className="inline-block"
                     whileHover={{ rotate: 45 }}
-                    transition={{ type: 'spring' }}
+                    transition={{ type: "spring" }}
                   >
                     <X size={18} className="transform rotate-45" />
                   </motion.span>
@@ -302,7 +308,9 @@ export const Gaming: React.FC = () => {
                         ),
                         li: ({ children }) => (
                           <li className="relative pl-6 mb-2 text-gray-700 dark:text-gray-300 break-words">
-                            <span className="absolute left-0 text-blue-500">•</span>
+                            <span className="absolute left-0 text-blue-500">
+                              •
+                            </span>
                             <span className="text-base leading-relaxed">
                               {children}
                             </span>
@@ -325,8 +333,13 @@ export const Gaming: React.FC = () => {
 
       <style jsx global>{`
         @keyframes pulse-slow {
-          0%, 100% { opacity: 0.1; }
-          50% { opacity: 0.2; }
+          0%,
+          100% {
+            opacity: 0.1;
+          }
+          50% {
+            opacity: 0.2;
+          }
         }
         .animate-pulse-slow {
           animation: pulse-slow 6s ease-in-out infinite;

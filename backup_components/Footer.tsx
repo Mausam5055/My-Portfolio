@@ -1,13 +1,16 @@
-import React from 'react';
-import { Github, Linkedin, Twitter, Mail } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { Github, Linkedin, Twitter, Mail } from "lucide-react";
+import { motion } from "framer-motion";
 
 const socialLinks = [
-  { icon: Github, href: 'https://github.com/Mausam5055', label: 'GitHub' },
-  { icon: Linkedin, href: 'https://www.linkedin.com/in/mausam-kar-6388861a7/', label: 'LinkedIn' },
-  { icon: Twitter, href: 'https://x.com/kar_mausam', label: 'Twitter' },
-  { icon: Mail, href: 'rikikumkar@gmail.com', label: 'Email' },
-  
+  { icon: Github, href: "https://github.com/Mausam5055", label: "GitHub" },
+  {
+    icon: Linkedin,
+    href: "https://www.linkedin.com/in/mausam-kar-6388861a7/",
+    label: "LinkedIn",
+  },
+  { icon: Twitter, href: "https://x.com/kar_mausam", label: "Twitter" },
+  { icon: Mail, href: "rikikumkar@gmail.com", label: "Email" },
 ];
 
 export const Footer: React.FC = () => {
@@ -47,5 +50,3 @@ export const Footer: React.FC = () => {
     </footer>
   );
 };
-
-

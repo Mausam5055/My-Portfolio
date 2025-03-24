@@ -1,14 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '../lib/utils';
+import React from "react";
+import { motion } from "framer-motion";
+import { cn } from "../lib/utils";
 
 export const About: React.FC = () => {
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       className="py-20 relative overflow-hidden bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] transition-colors duration-300"
       style={{
-        backgroundColor: "rgba(255, 255, 204, 0.05)" // Light yellow accent to match Journey
+        backgroundColor: "rgba(255, 255, 204, 0.05)", // Light yellow accent to match Journey
       }}
     >
       <div className="container mx-auto px-4">
@@ -22,17 +22,17 @@ export const About: React.FC = () => {
                 opacity: [0, 0.3, 0],
                 scale: [0, 1, 0],
                 x: Math.random() * 200 - 100,
-                y: Math.random() * 200 - 100
+                y: Math.random() * 200 - 100,
               }}
               transition={{
                 duration: 4 + Math.random() * 4,
                 repeat: Infinity,
-                ease: "easeInOut"
+                ease: "easeInOut",
               }}
               className="absolute w-48 h-48 bg-gradient-to-br from-blue-400/10 to-purple-500/10 rounded-full blur-xl"
               style={{
                 top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`
+                left: `${Math.random() * 100}%`,
               }}
             />
           ))}
@@ -86,7 +86,17 @@ export const About: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="text-gray-700 dark:text-gray-300 text-lg mb-8 text-center leading-relaxed"
               >
-                Hello! I'm <span className="font-semibold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">Mausam Kar</span>, a passionate first-year B.Tech student specializing in <span className="italic text-purple-600 dark:text-purple-400">Computer Science & AI/ML</span> at VIT Bhopal. Hailing from Assam, my academic journey began at Saint Vianney High School and continued at Ramanuj Gupta Junior College.
+                Hello! I'm{" "}
+                <span className="font-semibold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
+                  Mausam Kar
+                </span>
+                , a passionate first-year B.Tech student specializing in{" "}
+                <span className="italic text-purple-600 dark:text-purple-400">
+                  Computer Science & AI/ML
+                </span>{" "}
+                at VIT Bhopal. Hailing from Assam, my academic journey began at
+                Saint Vianney High School and continued at Ramanuj Gupta Junior
+                College.
               </motion.p>
 
               {/* Animated Underline for Interests */}
@@ -107,7 +117,21 @@ export const About: React.FC = () => {
                 transition={{ delay: 0.4 }}
                 className="text-gray-700 dark:text-gray-300 text-lg text-center leading-relaxed"
               >
-                When I'm not <span className="text-blue-600 dark:text-blue-400">coding</span>, I'm either refining my <span className="text-purple-600 dark:text-purple-400">gaming skills</span> or exploring <span className="italic text-pink-600 dark:text-pink-400">creative technologies</span>. Let's collaborate and create something <span className="underline decoration-wavy decoration-purple-500">extraordinary</span>!
+                When I'm not{" "}
+                <span className="text-blue-600 dark:text-blue-400">coding</span>
+                , I'm either refining my{" "}
+                <span className="text-purple-600 dark:text-purple-400">
+                  gaming skills
+                </span>{" "}
+                or exploring{" "}
+                <span className="italic text-pink-600 dark:text-pink-400">
+                  creative technologies
+                </span>
+                . Let's collaborate and create something{" "}
+                <span className="underline decoration-wavy decoration-purple-500">
+                  extraordinary
+                </span>
+                !
               </motion.p>
             </motion.div>
           </div>
