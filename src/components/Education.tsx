@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Book, Atom, TestTube, Calculator,Code, ArrowLeft, ExternalLink, } from 'lucide-react';
+import { LoadingSpinner } from './LoadingSpinner';
+import { Book, Atom, TestTube, Calculator, Code, ArrowLeft, ExternalLink } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { Subject, Chapter } from '../types';
- 
+import { LoadingImageSkeleton } from './LoadingImageSkeleton';
 
 const subjects: Subject[] = [
   {
@@ -1284,211 +1285,229 @@ const subjects: Subject[] = [
   // },
 ];
 
-const getSubjectIcon = (iconName) => {
-  switch (iconName) {
-    case 'Atom':
-      return Atom; // Ensure Atom is defined
-    case 'TestTube':
-      return TestTube; // Ensure TestTube is defined
-    case 'Calculator':
-      return Calculator; // Ensure Calculator is defined
-    case 'Code': // Adding an icon for coding
-      return Code; // Ensure Code is defined
-    default:
-      return Book; // Ensure Book is defined
-  }
+const ITEMS_PER_PAGE = 8;
+
+const getSubjectIcon = (iconName: string): React.ReactNode => {
+  const Icon = (() => {
+    switch (iconName) {
+      case 'Book':
+        return Book;
+      case 'Atom':
+        return Atom;
+      case 'TestTube':
+        return TestTube;
+      case 'Calculator':
+        return Calculator;
+      case 'Code':
+        return Code;
+      default:
+        return Book;
+    }
+  })();
+  return (
+    <div className="w-16 h-16 rounded-2xl bg-[#1e1b4b] dark:bg-[#1e1b4b] flex items-center justify-center">
+      <Icon className="w-8 h-8 text-blue-400" />
+    </div>
+  );
 };
 
+const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  return (
+    <div className="relative overflow-hidden rounded-xl border border-[#1e293b] bg-[#0f172a] transition-all duration-300 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/10">
+      <div className="relative h-48 w-full">
+        {!imageLoaded && <LoadingImageSkeleton className="absolute inset-0 h-full w-full" />}
+        <img
+          src={chapter.image}
+          alt={chapter.title}
+          className={cn(
+            "h-full w-full object-cover transition-opacity duration-300",
+            imageLoaded ? "opacity-100" : "opacity-0"
+          )}
+          onLoad={() => setImageLoaded(true)}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] to-transparent" />
+      </div>
+      <div className="p-6">
+        <h4 className="text-lg font-semibold text-white mb-2">
+          {chapter.title}
+        </h4>
+        <p className="text-gray-400 text-sm mb-4">
+          {chapter.description}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {chapter.driveLinks?.map((link, index) => (
+            <motion.a
+              key={index}
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 text-blue-400 rounded-md hover:bg-blue-500/20 border border-blue-500/20 transition-colors duration-200 text-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span>Part {index + 1}</span>
+              <ExternalLink className="w-3.5 h-3.5" />
+            </motion.a>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export const Education = () => {
-  const [selectedSubject, setSelectedSubject] = useState(null);
+  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const chaptersRef = useRef<HTMLDivElement>(null);
 
-  const handleSubjectClick = (subject) => {
+  const handleSubjectClick = async (subject: Subject) => {
+    setIsLoading(true);
     setSelectedSubject(subject);
+    setCurrentPage(1);
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setIsLoading(false);
   };
 
   const handleBack = () => {
     setSelectedSubject(null);
+    setCurrentPage(1);
   };
+
+  const handlePageChange = (page: number) => {
+    setIsLoading(true);
+    setCurrentPage(page);
+    
+    // Smooth scroll to the top of the chapters section
+    if (chaptersRef.current) {
+      chaptersRef.current.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    // Add a small delay to show loading state
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 300);
+  };
+
+  const getPaginatedChapters = () => {
+    if (!selectedSubject) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return selectedSubject.chapters.slice(startIndex, endIndex);
+  };
+
+  const totalPages = selectedSubject 
+    ? Math.ceil(selectedSubject.chapters.length / ITEMS_PER_PAGE) 
+    : 0;
 
   return (
     <section
-  id="Journey"
-  className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
-  style={{
-    backgroundColor: "rgba(255, 255, 204, 0.05)" // Light yellow accent in light theme
-  }}
->
-      <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-16 text-center space-y-4"
-        >
-          <motion.h2
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            className="text-4xl md:text-5xl font-bold text-black dark:text-white"
-          >
-            Academic Resources
-          </motion.h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "200px" }}
-            transition={{ duration: 0.8 }}
-            className="h-1 bg-gradient-to-r from-blue-500 to-purple-600 mx-auto rounded-full"
-          />
-        </motion.div>
-
-        <AnimatePresence mode="wait">
-          {!selectedSubject ? (
-            <motion.div
-              key="subjects"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {subjects.map((subject, index) => {
-                const Icon = getSubjectIcon(subject.icon);
-                return (
-                  <motion.div
-                    key={subject.id}
-                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    whileHover={{ y: -10, scale: 1.02 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                    onClick={() => handleSubjectClick(subject)}
-                    className={cn(
-                      "group relative bg-white dark:bg-gray-900",
-                      "rounded-2xl p-8 cursor-pointer",
-                      "shadow-2xl hover:shadow-3xl dark:hover:shadow-[0_8px_30px_rgba(59,130,246,0.15)]",
-                      "transform transition-all duration-300",
-                      "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800",
-                      "before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/10 before:to-purple-500/10 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300"
-                    )}
-                  >
-                    <div className="relative z-10">
-                      <motion.div
-                        whileHover={{ scale: 1.1, rotate: 5 }}
-                        className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/50 dark:to-purple-900/50 flex items-center justify-center mx-auto mb-6 shadow-lg"
-                      >
-                        <Icon className="w-8 h-8 text-blue-600 dark:text-blue-400" />
-                      </motion.div>
-                      <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-2">
-                        {subject.name}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 text-center">
-                        {subject.description}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="chapters"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="space-y-8"
-            >
-              <motion.button
-                whileHover={{ x: -5 }}
-                onClick={handleBack}
-                className={cn(
-                  "flex items-center gap-2 px-4 py-2",
-                  "text-blue-400 hover:text-blue-300",
-                  "transition-colors duration-200"
-                )}
-              >
-                <ArrowLeft className="w-5 h-5" />
-                <span className="font-semibold">Back to Subjects</span>
-              </motion.button>
-
-              <motion.h3
+      id="Journey"
+      className="py-20 bg-[#020817] relative overflow-hidden transition-colors duration-300"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {!selectedSubject ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {subjects.map((subject) => (
+              <motion.div
+                key={subject.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-3xl font-bold text-black dark:text-white text-center"
+                whileHover={{ scale: 1.02 }}
+                className="bg-[#0f172a] rounded-xl p-8 cursor-pointer border border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
+                onClick={() => handleSubjectClick(subject)}
               >
-                {selectedSubject.name} 
-              </motion.h3>
+                <div className="flex flex-col items-center text-center">
+                  {getSubjectIcon(subject.icon)}
+                  <h3 className="mt-6 text-2xl font-semibold text-white">
+                    {subject.name}
+                  </h3>
+                  <p className="mt-2 text-gray-400 text-sm">
+                    {subject.description}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <motion.button
+              onClick={handleBack}
+              className="mb-8 flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              whileHover={{ x: -5 }}
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Subjects</span>
+            </motion.button>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {selectedSubject.chapters.map((chapter, index) => (
-                  <motion.div
-                    key={chapter.id}
-                    initial={{ opacity: 0, y: 50, scale: 0.95 }}
-                    whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                    whileHover={{ y: -10, scale: 1.02 }}
-                    viewport={{ once: true, margin: "-100px" }}
-                    transition={{ delay: index * 0.1, type: "spring", stiffness: 100 }}
-                    className={cn(
-                      "group relative bg-white dark:bg-gray-900",
-                      "rounded-2xl overflow-hidden",
-                      "shadow-xl hover:shadow-2xl dark:hover:shadow-[0_8px_30px_rgba(59,130,246,0.1)]",
-                      "transform transition-all duration-300",
-                      "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800"
-                    )}
+            <motion.h3
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl font-bold text-white text-center mb-8"
+            >
+              {selectedSubject.name}
+            </motion.h3>
+
+            <div ref={chaptersRef}>
+              {isLoading ? (
+                <div className="min-h-[400px] flex items-center justify-center">
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <>
+                  <motion.div 
+                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <div className="relative h-48 overflow-hidden">
-                      <motion.img
-                        src={chapter.image}
-                        alt={chapter.title}
-                        className="w-full h-full object-cover"
-                        initial={{ scale: 1 }}
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-blue-900/20 to-transparent" />
-                    </div>
-                    <div className="p-6">
-                      <h4 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
-                        {chapter.title}
-                      </h4>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        {chapter.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {chapter.driveLinks?.length > 0 ? (
-                          chapter.driveLinks.map((link, partIndex) => (
-                            <motion.a
-                              key={partIndex}
-                              whileHover={{ x: 5 }}
-                              whileTap={{ scale: 0.95 }}
-                              href={link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className={cn(
-                                "inline-flex items-center gap-2 px-3 py-1.5",
-                                "bg-blue-100 dark:bg-blue-900/30",
-                                "text-blue-700 dark:text-blue-400",
-                                "rounded-md hover:bg-blue-200 dark:hover:bg-blue-900/50",
-                                "border border-blue-200 dark:border-blue-800",
-                                "transition-colors duration-200",
-                                "text-sm"
-                              )}
-                            >
-                              <span>Part {partIndex + 1}</span>
-                              <ExternalLink className="w-3.5 h-3.5" />
-                            </motion.a>
-                          ))
-                        ) : (
-                          <span className="text-sm text-gray-500 dark:text-gray-400">
-                            Coming Soon
-                          </span>
-                        )}
-                      </div>
-                    </div>
+                    {getPaginatedChapters().map((chapter, index) => (
+                      <motion.div
+                        key={chapter.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                      >
+                        <ChapterCard chapter={chapter} />
+                      </motion.div>
+                    ))}
                   </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+                  {totalPages > 1 && (
+                    <motion.div 
+                      className="flex justify-center mt-8 space-x-2"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                        <motion.button
+                          key={page}
+                          onClick={() => handlePageChange(page)}
+                          className={cn(
+                            "px-4 py-2 rounded-md text-sm transition-all duration-200",
+                            currentPage === page
+                              ? "bg-blue-500 text-white"
+                              : "bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 border border-blue-500/20"
+                          )}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          {page}
+                        </motion.button>
+                      ))}
+                    </motion.div>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

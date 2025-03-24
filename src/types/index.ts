@@ -9,7 +9,7 @@ export interface Subject {
   id: string;
   name: string;
   icon: string;
-  description: string;
+  description?: string;
   chapters: Chapter[];
 }
 
@@ -18,7 +18,7 @@ export interface Chapter {
   title: string;
   image: string;
   description: string;
-  driveLink: string;
+  driveLinks?: string[];
 }
 
 export interface Qualification {
