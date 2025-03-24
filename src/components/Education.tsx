@@ -428,9 +428,10 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1661430659143-ffbb5ce2b6a7?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Introduction to chemistry fundamentals',
         driveLinks: [ 
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1A2ANXYBnStPGXEoBAGDwKJWdnkxFNL1J/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AAV88PjWeGRtYiJPVbLc61woAsx_8sxp/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AT7kwyEXzt5_ijJIYN8UNcNkx05gAtaN/view?usp=drive_link',
+          'https://drive.google.com/file/d/1B15sQAjDg6987mJEn9E2vkPGJya2BhJg/view?usp=drive_link'
         ]
       },
       {
@@ -439,9 +440,9 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1673892648202-2dbdc2a3a955?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Understanding atomic structure and models',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1HBV48aPViyb6CDYd9Ltd7c_NezKULelC/view?usp=drive_link',
+          'https://drive.google.com/file/d/1HRzOs_mWDvce2NgIL2J8VIzIROUAsDLU/view?usp=drive_link',
+          'https://drive.google.com/file/d/1RFLbCwHeOWNfVtpkjvBaiRJ_ARzH4kB7/view?usp=drive_link'
         ]
       },
       {
@@ -450,7 +451,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1627389955611-70c92a5d2e2b?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of the periodic table and periodic trends',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/1LqiuEz3oPMabFwxQ-kTZwWbhv8-5xnl4/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -461,8 +462,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6',
         description: 'Understanding molecular structures',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/1LzaxedvWBK7K230UNJPfWRGgcDND9aya/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M7Vyc3BHa7omrK1wj9DsPKFvzNGSI07W/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -472,8 +473,8 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1720189952226-5d72d4b73554?q=80&w=2067&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The properties and behaviors of gases and liquids',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/1eGLkzUkKbO2cOfDwW9xF06_JLggtpgaV/view?usp=drive_link',
+          'https://drive.google.com/file/d/1eHtK20843lYquIpLWvO1Iktg-pkmJpUS/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -483,9 +484,9 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1539186607619-df476afe6ff1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of heat, energy, and work',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1epTO60wsKrZXj6D8K8O-2EX0bvTiYg4S/view?usp=drive_link',
+          'https://drive.google.com/file/d/1fHl0jup82BsU6rElcJzcaVNXSeEHt-ZY/view?usp=drive_link',
+          'https://drive.google.com/file/d/1X_yiLmn9gBHt8-TMfjXJR9eKKt5OjhPD/view?usp=drive_link'
         ]
       },
       {
@@ -494,9 +495,70 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1433439216031-9571132ce719?q=80&w=2003&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1eCOxFBxnFEZNQ-LZLxdjKoCqJcB9-yVZ/view?usp=drive_link',
+          'https://drive.google.com/file/d/18BNnVwIf_1LVzgsKrn7hKxH7l2r5qnHY/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M9GfjB6J5fEzPmm12EgdSKMtb5gXt9ga/view?usp=drive_link',
+          'https://drive.google.com/file/d/1rRDqcayWoL7i7qinqM90X_pvll6W9Mb4/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'Solid State',
+        image: 'https://plus.unsplash.com/premium_photo-1671707015865-5460da84b32e?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1LF0x4qPIO2lRetXGXzmK2K7dhAbLwCcX/view?usp=drive_link',
+          'https://drive.google.com/file/d/12ZQZidIkjJ42tiAI_AKhSt768mYoCnXh/view?usp=drive_link',
+          'https://drive.google.com/file/d/12JRULMhnLP9SYc9--euNOpwLZVMkdhEJ/view?usp=drive_link',
+          'https://drive.google.com/file/d/119DTsoFLdZdSYZNDred9DVe9mNnfhb4d/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'Solutions',
+        image: 'https://images.unsplash.com/photo-1459802071246-377c0346da93?q=80&w=1795&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1LDTcpcOvAxZN7LOdkk4tmHE-jTFN3vUQ/view?usp=drive_link',
+          'https://drive.google.com/file/d/1eCOKIViJ70G7CS1JXtLjY_dOEmR2pftX/view?usp=drive_link',
+          ''
+        
+        ]
+      },     
+      {
+        id: 'chemistry-7',
+        title: 'Chemical Kinetics',
+        image: 'https://images.unsplash.com/photo-1643625757115-a712ca47a3af?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1g8JeN9F6z7nX-COx1uc4jJooS1gPYoac/view?usp=drive_link',
+          'https://drive.google.com/file/d/1ETVVALehPDVcFRscI5Xt8cN05stYfDOd/view?usp=drive_link',
+          'https://drive.google.com/file/d/1ljIw50cR9SgnvhiI93BYwZ378EZf9hvO/view?usp=drive_link'
+        
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'ElectroChemistry',
+        image: 'https://plus.unsplash.com/premium_photo-1675662138450-e76e39cc0ef9?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/1rlANKpOjy6WOUQIaEz3FJR4i1oLh5P6H/view?usp=drive_link',
+          'https://drive.google.com/file/d/1gHm2f4skPtOvO946lKo1VHfYtEoHzvF-/view?usp=drive_link',
+          ''
+        
+        ]
+      },
+      {
+        id: 'chemistry-7',
+        title: 'SurfaceChemistry',
+        image: 'https://images.unsplash.com/photo-1451188214936-ec16af5ca155?q=80&w=2128&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Understanding chemical equilibria and Le Chatelier\'s principle',
+        driveLinks: [ // Changed to array
+          'https://drive.google.com/file/d/15vz5nmVPLnN-RI9WdwX11gqjFefbsxXn/view?usp=drive_link',
+          '',
+          ''
+        
         ]
       },
       {
@@ -505,8 +567,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1532187643603-ba119ca4109e?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of oxidation and reduction processes',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/18bsrGXgKY9ehNropm8NgWVvhxUbvmdW4/view?usp=drive_link',
+          'https://drive.google.com/file/d/1bxL6VIIMxbKahrUY3nPoKez1jekDO9r6/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -516,8 +578,8 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1673830981161-16872c70df8d?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The chemistry and uses of hydrogen',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/17w9TcUkEV4xkUiCADoZVrejpSuzgxDc5/view?usp=drive_link',
+          'https://drive.google.com/file/d/1M7_9R0G7eGDiaT4JZIJfaM88f9saiwFp/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -527,7 +589,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1671068039583-ebbcfa1bc670?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alkali and alkaline earth metals',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/180mSdwTGTjMl18GMZ6LCBpFFRCc4jLBi/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -538,20 +600,33 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1668736594225-55e292fdd95e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fHMlMjBibG9jayUyMGVsZW1lbnRzfGVufDB8fDB8fHww',
         description: 'Study of p-block elements and their chemistry',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/181IDw92m5S4eLDNJmwRCBAlfOwQg5l7X/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
       },
       {
         id: 'chemistry-12',
-        title: 'Hydrocarbons',
+        title: 'General Organic Chemitry-1',
         image: 'https://plus.unsplash.com/premium_photo-1715107534372-0711eae7153c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alkanes, alkenes, and alkynes',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1EcYSvzg1aeDGK48KTAb_4LisHFrPGtmb/view?usp=drive_link',
+          'https://drive.google.com/file/d/1EdL4_gZG7yXe7iRNpZxNjAIj3FnAMWVP/view?usp=drive_link',
+          'https://drive.google.com/file/d/1Humg-YcE0DOlRpzPV4h-qtGJoCJjomKT/view?usp=drive_link',
+          'https://drive.google.com/file/d/1STt6S8jDSpYIKi9qxKRhYD3OAklpLrc8/view?usp=drive_link'
+        ]
+      },
+      {
+        id: 'chemistry-12',
+        title: 'General Organic Chemitry-2',
+        image: 'https://plus.unsplash.com/premium_photo-1715107534372-0711eae7153c?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+        description: 'Study of alkanes, alkenes, and alkynes',
+        driveLinks:  [ // Changed to array
+          'https://drive.google.com/file/d/1EA_b6m1LvdIveykuWlSCpz17IeIKhcJe/view?usp=drive_link',
+          'https://drive.google.com/file/d/1DtvG1JSxt0yTGvhkNDEpQwQN-aPBcfyG/view?usp=drive_link',
+          'https://drive.google.com/file/d/1EKUc5PXAaIbOfTwaOX4R9qO0QVlpQKNx/view?usp=drive_link',
+          'https://drive.google.com/file/d/1E5NsOPhs69Ga46NuRyOsZGVIgvjMT04l/view?usp=drive_link'
         ]
       },
       {
@@ -560,7 +635,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1723244684626-5623fb0d8295?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'The study of chemistry in the environment',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17qZXV9VSXULheutppz31wfBq4j4oNoRn/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -571,7 +646,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1700068553658-5bed4f670451?q=80&w=1925&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of transition metals and inner transition elements',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17_FrzKsOs262d-vmFQ-LPOBztGS1BsKl/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -582,7 +657,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1562411052-105105232432?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of complex compounds formed by metals',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17Wt4ntDZVuSzgqcbho0A0ST4wTWZPnCQ/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -593,9 +668,9 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1663100641774-cb51237207c6?q=80&w=1790&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Fundamental principles and techniques in organic chemistry',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
-          'https://drive.google.com/part3'
+          'https://drive.google.com/file/d/1A4p-koLwoyPoSR07F00AnPLnTTq5mP2H/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AFcsW0cfYdToAFXiI36VwRWJ0aFBnpe4/view?usp=drive_link',
+          'https://drive.google.com/file/d/1AGwqrdvIAYdG1bGtO-azfJAYmOEhXA6Y/view?usp=drive_link'
         ]
       },
       {
@@ -604,7 +679,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1531956656798-56686eeef3d4?q=80&w=2054&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of different types of hydrocarbons',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/18mhTAg5jOaEjDbC5Kd5AVJ_cN5tRqg8V/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -615,8 +690,8 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1534744971734-e1628d37ea01?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of halogenated organic compounds',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
-          'https://drive.google.com/part2',
+          'https://drive.google.com/file/d/18r8RC67yLrjtbLUVUBiyK-ceyv9x236V/view?usp=drive_link',
+          'https://drive.google.com/file/d/18pbwCGIDZgZy70WkQuK92XUOc-JNJfmT/view?usp=drive_link',
           'https://drive.google.com/part3'
         ]
       },
@@ -626,7 +701,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1507413245164-6160d8298b31?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of alcohols, phenols, and ethers',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/19x26H9EOZU5jP1O3K9cCO29PC0CG_oyK/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -637,7 +712,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1631106321638-d94d9a8f3e1f?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of carbonyl compounds and carboxylic acids',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/1jiJGWVOtHfHp8M77eTBZGBwVPDqkhF2K/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -648,7 +723,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1653226539322-55de1cc336be?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of nitrogen-containing organic compounds',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/19y2yVPKeeHiTwWrQVQnxbyCHq0NOqjxw/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -659,7 +734,7 @@ const subjects: Subject[] = [
         image: 'https://images.unsplash.com/photo-1475906089153-644d9452ce87?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of biological molecules and their functions',
         driveLinks:  [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17TOgYSFI0t1aUdKjDMGLmiglSJ5vEr4p/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
@@ -670,7 +745,7 @@ const subjects: Subject[] = [
         image: 'https://plus.unsplash.com/premium_photo-1681505601897-5171f4baf000?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         description: 'Study of macromolecules and their properties',
         driveLinks: [ // Changed to array
-          'https://drive.google.com/part1',
+          'https://drive.google.com/file/d/17bJgRlh7CTCbTU6UyOg1OGPvcpdHIfi5/view?usp=drive_link',
           'https://drive.google.com/part2',
           'https://drive.google.com/part3'
         ]
