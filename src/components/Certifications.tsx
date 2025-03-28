@@ -33,9 +33,9 @@ const certificates: Certificate[] = [
     organization: "United Latino Students Association",
     date: "Feb 2025",
     credentialId: "28",
-    image: "/certificates/ai-tools.png",
+    image: "public/assets/certificates/ai.png",
     skills: ["Generative AI", "Computer Ethics"],
-    link: "#",
+    link: "https://certx.in/certificate/9318e7f9-0234-4ea4-9390-efad88624b8b227735",
     description: "Comprehensive training in AI tools and ethical considerations. Hands-on experience with cutting-edge AI technologies. Focus on responsible AI development and implementation"
   },
   {
@@ -44,9 +44,9 @@ const certificates: Certificate[] = [
     organization: "Microsoft and LinkedIn",
     date: "Feb 2025",
     credentialId: "MS-GEN-AI-2025",
-    image: "/certificates/ms-gen-ai.png",
+    image: "public/assets/certificates/microsoft.png",
     skills: ["Generative AI", "AI Applications", "Industry Best Practices"],
-    link: "#",
+    link: "https://www.linkedin.com/learning/certificates/7db784f3c327ce91e9eb3d6f84cff388ec4e12fda6e311506a6408600cd1528a",
     description: "Professional certification in generative AI applications. Industry-standard practices for AI implementation. Practical applications of generative AI in business contexts"
   },
   {
@@ -55,9 +55,9 @@ const certificates: Certificate[] = [
     organization: "GreatStack",
     date: "Feb 2025",
     credentialId: "rhs-",
-    image: "/certificates/react-hooks.png",
+    image: "public/assets/certificates/react.png",
     skills: ["CSS", "Tailwind CSS", "HTML", "JavaScript", "React.js", "TypeScript"],
-    link: "#",
+    link: "https://drive.google.com/file/d/1V-3SCPnPDlf01aGln2tQIIY-qxPTGi9J/view?usp=drive_link",
     description: "Advanced React hooks implementation and patterns. State management and component lifecycle mastery. Modern React development best practices"
   },
   {
@@ -66,9 +66,9 @@ const certificates: Certificate[] = [
     organization: "freeCodeCamp",
     date: "Feb 2025",
     credentialId: "fc9",
-    image: "/certificates/responsive-web.png",
+    image: "public/assets/certificates/react2.png",
     skills: ["Responsive Design", "CSS Grid", "Flexbox", "Mobile-First"],
-    link: "#",
+    link: "https://www.freecodecamp.org/certification/fcc9af661c7-fd05-4bb8-bb00-bf761ac42753/responsive-web-design",
     description: "Comprehensive web design principles and practices. Mobile-first approach to responsive design. Advanced CSS techniques and modern layout systems"
   },
   {
@@ -77,9 +77,9 @@ const certificates: Certificate[] = [
     organization: "iNeuron",
     date: "Sep 2024",
     credentialId: "AIML-2024-IN",
-    image: "/certificates/aiml.png",
+    image: "public/assets/certificates/aiml.png",
     skills: ["Artificial Intelligence", "Machine Learning", "Data Science", "Neural Networks"],
-    link: "#",
+    link: "https://drive.google.com/file/d/16V19EldFv80hgg89-4cMeE6RToSVW49f/view?usp=drive_link",
     description: "Core concepts of artificial intelligence and machine learning. Practical implementation of ML algorithms. Real-world AI/ML project experience"
   },
   {
@@ -88,9 +88,9 @@ const certificates: Certificate[] = [
     organization: "MATLAB Coding",
     date: "Aug 2024",
     credentialId: "MATLAB-2024",
-    image: "/certificates/matlab.png",
+    image: "public/assets/certificates/matlab1.png",
     skills: ["MATLAB", "Data Analysis", "Visualization", "Scientific Computing"],
-    link: "#",
+    link: "https://drive.google.com/file/d/1V3mrrRxwEdCs8QbpmzHqOQGmQW0FnAzQ/view?usp=drive_link",
     description: "Comprehensive MATLAB programming fundamentals. Data analysis and visualization techniques. Scientific computing and algorithm implementation"
   },
   {
@@ -99,9 +99,9 @@ const certificates: Certificate[] = [
     organization: "MathWorks",
     date: "Aug 2024",
     credentialId: "SIMULINK-2024",
-    image: "/certificates/simulink.png",
+    image: "public/assets/certificates/matlab2.png",
     skills: ["Simulink", "System Modeling", "Simulation", "Control Systems"],
-    link: "#",
+    link: "https://drive.google.com/file/d/1V1naGyCuS8hYMXr8pRywZoMR7gjuoMOp/view?usp=drive_link",
     description: "Advanced system modeling and simulation. Dynamic system analysis and design. Integration with MATLAB for comprehensive solutions"
   }
 ];
