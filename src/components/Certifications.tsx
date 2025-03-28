@@ -228,16 +228,16 @@ export const Certifications: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className={cn(
           "space-y-4 rounded-xl p-4",
-          "bg-white/10 dark:bg-gray-800/10",
+          "bg-white/10 dark:bg-purple-950/40",
           "backdrop-blur-md backdrop-saturate-150",
-          "border border-white/20 dark:border-gray-700/30",
+          "border border-white/20 dark:border-purple-800/50",
           "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)]",
-          "dark:shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)]"
+          "dark:shadow-[0_8px_16px_-6px_rgba(147,51,234,0.15)]"
         )}
       >
         <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-900/30">
-            <Sparkle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-purple-900/40">
+            <Sparkle className="w-4 h-4 text-blue-600 dark:text-purple-400" />
           </div>
           About this Certification
         </h4>
@@ -266,16 +266,16 @@ export const Certifications: React.FC = () => {
         transition={{ delay: 0.1 }}
         className={cn(
           "space-y-3 rounded-xl p-4",
-          "bg-white/10 dark:bg-gray-800/10",
+          "bg-white/10 dark:bg-purple-950/40",
           "backdrop-blur-md backdrop-saturate-150",
-          "border border-white/20 dark:border-gray-700/30",
+          "border border-white/20 dark:border-purple-800/50",
           "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)]",
-          "dark:shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)]"
+          "dark:shadow-[0_8px_16px_-6px_rgba(147,51,234,0.15)]"
         )}
       >
         <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-900/30">
-            <CheckCircle className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-purple-900/40">
+            <CheckCircle className="w-4 h-4 text-blue-600 dark:text-purple-400" />
           </div>
           Skills Validated
         </h4>
@@ -289,9 +289,9 @@ export const Certifications: React.FC = () => {
               className={cn(
                 "px-3 py-1.5 rounded-lg text-xs font-medium",
                 "bg-gradient-to-r from-blue-500/10 to-purple-500/10",
-                "dark:from-blue-500/5 dark:to-purple-500/5",
-                "text-blue-700 dark:text-blue-300",
-                "border border-blue-200/30 dark:border-blue-800/30",
+                "dark:from-purple-500/20 dark:to-violet-500/20",
+                "text-blue-700 dark:text-purple-300",
+                "border border-blue-200/30 dark:border-purple-800/50",
                 "backdrop-blur-sm",
                 "flex items-center gap-1.5",
                 "shadow-sm"
@@ -312,31 +312,31 @@ export const Certifications: React.FC = () => {
           transition={{ delay: 0.2 }}
           className={cn(
             "space-y-3 rounded-xl p-4",
-            "bg-white/10 dark:bg-gray-800/10",
+            "bg-white/10 dark:bg-purple-950/40",
             "backdrop-blur-md backdrop-saturate-150",
-            "border border-white/20 dark:border-gray-700/30",
+            "border border-white/20 dark:border-purple-800/50",
             "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)]",
-            "dark:shadow-[0_8px_16px_-6px_rgba(0,0,0,0.2)]"
+            "dark:shadow-[0_8px_16px_-6px_rgba(147,51,234,0.15)]"
           )}
         >
           <h4 className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-            <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-blue-900/30">
-              <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+            <div className="p-1.5 rounded-lg bg-blue-100/80 dark:bg-purple-900/40">
+              <Award className="w-4 h-4 text-blue-600 dark:text-purple-400" />
             </div>
             Credential Details
           </h4>
           <div className={cn(
             "flex items-center gap-3 rounded-lg p-4",
             "bg-gradient-to-r from-white/40 to-white/30",
-            "dark:from-gray-900/40 dark:to-gray-900/30",
+            "dark:from-purple-950/60 dark:to-violet-950/50",
             "backdrop-blur-md backdrop-saturate-150",
-            "border border-white/30 dark:border-gray-700/30"
+            "border border-white/30 dark:border-purple-800/50"
           )}>
             <div className="flex-1">
-              <p className="text-xs text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-purple-300/70">
                 Credential ID
               </p>
-              <p className="font-mono text-sm text-gray-800 dark:text-blue-300 mt-0.5">
+              <p className="font-mono text-sm text-gray-800 dark:text-purple-300 mt-0.5">
                 {cert.credentialId}
               </p>
             </div>
@@ -349,10 +349,12 @@ export const Certifications: React.FC = () => {
               className={cn(
                 "p-2 rounded-lg",
                 "bg-gradient-to-r from-blue-500/20 to-purple-500/20",
+                "dark:from-purple-500/30 dark:to-violet-500/30",
                 "hover:from-blue-500/30 hover:to-purple-500/30",
-                "text-blue-600 dark:text-blue-400",
+                "dark:hover:from-purple-500/40 dark:hover:to-violet-500/40",
+                "text-blue-600 dark:text-purple-400",
                 "backdrop-blur-sm",
-                "border border-blue-200/30 dark:border-blue-800/30",
+                "border border-blue-200/30 dark:border-purple-800/50",
                 "shadow-sm"
               )}
             >
