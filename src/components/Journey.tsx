@@ -28,7 +28,7 @@ const journeyEvents: Journey[] = [
   },
   {
     date: "22/03/2005",
-    title: "Born on: Assam",
+    title: "Born In: Assam",
     description:
       " A moment in time that holds a special place in my story. Every year since has been a chapter filled with growth, learning, and new experiences. My journey began on this day, and it continues to unfold as I embrace each new challenge and opportunity that comes my way.",
     image: "assets/me.jpg",
