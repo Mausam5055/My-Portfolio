@@ -125,6 +125,19 @@ export const Certifications: React.FC = () => {
     setExpandedCert(null);
   };
 
+  const handleShowLess = () => {
+    setShowAllMobile(false);
+    setTimeout(() => {
+      const certificationsSection = document.getElementById('certifications');
+      if (certificationsSection) {
+        certificationsSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    }, 100);
+  };
+
   const selectedCert = certificates.find(cert => cert.id === expandedCert);
 
   // Function to get displayed certificates based on screen size
@@ -514,7 +527,7 @@ export const Certifications: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Mobile  Button */}
+          {/* Mobile Button */}
           {certificates.length > 3 && (
             <motion.div
               variants={mobileExpandButtonVariants}
@@ -524,7 +537,7 @@ export const Certifications: React.FC = () => {
               className="mt-8 flex justify-center md:hidden"
             >
               <motion.button
-                onClick={() => setShowAllMobile(!showAllMobile)}
+                onClick={() => showAllMobile ? handleShowLess() : setShowAllMobile(true)}
                 className={cn(
                   "group relative overflow-hidden",
                   "px-6 py-3 rounded-full",
