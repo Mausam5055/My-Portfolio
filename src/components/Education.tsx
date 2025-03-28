@@ -1328,7 +1328,7 @@ const ChapterCard = ({ chapter }: { chapter: Chapter }) => {
           )}
           onLoad={() => setImageLoaded(true)}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0f172a] to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent dark:from-[#0f172a] to-transparent" />
       </div>
       <div className="p-6">
         <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
