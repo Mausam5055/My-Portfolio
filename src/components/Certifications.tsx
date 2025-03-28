@@ -112,12 +112,8 @@ export const Certifications: React.FC = () => {
   const [showAllMobile, setShowAllMobile] = useState(false);
 
   const handleCardClick = (certId: string) => {
-    if (window.innerWidth >= 768) {
-      setIsModalOpen(true);
-      setExpandedCert(certId);
-    } else {
-      setExpandedCert(expandedCert === certId ? null : certId);
-    }
+    setIsModalOpen(true);
+    setExpandedCert(certId);
   };
 
   const handleCloseModal = () => {
@@ -130,12 +126,15 @@ export const Certifications: React.FC = () => {
     setTimeout(() => {
       const certificationsSection = document.getElementById('certifications');
       if (certificationsSection) {
-        certificationsSection.scrollIntoView({ 
-          behavior: 'smooth',
-          block: 'start'
+        const yOffset = -100; // Offset to account for any fixed headers
+        const y = certificationsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        
+        window.scrollTo({
+          top: y,
+          behavior: 'smooth'
         });
       }
-    }, 100);
+    }, 300); // Increased delay to match the collapse animation duration
   };
 
   const selectedCert = certificates.find(cert => cert.id === expandedCert);
@@ -444,8 +443,7 @@ export const Certifications: React.FC = () => {
                   "shadow-2xl hover:shadow-3xl dark:hover:shadow-[0_20px_50px_rgba(59,130,246,0.1)]",
                   "transform transition-all duration-300",
                   "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800 dark:hover:border-indigo-500/30",
-                  expandedCert === cert.id && "ring-2 ring-blue-500 dark:ring-blue-400",
-                  "cursor-pointer md:cursor-default",
+                  "cursor-pointer"
                 )}
               >
                 <div className="p-6 relative z-10">
@@ -485,24 +483,9 @@ export const Certifications: React.FC = () => {
                           <CalendarDays className="w-4 h-4 shrink-0" />
                           <span>Issued: {cert.date}</span>
                         </motion.p>
-                        {/* Mobile Expand Indicator */}
-                        <motion.div
-                          animate={{ rotate: expandedCert === cert.id ? 180 : 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="md:hidden text-blue-600 dark:text-blue-400"
-                        >
-                          <ChevronDown className="w-4 h-4" />
-                        </motion.div>
                       </motion.div>
                     </div>
                   </div>
-
-                  {/* Mobile Expanded Content */}
-                  <AnimatePresence mode="wait">
-                    {expandedCert === cert.id && window.innerWidth < 768 && (
-                      <MobileCertContent cert={cert} />
-                    )}
-                  </AnimatePresence>
                 </div>
 
                 {/* Background Effect */}
@@ -510,18 +493,6 @@ export const Certifications: React.FC = () => {
                   <div className="absolute -inset-24 opacity-0 group-hover:opacity-30 transition-opacity duration-500">
                     <div className="w-full h-full bg-gradient-to-r from-transparent via-indigo-400/20 to-transparent animate-[translate-x-full_rotate-15_1.5s_infinite]" />
                   </div>
-                </div>
-
-                {/* Mobile Touch Ripple Effect */}
-                <div className="absolute inset-0 md:hidden">
-                  <motion.div
-                    initial={false}
-                    animate={{
-                      backgroundColor: expandedCert === cert.id ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0)",
-                    }}
-                    transition={{ duration: 0.3 }}
-                    className="w-full h-full"
-                  />
                 </div>
               </motion.div>
             ))}
@@ -570,9 +541,9 @@ export const Certifications: React.FC = () => {
         </div>
       </section>
 
-      {/* Desktop Modal Portal */}
+      {/* Modal Portal for both Mobile and Desktop */}
       <AnimatePresence>
-        {isModalOpen && selectedCert && window.innerWidth >= 768 && (
+        {isModalOpen && selectedCert && (
           <div className="fixed inset-0 flex items-center justify-center z-50">
             <motion.div
               variants={overlayVariants}
