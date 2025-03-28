@@ -122,19 +122,20 @@ export const Certifications: React.FC = () => {
   };
 
   const handleShowLess = () => {
+    // First collapse the content
     setShowAllMobile(false);
-    setTimeout(() => {
-      const certificationsSection = document.getElementById('certifications');
-      if (certificationsSection) {
-        const yOffset = -100; // Offset to account for any fixed headers
-        const y = certificationsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        
-        window.scrollTo({
-          top: y,
-          behavior: 'smooth'
-        });
-      }
-    }, 300); // Increased delay to match the collapse animation duration
+    
+    // Calculate scroll position immediately
+    const certificationsSection = document.getElementById('certifications');
+    if (certificationsSection) {
+      const targetPosition = certificationsSection.offsetTop - 100;
+      
+      // Start scrolling immediately but with smooth behavior
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   const selectedCert = certificates.find(cert => cert.id === expandedCert);
@@ -232,7 +233,7 @@ export const Certifications: React.FC = () => {
       initial="collapsed"
       animate="expanded"
       exit="collapsed"
-      className="mt-6 space-y-6 overflow-hidden md:hidden px-1"
+      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
     >
       {/* Description Section */}
       <motion.div
@@ -428,7 +429,10 @@ export const Certifications: React.FC = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+            className={cn(
+              "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8",
+              "transition-all duration-300 ease-in-out"
+            )}
           >
             {getDisplayedCertificates().map((cert) => (
               <motion.div
