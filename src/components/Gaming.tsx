@@ -25,27 +25,35 @@ const gamingPosts: GamingPost[] = [
     excerpt:
       "Watch my thrilling gameplay of Spider-Man: Miles Morales with epic web-swinging and combat!",
     content: `
-    Spider-Man: Miles Morales –  
-    Ultimate Web-Swinging 
-    Experience
-    
-    Dive into the streets of New York as 
-    I play *Spider-Man: Miles Morales!
+# Spider-Man: Miles Morales
 
-    This gameplay showcases:
-    - Fluid web-swinging mechanics 
-      across the city  
-    - High-energy combat with 
-      electrifying Venom powers  
-    - Breathtaking visuals and 
-      cinematic moments  
-    - Stealth missions, side 
-      quests, and open-world 
-      exploration  
-    
-    Watch as Miles takes on enemies, 
-    saves the city, and embraces his 
-    role as Spider-Man! 🕷️🔥
+Experience the ultimate web-swinging adventure as we dive into the streets of New York City in *Spider-Man: Miles Morales*! 
+
+## Gameplay Highlights
+
+* **Fluid Web-Swinging**
+  * Master the art of traversal across Manhattan
+  * Experience smooth, physics-based movement
+  * Chain together impressive web-swinging combos
+
+* **Electrifying Combat**
+  * Unleash Miles' unique Venom powers
+  * Execute stylish takedowns and finishers
+  * Master stealth and combat mechanics
+
+* **Stunning Visuals**
+  * Marvel at the detailed city environment
+  * Experience dynamic weather effects
+  * Witness breathtaking sunset and night scenes
+
+* **Open World Exploration**
+  * Discover hidden collectibles
+  * Complete side missions
+  * Help citizens in need
+
+## Watch the Action
+
+Join me as I showcase the most exciting moments from my playthrough, including epic boss battles, stealth missions, and heart-pounding chase sequences. Get ready for an unforgettable Spider-Man experience! 🕷️🔥
     `,
     date: "2024-03-20",
     author: "Mausam Kar",
@@ -59,23 +67,35 @@ const gamingPosts: GamingPost[] = [
     excerpt:
       "Epic BGMI gameplay showcasing intense gunfights and survival tactics!",
     content: `
-    BGMI – Battlegrounds Mobile 
-           India Gameplay
+# BGMI – Battlegrounds Mobile India
 
-    Watch my action-packed BGMI gameplay featuring:
+Get ready for intense battle royale action as we dive into the world of BGMI! 
 
-    - High-intensity gunfights and 
-      tactical strategies  
-    - Survival techniques to secure 
-      the Chicken Dinner  
-    - Sniping, close combat, and team 
-      coordination 
-    - Exciting moments in classic and 
-      TDM matches
+## Gameplay Features
 
-    Experience the thrill of BGMI as I take 
-    on enemies, explore maps, and push 
-    for victory! 🎯🔥
+* **Tactical Combat**
+  * Master different weapon types
+  * Execute precise headshots
+  * Perfect your recoil control
+
+* **Survival Strategies**
+  * Smart zone rotation tactics
+  * Efficient looting routes
+  * Team coordination essentials
+
+* **Combat Styles**
+  * Aggressive rushing techniques
+  * Patient sniping gameplay
+  * Close-quarter combat mastery
+
+* **Match Highlights**
+  * Epic squad wipeouts
+  * Clutch moments
+  * Victory celebrations
+
+## Watch the Action
+
+Experience the thrill of intense firefights, strategic gameplay, and those heart-stopping moments that make BGMI so addictive. From early game drops to final circle battles, this gameplay has it all! 🎯🔥
     `,
     date: "2024-03-18",
     author: "Mausam Kar",
@@ -89,25 +109,35 @@ const gamingPosts: GamingPost[] = [
     excerpt:
       "Experience the adrenaline rush of Asphalt 9: Legends with breathtaking races and stunning visuals!",
     content: `
-    Asphalt 9: Legends – Ultimate 
-               Racing Experience
+# Asphalt 9: Legends
 
-    Get ready for high-speed action in my 
-    Asphalt 9: Legends gameplay! 
-    This video features:
+Buckle up for an adrenaline-fueled racing experience in *Asphalt 9: Legends*! 
 
-    - Thrilling arcade-style racing 
-      with stunning graphics  
-    - Nitro boosts, drifts, and jumps 
-      for insane speed  
-    - Exotic supercars and intense 
-      multiplayer showdowns  
-    - High-octane gameplay across  
-      breathtaking locations  
+## Racing Experience
 
-    Watch as I race through the most 
-    exciting tracks, pulling off epic 
-    drifts and securing first place! 🏎️🔥
+* **Exotic Cars**
+  * Drive the latest supercars
+  * Customize your vehicles
+  * Master different car classes
+
+* **Racing Mechanics**
+  * Perfect nitro management
+  * Master drift techniques
+  * Execute perfect jumps
+
+* **Visual Spectacle**
+  * Stunning track environments
+  * Dynamic weather effects
+  * Realistic car damage
+
+* **Game Modes**
+  * Career mode challenges
+  * Multiplayer races
+  * Special events
+
+## Watch the Action
+
+Join me as I push these incredible machines to their limits, pulling off insane drifts, perfect nitro boosts, and securing victory in the most intense races! 🏎️🔥
     `,
     date: "2024-03-15",
     author: "Mausam Kar",
@@ -258,6 +288,7 @@ export const Gaming: React.FC = () => {
                 initial={{ opacity: 0, scale: 0.9, y: 20 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-xl w-full max-w-3xl mx-4 my-8 overflow-hidden border border-white/20 dark:border-gray-700/50 flex flex-col h-[90vh]"
               >
                 <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 p-4 border-b dark:border-gray-700 flex justify-between items-center backdrop-blur-sm z-10">
@@ -270,13 +301,14 @@ export const Gaming: React.FC = () => {
                       setSelectedPost(null);
                     }}
                     whileHover={{ rotate: 90 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                     className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
                   >
                     <X size={24} />
                   </motion.button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 max-h-screen">
+                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 max-h-screen scrollbar-hide">
                   <div className="aspect-video mb-6 sm:mb-8 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
                     <iframe
                       src={selectedPost.videoUrl}
@@ -292,12 +324,12 @@ export const Gaming: React.FC = () => {
                     <ReactMarkdown
                       components={{
                         h1: ({ children }) => (
-                          <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-900 dark:text-white">
+                          <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-900 dark:text-white break-words">
                             {children}
                           </h1>
                         ),
                         p: ({ children }) => (
-                          <p className="mb-4 text-base leading-relaxed text-gray-700 dark:text-gray-300 break-words">
+                          <p className="mb-4 text-base sm:text-lg leading-relaxed text-gray-700 dark:text-gray-300 break-words">
                             {children}
                           </p>
                         ),
@@ -311,7 +343,7 @@ export const Gaming: React.FC = () => {
                             <span className="absolute left-0 text-blue-500">
                               •
                             </span>
-                            <span className="text-base leading-relaxed">
+                            <span className="text-base sm:text-lg leading-relaxed">
                               {children}
                             </span>
                           </li>
@@ -331,7 +363,7 @@ export const Gaming: React.FC = () => {
         <div className="absolute -bottom-20 right-1/3 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none" />
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @keyframes pulse-slow {
           0%,
           100% {
@@ -343,6 +375,13 @@ export const Gaming: React.FC = () => {
         }
         .animate-pulse-slow {
           animation: pulse-slow 6s ease-in-out infinite;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
         }
       `}</style>
     </section>
