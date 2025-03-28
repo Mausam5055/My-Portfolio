@@ -54,7 +54,7 @@ const certificates: Certificate[] = [
     title: "React Hooks Crash Course",
     organization: "GreatStack",
     date: "Feb 2025",
-    credentialId: "rhs-tf142t1UOFpPkSiigIjJhfIbriOU2",
+    credentialId: "rhs-",
     image: "/certificates/react-hooks.png",
     skills: ["CSS", "Tailwind CSS", "HTML", "JavaScript", "React.js", "TypeScript"],
     link: "#",
@@ -65,7 +65,7 @@ const certificates: Certificate[] = [
     title: "Responsive Web Design",
     organization: "freeCodeCamp",
     date: "Feb 2025",
-    credentialId: "fc9a1b61c7-bb05-4bd8-bb00-bf79",
+    credentialId: "fc9",
     image: "/certificates/responsive-web.png",
     skills: ["Responsive Design", "CSS Grid", "Flexbox", "Mobile-First"],
     link: "#",
@@ -512,7 +512,7 @@ export const Certifications: React.FC = () => {
             ))}
           </motion.div>
 
-          {/* Mobile View All Button */}
+          {/* Mobile  Button */}
           {certificates.length > 3 && (
             <motion.div
               variants={mobileExpandButtonVariants}
@@ -537,7 +537,7 @@ export const Certifications: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <span className="relative z-10">
-                  {showAllMobile ? 'Show Less' : `View All ${certificates.length} Certifications`}
+                  {showAllMobile ? 'Show Less' : `View All`}
                 </span>
                 <motion.div
                   animate={{ rotate: showAllMobile ? 180 : 0 }}
