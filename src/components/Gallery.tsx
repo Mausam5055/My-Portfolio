@@ -246,21 +246,22 @@ export const Gallery: React.FC = () => {
                 className={cn(
                   "absolute inset-0",
                   "bg-gradient-to-t from-black/90 via-black/40 to-transparent",
-                  "opacity-100 md:opacity-0 md:group-hover:opacity-100", // Changed here
-                  "transition-opacity duration-300",
-                  "flex flex-col items-center justify-end p-4",
+                  "opacity-100 md:opacity-0 md:group-hover:opacity-100",
+                  "transition-all duration-300",
+                  "flex flex-col items-center justify-end p-2 sm:p-4",
+                  "md:backdrop-blur-sm"
                 )}
               >
-                <h3 className="text-white font-semibold text-lg text-center mb-2">
+                <h3 className="text-white font-semibold text-sm sm:text-lg text-center mb-0.5 sm:mb-2">
                   {image.title}
                 </h3>
-                <p className="text-white/80 text-sm text-center line-clamp-2">
+                <p className="text-white/80 text-xs sm:text-sm text-center line-clamp-2">
                   {image.description}
                 </p>
                 {image.subphotos && (
-                  <div className="mt-4 flex items-center justify-center space-x-2">
-                    <Search className="text-white w-5 h-5" />
-                    <span className="text-white/80 text-sm">
+                  <div className="mt-1 sm:mt-4 flex items-center justify-center space-x-1 sm:space-x-2 bg-black/30 px-1.5 sm:px-3 py-0.5 sm:py-1.5 rounded-full">
+                    <Search className="text-white w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="text-white/90 text-xs sm:text-sm">
                       +{image.subphotos.length}
                     </span>
                   </div>
@@ -301,14 +302,11 @@ export const Gallery: React.FC = () => {
                 <div className="relative flex-1">
                   <motion.div
                     key={currentSubphotoIndex}
-                    initial={{
-                      opacity: 0,
-                      x: selectedImage.subphotos ? 50 : 0,
-                    }}
+                    initial={{ opacity: 0, x: selectedImage.subphotos ? 50 : 0 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: selectedImage.subphotos ? -50 : 0 }}
                     transition={{ duration: 0.3 }}
-                    className="h-full flex items-center justify-center"
+                    className="h-full flex items-center justify-center p-0 sm:p-4"
                   >
                     <img
                       src={
@@ -321,51 +319,52 @@ export const Gallery: React.FC = () => {
                           ? selectedImage.subphotos[currentSubphotoIndex].title
                           : selectedImage.title
                       }
-                      className="w-full max-h-[70vh] object-contain"
+                      className="w-full h-full sm:h-auto sm:max-h-[75vh] object-contain sm:rounded-lg"
                       loading="lazy"
                       decoding="async"
                       fetchPriority="low"
                     />
                   </motion.div>
 
-                  {selectedImage.subphotos &&
-                    selectedImage.subphotos.length > 1 && (
-                      <>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={prevSubphoto}
-                          className={cn(
-                            "absolute left-4 top-1/2 -translate-y-1/2",
-                            "p-2 md:p-3 rounded-full",
-                            "bg-black/50 hover:bg-black/70",
-                            "text-white",
-                            "transition-all duration-200",
-                          )}
-                        >
-                          <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                          onClick={nextSubphoto}
-                          className={cn(
-                            "absolute right-4 top-1/2 -translate-y-1/2",
-                            "p-2 md:p-3 rounded-full",
-                            "bg-black/50 hover:bg-black/70",
-                            "text-white",
-                            "transition-all duration-200",
-                          )}
-                        >
-                          <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-                        </motion.button>
-                      </>
-                    )}
+                  {selectedImage.subphotos && selectedImage.subphotos.length > 1 && (
+                    <>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={prevSubphoto}
+                        className={cn(
+                          "absolute left-1 sm:left-4 top-1/2 -translate-y-1/2",
+                          "p-1.5 sm:p-3 rounded-full",
+                          "bg-black/50 hover:bg-black/70",
+                          "text-white",
+                          "transition-all duration-200",
+                          "md:backdrop-blur-sm"
+                        )}
+                      >
+                        <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
+                      </motion.button>
+                      <motion.button
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={nextSubphoto}
+                        className={cn(
+                          "absolute right-1 sm:right-4 top-1/2 -translate-y-1/2",
+                          "p-1.5 sm:p-3 rounded-full",
+                          "bg-black/50 hover:bg-black/70",
+                          "text-white",
+                          "transition-all duration-200",
+                          "md:backdrop-blur-sm"
+                        )}
+                      >
+                        <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
+                      </motion.button>
+                    </>
+                  )}
                 </div>
 
                 {selectedImage.subphotos && (
-                  <div className="p-4 border-t border-gray-100 dark:border-gray-800">
-                    <div className="flex overflow-x-auto pb-2 space-x-3 snap-x">
+                  <div className="p-1.5 sm:p-4 border-t border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 md:backdrop-blur-sm">
+                    <div className="flex overflow-x-auto pb-1 sm:pb-2 space-x-1.5 sm:space-x-3 snap-x scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
                       {selectedImage.subphotos.map((subphoto, index) => (
                         <motion.button
                           key={index}
@@ -373,9 +372,10 @@ export const Gallery: React.FC = () => {
                           whileTap={{ scale: 0.95 }}
                           onClick={() => setCurrentSubphotoIndex(index)}
                           className={cn(
-                            "relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden",
+                            "relative w-10 h-10 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden",
                             "focus:outline-none focus:ring-2 focus:ring-green-500",
-                            "border-2 transition-all duration-200",
+                            "border transition-all duration-200",
+                            "hover:border-blue-500/50 dark:hover:border-blue-400/50",
                             currentSubphotoIndex === index
                               ? "ring-2 ring-green-500 dark:ring-green-400 border-transparent scale-105"
                               : "border-white/10 dark:border-gray-700/50",

@@ -107,30 +107,30 @@ export const Testimonials: React.FC = () => {
   const slideVariants = {
     enter: (direction: number) => ({
       opacity: 0,
-      scale: 0.95,
-      filter: "blur(20px)",
+      scale: 0.98,
+      x: direction > 0 ? 100 : -100,
       transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.5,
+        ease: [0.32, 0.72, 0, 1]
       }
     }),
     center: {
       opacity: 1,
       scale: 1,
-      filter: "blur(0px)",
+      x: 0,
       transition: {
-        duration: 0.6,
-        ease: [0.4, 0, 0.2, 1],
+        duration: 0.7,
+        ease: [0.32, 0.72, 0, 1],
         staggerChildren: 0.1
       }
     },
     exit: (direction: number) => ({
       opacity: 0,
-      scale: 0.95,
-      filter: "blur(20px)",
+      scale: 0.98,
+      x: direction > 0 ? -100 : 100,
       transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.5,
+        ease: [0.32, 0.72, 0, 1]
       }
     })
   };
@@ -138,29 +138,29 @@ export const Testimonials: React.FC = () => {
   const cardVariants = {
     enter: {
       opacity: 0,
-      scale: 0.95,
-      filter: "blur(10px)",
+      scale: 0.98,
+      y: 20,
       transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.5,
+        ease: [0.32, 0.72, 0, 1]
       }
     },
     center: {
       opacity: 1,
       scale: 1,
-      filter: "blur(0px)",
+      y: 0,
       transition: {
-        duration: 0.5,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.6,
+        ease: [0.32, 0.72, 0, 1]
       }
     },
     exit: {
       opacity: 0,
-      scale: 0.95,
-      filter: "blur(10px)",
+      scale: 0.98,
+      y: -20,
       transition: {
-        duration: 0.4,
-        ease: [0.4, 0, 0.2, 1]
+        duration: 0.5,
+        ease: [0.32, 0.72, 0, 1]
       }
     }
   };
@@ -178,11 +178,11 @@ export const Testimonials: React.FC = () => {
         
         setTimeout(() => {
           isTransitioning.current = false;
-        }, 1000);
+        }, 800);
       }
     };
 
-    autoScrollTimer.current = setInterval(startAutoScroll, 5000);
+    autoScrollTimer.current = setInterval(startAutoScroll, 6000);
     return () => {
       if (autoScrollTimer.current) {
         clearInterval(autoScrollTimer.current);
@@ -200,7 +200,7 @@ export const Testimonials: React.FC = () => {
       setTimeout(() => {
         isTransitioning.current = false;
         setIsAutoScrolling(true);
-      }, 1500);
+      }, 1000);
     }
   };
 
@@ -216,7 +216,7 @@ export const Testimonials: React.FC = () => {
       setTimeout(() => {
         isTransitioning.current = false;
         setIsAutoScrolling(true);
-      }, 1500);
+      }, 1000);
     }
   };
 
