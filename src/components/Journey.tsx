@@ -23,7 +23,7 @@ const journeyEvents: Journey[] = [
     date: "2005-infinity",
     title: "Hobby : Gaming",
     description:
-      " Gaming not only serves as a hobby but also inspires my approach to challenges in real life—whether it’s staying focused, adapting to new strategies, or thinking outside the box. It has helped me develop quick decision-making skills and a strong sense of perseverance, which I apply both in gaming and my professional life.",
+      " Gaming not only serves as a hobby but also inspires my approach to challenges in real life—whether it's staying focused, adapting to new strategies, or thinking outside the box. It has helped me develop quick decision-making skills and a strong sense of perseverance, which I apply both in gaming and my professional life.",
     image: "assets/gallery/7.jpg",
   },
   {
@@ -93,18 +93,28 @@ export const Journey: React.FC = () => {
                 {/* Content Column with spacing and z-index */}
                 <div
                   className={cn(
-                    "flex flex-col justify-center md:px-8 pl-12 z-10", // Added z-10 here
+                    "flex flex-col justify-center md:px-8 pl-12 z-10",
                     index % 2 === 0 ? "md:order-1" : "md:order-2",
                   )}
                 >
                   <div className="space-y-4">
-                    <span className="text-blue-600 dark:text-blue-400 font-bold text-lg">
+                    <motion.span 
+                      initial={{ opacity: 0, y: -20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.2 }}
+                      className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold text-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                    >
                       {event.date}
-                    </span>
-                    <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
+                    </motion.span>
+                    <motion.h3 
+                      initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.2 + 0.2 }}
+                      className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent"
+                    >
                       {event.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
+                    </motion.h3>
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                       {event.description}
                     </p>
                   </div>
