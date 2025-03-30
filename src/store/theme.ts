@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 
 interface ThemeState {
   isDark: boolean;
+  isChanging: boolean;
   toggleTheme: () => void;
 }
 
@@ -12,7 +13,16 @@ export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       isDark: defaultTheme,
-      toggleTheme: () => set((state) => ({ isDark: !state.isDark })),
+      isChanging: false,
+      toggleTheme: () => {
+        set({ isChanging: true });
+        setTimeout(() => {
+          set((state) => ({ isDark: !state.isDark }));
+          setTimeout(() => {
+            set({ isChanging: false });
+          }, 300); // Duration slightly longer than animation
+        }, 100);
+      },
     }),
     {
       name: 'theme-storage',
