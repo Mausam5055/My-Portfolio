@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Clock, Tag } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -87,6 +87,10 @@ export const BlogDetail: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const post = blogPosts.find(p => p.id === id);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [id]);
 
   if (!post) {
     return (
@@ -193,7 +197,45 @@ export const BlogDetail: React.FC = () => {
           transition={{ delay: 0.6 }}
           className="prose dark:prose-invert max-w-none mx-auto md:text-lg lg:text-xl leading-relaxed"
         >
-          <ReactMarkdown className="text-gray-700 dark:text-gray-300 [&>h1]:text-4xl md:[&>h1]:text-5xl lg:[&>h1]:text-6xl [&>h1]:font-bold [&>h1]:mb-8 [&>h1]:md:hidden [&>h2]:text-2xl md:[&>h2]:text-3xl lg:[&>h2]:text-4xl [&>h2]:font-semibold [&>h2]:mt-12 [&>h2]:mb-6 [&>p]:text-base md:[&>p]:text-lg lg:[&>p]:text-xl [&>p]:leading-relaxed">
+          <ReactMarkdown className="text-gray-700 dark:text-gray-300 
+            [&>h1]:text-4xl md:[&>h1]:text-5xl lg:[&>h1]:text-6xl 
+            [&>h1]:font-bold [&>h1]:mb-8 [&>h1]:md:hidden 
+            [&>h1]:bg-gradient-to-r [&>h1]:from-purple-600 [&>h1]:to-pink-600 
+            [&>h1]:bg-clip-text [&>h1]:text-transparent
+            [&>h2]:text-2xl md:[&>h2]:text-3xl lg:[&>h2]:text-4xl 
+            [&>h2]:font-semibold [&>h2]:mt-12 [&>h2]:mb-6
+            [&>h2]:relative [&>h2]:pl-4 [&>h2]:before:absolute [&>h2]:before:left-0 
+            [&>h2]:before:top-0 [&>h2]:before:h-full [&>h2]:before:w-1 
+            [&>h2]:before:bg-gradient-to-b [&>h2]:before:from-purple-500 [&>h2]:before:to-pink-500 
+            [&>h2]:before:rounded-full
+            [&>p]:text-base md:[&>p]:text-lg lg:[&>p]:text-xl 
+            [&>p]:leading-relaxed [&>p]:text-gray-600 dark:text-gray-300
+            [&>p]:relative [&>p]:pl-4 [&>p]:before:absolute [&>p]:before:left-0 
+            [&>p]:before:top-0 [&>p]:before:h-full [&>p]:before:w-[2px] 
+            [&>p]:before:bg-gray-200 dark:[&>p]:before:bg-gray-700
+            [&>p]:before:rounded-full
+            [&>p]:hover:before:bg-purple-300 dark:[&>p]:hover:before:bg-purple-500
+            [&>p]:transition-all [&>p]:duration-300
+            [&>p]:hover:translate-x-1
+            [&>ul]:list-none [&>ul]:space-y-4 [&>ul]:mt-6
+            [&>ul>li]:flex [&>ul>li]:items-start [&>ul>li]:gap-3
+            [&>ul>li]:before:content-['•'] [&>ul>li]:before:text-purple-500
+            [&>ul>li]:text-gray-600 dark:[&>ul>li]:text-gray-300
+            [&>ul>li]:relative [&>ul>li]:pl-4
+            [&>ul>li]:before:absolute [&>ul>li]:before:left-0
+            [&>ul>li]:hover:translate-x-1 [&>ul>li]:transition-all [&>ul>li]:duration-300
+            [&>blockquote]:border-l-4 [&>blockquote]:border-purple-500
+            [&>blockquote]:pl-4 [&>blockquote]:italic
+            [&>blockquote]:bg-purple-50 dark:[&>blockquote]:bg-purple-900/20
+            [&>blockquote]:py-2 [&>blockquote]:rounded-r-lg
+            [&>blockquote]:text-gray-600 dark:[&>blockquote]:text-gray-300
+            [&>code]:bg-gray-100 dark:[&>code]:bg-gray-800
+            [&>code]:px-1.5 [&>code]:py-0.5 [&>code]:rounded
+            [&>code]:text-sm [&>code]:font-mono
+            [&>pre]:bg-gray-100 dark:[&>pre]:bg-gray-800
+            [&>pre]:p-4 [&>pre]:rounded-lg
+            [&>pre]:overflow-x-auto
+            [&>pre>code]:bg-transparent [&>pre>code]:p-0">
             {post.content}
           </ReactMarkdown>
         </motion.div>
