@@ -10,7 +10,7 @@ const galleryImages: GalleryImage[] = [
   {
     url: "/assets/gallery/1.jpg",
     title: "Himachal Pradesh",
-    description: "Land of the Gods,",
+    description: "Land of the Gods, nestled in the Himalayas with snow-capped peaks, pristine valleys, and ancient temples that showcase the rich cultural heritage of India's northern paradise.",
     subphotos: [
       {
         url: "/assets/gallery/1.jpg",
@@ -57,7 +57,7 @@ const galleryImages: GalleryImage[] = [
   {
     url: "/assets/gallery/4.jpg",
     title: "Amritsar",
-    description: "the spiritual and cultural heart of Punjab",
+    description: "The spiritual and cultural heart of Punjab, home to the magnificent Golden Temple, where devotion meets tradition in a city that resonates with historical significance and vibrant Punjabi culture.",
     subphotos: [
       {
         url: "/assets/gallery/4.jpg",
@@ -79,7 +79,7 @@ const galleryImages: GalleryImage[] = [
   {
     url: "/assets/gallery/7.jpg",
     title: "Digital Art Setup",
-    description: "Where digital artworks are created",
+    description: "A creative sanctuary equipped with cutting-edge tools and technology, where imagination flows freely and digital masterpieces come to life through artistic expression and technical precision.",
     subphotos: [
       {
         url: "/assets/gallery/7.jpg",
@@ -101,8 +101,7 @@ const galleryImages: GalleryImage[] = [
   {
     url: "/assets/gallery/12.jpg",
     title: "Friends",
-    description:
-      "Friends are the family we choose, bringing joy, support, and unforgettable memories into our lives.",
+    description: "Friends are the family we choose, bringing joy, support, and unforgettable memories into our lives. They're the companions who share our journey, celebrate our victories, and stand by us through life's challenges.",
     subphotos: [
       {
         url: "/assets/gallery/12.jpg",
@@ -310,7 +309,7 @@ export const GalleryDetail: React.FC = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.7 }}
-                  className="text-lg md:text-xl opacity-90 leading-relaxed"
+                  className="text-lg md:text-xl opacity-90 leading-relaxed line-clamp-2 md:line-clamp-none"
                 >
                   {galleryImage.description}
                 </motion.p>
