@@ -156,28 +156,31 @@ export const BlogDetail: React.FC = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
+                className="group relative flex items-center gap-3 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-xl px-5 py-2.5 rounded-full border border-white/20 hover:border-purple-300/50 hover:from-purple-500/30 hover:to-pink-500/30 transition-all duration-500 shadow-lg shadow-purple-500/5 hover:shadow-purple-500/10"
               >
-                <Calendar size={16} className="md:w-5 md:h-5 text-purple-300" />
-                <span className="font-medium">{post.date}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <Calendar size={18} className="md:w-5 md:h-5 text-purple-300 group-hover:scale-110 transition-transform duration-300" />
+                <span className="font-medium tracking-wide relative z-10">{post.date}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
+                className="group relative flex items-center gap-3 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 backdrop-blur-xl px-5 py-2.5 rounded-full border border-white/20 hover:border-blue-300/50 hover:from-blue-500/30 hover:to-cyan-500/30 transition-all duration-500 shadow-lg shadow-blue-500/5 hover:shadow-blue-500/10"
               >
-                <User size={16} className="md:w-5 md:h-5 text-purple-300" />
-                <span className="font-medium">{post.author}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-cyan-500/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <User size={18} className="md:w-5 md:h-5 text-blue-300 group-hover:scale-110 transition-transform duration-300" />
+                <span className="font-medium tracking-wide relative z-10">{post.author}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
+                className="group relative flex items-center gap-3 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 backdrop-blur-xl px-5 py-2.5 rounded-full border border-white/20 hover:border-emerald-300/50 hover:from-emerald-500/30 hover:to-teal-500/30 transition-all duration-500 shadow-lg shadow-emerald-500/5 hover:shadow-emerald-500/10"
               >
-                <Clock size={16} className="md:w-5 md:h-5 text-purple-300" />
-                <span className="font-medium">5 min read</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-teal-500/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <Clock size={18} className="md:w-5 md:h-5 text-emerald-300 group-hover:scale-110 transition-transform duration-300" />
+                <span className="font-medium tracking-wide relative z-10">5 min read</span>
               </motion.div>
             </div>
           </div>
