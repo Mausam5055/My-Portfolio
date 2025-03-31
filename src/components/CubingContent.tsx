@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronDown, ChevronUp, Clock, Target, Award, Box, Brain, Star, Zap, ChevronLeft, ChevronRight } from "lucide-react";
 import type { CubingContent as CubingContentType } from "../types";
@@ -69,6 +69,23 @@ export const CubingContent: React.FC = () => {
   const [selectedCube, setSelectedCube] = useState<CubingContentType | null>(null);
   const [isVideoLoading, setIsVideoLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Add effect to handle browser back button for modal
+  useEffect(() => {
+    if (selectedCube) {
+      // Push a new history entry when modal opens
+      window.history.pushState({ modalOpen: true }, '', window.location.href);
+
+      // Handle browser back button
+      const handlePopState = () => {
+        // Close the modal when back button is pressed
+        closeModal();
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [selectedCube]);
 
   const totalPages = Math.ceil(cubingContent.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
