@@ -112,7 +112,11 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
-    window.scrollTo(0, 0);
+    // Scroll to top instantly without animation
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     navigate(`/blog/${postId}`, { state: { fromBlogDetail: true } });
   };
 
