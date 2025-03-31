@@ -423,58 +423,6 @@ export const GameDetail: React.FC = () => {
 
       {/* Content Section */}
       <div className="relative">
-        {/* Floating Navigation - Mobile Only */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="lg:hidden sticky top-4 z-50 mx-4"
-        >
-          <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-md rounded-full shadow-lg p-2">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveSection(0)}
-                  className={`px-4 py-2 rounded-full transition-all duration-300 ${
-                    activeSection === 0
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50"
-                  }`}
-                >
-                  Gameplay
-                </button>
-                <button
-                  onClick={() => setActiveSection(1)}
-                  className={`px-4 py-2 rounded-full transition-all duration-300 ${
-                    activeSection === 1
-                      ? "bg-blue-500 text-white"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50"
-                  }`}
-                >
-                  Details
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleShare}
-                  className="p-2 text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-full transition-colors duration-300"
-                >
-                  <Share2 size={20} />
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-2 text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-full transition-colors duration-300"
-                >
-                  <Bookmark size={20} />
-                </motion.button>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
         {/* Content Area */}
         <div className="container mx-auto px-4 py-12">
           <AnimatePresence mode="wait">
