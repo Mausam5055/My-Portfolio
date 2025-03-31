@@ -165,13 +165,11 @@ export const Gaming: React.FC = () => {
           // Calculate the target scroll position
           const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
           
-          // If we're already at the top, scroll instantly
-          if (window.scrollY === 0) {
-            window.scrollTo(0, targetScroll);
-          } else {
-            // If we're not at the top, jump to position first
-            window.scrollTo(0, targetScroll);
-          }
+          // Always use instant scroll behavior
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'instant'
+          });
         }
       });
       // Clear the state
