@@ -271,7 +271,7 @@ export default function ContentBoxes({ refs }: { refs: any }) {
                     <h3 className="font-bold text-white text-lg md:text-xl mb-2">
                       {box.title}
                     </h3>
-                    <p className="text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                    <p className="hidden md:block text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none">
                       {box.description}
                     </p>
                   </div>
