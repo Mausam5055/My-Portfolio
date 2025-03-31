@@ -26,6 +26,7 @@ import { Footer } from './components/Footer';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import ThemeTransition from './components/ThemeTransition';
+import { ProjectDetails } from './pages/ProjectDetails';
 
 function App() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
@@ -215,6 +216,7 @@ function App() {
                 </>
               } />
               <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/projects/:id" element={<ProjectDetails />} />
             </Routes>
           </div>
         </>
