@@ -35,9 +35,9 @@ export const ProjectDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Navigate immediately without any scroll
+    // Navigate immediately without any scroll or transition
     navigate('/', { 
-      state: { scrollToProjects: true, fromProjectDetail: true },
+      state: { scrollToProjects: true },
       replace: true
     });
   };

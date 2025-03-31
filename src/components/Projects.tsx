@@ -18,16 +18,16 @@ export const Projects: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToProjects) {
-      // Immediately scroll to projects section without any animation
+      // Immediately scroll to projects section without any transition
       const projectsSection = document.getElementById('projects');
       if (projectsSection) {
         const rect = projectsSection.getBoundingClientRect();
         const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
-        // Use scrollTo with instant behavior
+        // Use direct scrollTo without any behavior
         window.scrollTo(0, targetScroll);
       }
       
-      // Clear the state
+      // Clear the state immediately
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
