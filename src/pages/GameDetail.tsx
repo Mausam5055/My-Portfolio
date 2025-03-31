@@ -225,16 +225,27 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Store current scroll position in history state
-    const scrollPosition = window.scrollY;
+    // Check if we're in mobile view
+    const isMobile = window.innerWidth < 1024;
     
-    // Navigate back with scroll position
-    navigate('/', { 
-      state: { 
-        scrollToGaming: true,
-        scrollPosition: scrollPosition
-      }
-    });
+    if (isMobile) {
+      // For mobile, use replace to prevent adding to history stack
+      // and maintain the scroll position
+      navigate('/', { 
+        replace: true,
+        state: { 
+          scrollToGaming: true,
+          fromMobile: true
+        }
+      });
+    } else {
+      // For desktop, keep the existing behavior
+      navigate('/', { 
+        state: { 
+          scrollToGaming: true
+        }
+      });
+    }
   };
 
   const handleShare = () => {
@@ -251,14 +262,16 @@ export const GameDetail: React.FC = () => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        // Get the stored scroll position from history state
-        const storedScrollPosition = location.state?.scrollPosition;
+        // Check if we're coming from mobile view
+        const isFromMobile = location.state?.fromMobile;
         
-        if (storedScrollPosition) {
-          // If we have a stored position, scroll to it
-          window.scrollTo(0, storedScrollPosition);
+        if (isFromMobile) {
+          // For mobile, scroll instantly without animation
+          const yOffset = -100;
+          const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo(0, y);
         } else {
-          // Otherwise, use the default behavior
+          // For desktop, use smooth scrolling
           const yOffset = -100;
           const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
           window.scrollTo({
