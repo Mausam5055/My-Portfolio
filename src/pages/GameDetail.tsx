@@ -245,25 +245,22 @@ export const GameDetail: React.FC = () => {
   useEffect(() => {
     // Add a new history entry when the component mounts
     window.history.pushState({ scrollToGaming: true }, '', window.location.href);
-  }, []);
 
-  useEffect(() => {
-    if (isNavigating.current) {
-      const gamingSection = document.getElementById('gaming');
-      if (gamingSection) {
-        // Use instant scroll behavior
-        const yOffset = -100;
-        const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        
-        // Use instant scroll without any delay
-        window.scrollTo({
-          top: y,
-          behavior: 'instant'
-        });
-      }
-      isNavigating.current = false;
-    }
-  }, [location.pathname]);
+    // Handle browser back button
+    const handlePopState = () => {
+      // Prevent default navigation
+      window.history.pushState({ scrollToGaming: true }, '', window.location.href);
+      
+      // Directly navigate to home with scroll state
+      navigate('/', { 
+        state: { scrollToGaming: true },
+        replace: true
+      });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigate]);
 
   if (!game) {
     return (

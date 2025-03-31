@@ -134,7 +134,7 @@ function AppContent() {
     };
 
     handleLocationChange();
-  }, [location.pathname]);
+  }, [location.pathname, location.state]);
 
   // Add a new effect to handle initial navigation
   useEffect(() => {
