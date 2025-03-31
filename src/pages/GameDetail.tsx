@@ -225,11 +225,16 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Simple navigation with scroll state
+    // Ensure instant navigation without any scroll effects
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     navigate('/', { 
       state: { 
         scrollToGaming: true
-      }
+      },
+      replace: true
     });
   };
 

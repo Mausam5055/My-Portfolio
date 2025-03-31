@@ -212,7 +212,11 @@ export const GalleryDetail: React.FC = () => {
   }, [galleryImage.subphotos]);
 
   const handleBack = () => {
-    // First navigate to home page
+    // First navigate to home page with instant behavior
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     navigate("/", { 
       state: { scrollToGallery: true },
       replace: true

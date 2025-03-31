@@ -120,12 +120,12 @@ export const Projects: React.FC = () => {
                   className="block"
                   onClick={(e) => {
                     e.preventDefault();
-                    // Ensure smooth scroll to top before navigation
+                    // Ensure instant navigation without any scroll effects
                     window.scrollTo({
                       top: 0,
                       behavior: 'instant'
                     });
-                    navigate(`/projects/${project.id}`);
+                    navigate(`/projects/${project.id}`, { replace: true });
                   }}
                 >
                   <div className="overflow-hidden rounded-2xl mb-4 md:mb-6 relative aspect-video">
@@ -158,12 +158,12 @@ export const Projects: React.FC = () => {
                   to={`/projects/${project.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    // Ensure smooth scroll to top before navigation
+                    // Ensure instant navigation without any scroll effects
                     window.scrollTo({
                       top: 0,
                       behavior: 'instant'
                     });
-                    navigate(`/projects/${project.id}`);
+                    navigate(`/projects/${project.id}`, { replace: true });
                   }}
                 >
                   <motion.h3 
