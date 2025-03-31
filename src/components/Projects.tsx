@@ -112,10 +112,10 @@ export const Projects: React.FC = () => {
                         loading="lazy"
                       />
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="bg-black/50 backdrop-blur-sm px-3 py-1.5 md:px-4 md:py-2 rounded-full">
-                        <span className="text-white text-xs md:text-sm font-medium">View Details</span>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="bg-black/60 backdrop-blur-sm px-4 py-2 md:px-6 md:py-2.5 rounded-full">
+                        <span className="text-white text-sm md:text-base font-medium">View Details</span>
                       </div>
                     </div>
                   </div>
@@ -151,59 +151,6 @@ export const Projects: React.FC = () => {
                       </motion.span>
                     ))}
                   </div>
-                </motion.div>
-    
-                {/* Action buttons */}
-                <motion.div 
-                  className="flex justify-between gap-2 md:gap-3 mb-4 md:mb-6"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  <a 
-                    href={project.github} 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1 md:gap-2 py-2 md:py-3 px-3 md:px-4 text-xs md:text-sm font-medium rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
-                  >
-                    <FaGithub className="text-base md:text-lg" />
-                    GitHub
-                  </a>
-                  <a 
-                    href={project.liveDemo} 
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1 md:gap-2 py-2 md:py-3 px-3 md:px-4 text-xs md:text-sm font-medium rounded-xl border-2 border-blue-500 text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
-                  >
-                    <FaExternalLinkAlt className="text-base md:text-lg" />
-                    Live Demo
-                  </a>
-                </motion.div>
-
-                {/* Contributors */}
-                <motion.div 
-                  className="flex items-center -space-x-2"
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                >
-                  {project.contributors.map((contributor) => (
-                    <div 
-                      key={contributor.name} 
-                      className="relative group"
-                      title={contributor.name}
-                    >
-                      <img 
-                        src={contributor.profilePic} 
-                        alt={contributor.name} 
-                        className="w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-gray-200 dark:border-gray-800 hover:border-blue-400 transition-all duration-300 transform hover:scale-110 hover:shadow-lg" 
-                        loading="lazy"
-                      />
-                      <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 md:px-3 md:py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 shadow-lg whitespace-nowrap">
-                        {contributor.name}
-                      </div>
-                    </div>
-                  ))}
                 </motion.div>
               </div>
             </motion.div>
