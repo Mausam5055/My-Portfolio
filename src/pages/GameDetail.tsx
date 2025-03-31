@@ -252,17 +252,15 @@ export const GameDetail: React.FC = () => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        // Simple scroll to gaming section
+        // Use instant scroll behavior
         const yOffset = -100;
         const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
         
-        // Use setTimeout to ensure DOM is ready
-        setTimeout(() => {
-          window.scrollTo({
-            top: y,
-            behavior: 'smooth'
-          });
-        }, 100);
+        // Use instant scroll without any delay
+        window.scrollTo({
+          top: y,
+          behavior: 'instant'
+        });
       }
       isNavigating.current = false;
     }
