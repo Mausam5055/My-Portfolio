@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Play, Clock, User, ChevronRight, ChevronLeft, Share2, Bookmark } from "lucide-react";
+import { ArrowLeft, Play, Clock, User, ChevronRight, ChevronLeft, Share2, Bookmark, BookOpen } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 type GameTimelineItem = {
@@ -27,7 +27,7 @@ type GameDetail = {
 const gameDetails: Record<string, GameDetail> = {
   "spider-man": {
     id: "1",
-    title: "Spider-Man: Miles Morales – Ultimate Web-Swinging Experience",
+    title: "Spider-Man: Miles Morales ",
     image: "https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&q=80&w=800",
     excerpt: "Watch my thrilling gameplay of Spider-Man: Miles Morales with epic web-swinging and combat!",
     content: `# Spider-Man: Miles Morales
@@ -331,20 +331,30 @@ export const GameDetail: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setActiveSection(0)}
-                      className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-sm transition-colors duration-300"
+                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                        activeSection === 0
+                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                          : "bg-white/10 hover:bg-white/20 text-white"
+                      }`}
                     >
-                      Watch Gameplay
+                      <Play size={20} className={activeSection === 0 ? "animate-pulse" : ""} />
+                      <span className="font-medium tracking-wide">Watch Gameplay</span>
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.05, y: -2 }}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setActiveSection(1)}
-                      className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-sm transition-colors duration-300"
+                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                        activeSection === 1
+                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
+                          : "bg-white/10 hover:bg-white/20 text-white"
+                      }`}
                     >
-                      Read More
+                      <BookOpen size={20} className={activeSection === 1 ? "animate-pulse" : ""} />
+                      <span className="font-medium tracking-wide">Read More</span>
                     </motion.button>
                   </div>
                 </div>
