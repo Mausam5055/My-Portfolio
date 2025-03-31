@@ -97,10 +97,10 @@ export const BlogDetail: React.FC = () => {
   // Handle browser back button
   useEffect(() => {
     const handlePopState = () => {
-      // Navigate first with state
+      // Navigate to home with state
       navigate('/', { 
-        state: { scrollToBlog: true },
-        replace: true // This replaces the current history entry instead of adding a new one
+        state: { scrollToBlog: true, fromBlogDetail: true },
+        replace: true
       });
     };
 
@@ -109,10 +109,10 @@ export const BlogDetail: React.FC = () => {
   }, [navigate]);
 
   const handleBack = () => {
-    // Navigate first with state
+    // Navigate to home with state
     navigate('/', { 
-      state: { scrollToBlog: true },
-      replace: true // This replaces the current history entry instead of adding a new one
+      state: { scrollToBlog: true, fromBlogDetail: true },
+      replace: true
     });
   };
 

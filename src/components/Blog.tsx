@@ -80,19 +80,18 @@ export const Blog: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      // Use requestAnimationFrame to ensure the DOM is ready
+      // First ensure we're at the top
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      
+      // Then wait for the next frame to ensure DOM is ready
       requestAnimationFrame(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
-          // Get the element's position relative to the viewport
           const rect = blogSection.getBoundingClientRect();
-          // Calculate the target scroll position with offset for mobile
-          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 80 : 100);
-          
-          // Use smooth scrolling with a longer duration for mobile
+          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
           window.scrollTo({
             top: targetScroll,
-            behavior: 'smooth'
+            behavior: 'instant'
           });
         }
       });
@@ -113,10 +112,9 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
-    // Navigate immediately without scrolling first
     navigate(`/blog/${postId}`, { 
       state: { fromBlogDetail: true },
-      replace: true // This replaces the current history entry instead of adding a new one
+      replace: true
     });
   };
 
