@@ -188,9 +188,22 @@ export const Gaming: React.FC = () => {
   };
 
   const handlePostClick = (slug: string) => {
-    window.scrollTo(0, 0);
+    // Ensure smooth scroll to top before navigation
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
     navigate(`/games/${slug}`, { state: { fromGameDetail: true } });
   };
+
+  // Add scroll restoration effect
+  useEffect(() => {
+    // Reset scroll position when component mounts
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+  }, []);
 
   return (
     <section
