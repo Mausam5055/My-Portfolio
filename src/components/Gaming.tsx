@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type GamingPost = {
   id: string;
@@ -154,23 +154,37 @@ const ITEMS_PER_PAGE = 3;
 export const Gaming: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Check if we have a hash in the URL
-    if (window.location.hash === '#gaming') {
+    // Only handle scroll if we're coming from game detail
+    if (location.state?.fromGameDetail) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        const yOffset = -100; // Adjust this value based on your header height
-        const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({
-          top: y,
-          behavior: 'smooth'
-        });
+        // Calculate the target scroll position
+        const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
+        
+        // If we're already at the top, scroll smoothly
+        if (window.scrollY === 0) {
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+          });
+        } else {
+          // If we're not at the top, jump to position first then smooth scroll
+          window.scrollTo(0, targetScroll);
+          requestAnimationFrame(() => {
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'smooth'
+            });
+          });
+        }
       }
-      // Remove the hash from the URL
+      // Clear the state
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-  }, []);
+  }, [location.state]);
 
   const totalPages = Math.ceil(gamingPosts.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;

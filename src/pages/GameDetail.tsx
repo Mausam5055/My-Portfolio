@@ -220,7 +220,15 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/#gaming');
+    // Store current scroll position
+    const currentScroll = window.scrollY;
+    // Navigate to home with hash
+    navigate('/#gaming', { 
+      state: { 
+        scrollPosition: currentScroll,
+        fromGameDetail: true 
+      }
+    });
   };
 
   useEffect(() => {
