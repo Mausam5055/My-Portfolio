@@ -13,31 +13,16 @@ export default function ThemeTransition({ isChanging, isDark }: ThemeTransitionP
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ 
+            duration: 0.5,
+            ease: [0.4, 0, 0.2, 1]
+          }}
           className={`fixed inset-0 z-[9999] pointer-events-none ${
             isDark 
-              ? "bg-black" 
-              : "bg-white"
+              ? "bg-gradient-to-br from-gray-900 via-black to-gray-900" 
+              : "bg-gradient-to-br from-white via-gray-50 to-white"
           }`}
-        >
-          <div className="absolute inset-0 flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={isDark ? "moon" : "sun"}
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ 
-                  duration: 0.3,
-                  delay: 0.1
-                }}
-                className={`text-4xl ${isDark ? "text-white" : "text-gray-900"}`}
-              >
-                {isDark ? "🌙" : "☀️"}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </motion.div>
+        />
       )}
     </AnimatePresence>
   );
