@@ -195,8 +195,8 @@ export const Gaming: React.FC = () => {
   };
 
   const handlePostClick = (slug: string) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate(`/games/${slug}`);
+    // Navigate to the game detail page without any scroll behavior
+    navigate(`/games/${slug}`, { state: { fromGameDetail: true } });
   };
 
   return (
