@@ -121,7 +121,7 @@ export const BlogDetail: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative h-[400px] rounded-2xl overflow-hidden mb-12"
+          className="relative h-[300px] md:h-[400px] rounded-2xl overflow-hidden mb-8 md:mb-12"
         >
           <motion.img
             src={post.image}
@@ -131,47 +131,57 @@ export const BlogDetail: React.FC = () => {
             animate={{ scale: 1 }}
             transition={{ duration: 1 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          <div className="absolute bottom-0 left-0 right-0 p-8">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+          <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
+              className="hidden md:block text-4xl lg:text-5xl font-bold text-white mb-3 md:mb-4 leading-tight"
             >
               {post.title}
             </motion.h1>
-            <div className="flex items-center gap-6 text-white/80">
+            <div className="flex flex-wrap items-center gap-4 md:gap-6 text-white/90 text-sm md:text-base">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
               >
-                <Calendar size={18} />
+                <Calendar size={16} className="md:w-5 md:h-5" />
                 <span>{post.date}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
               >
-                <User size={18} />
+                <User size={16} className="md:w-5 md:h-5" />
                 <span>{post.author}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
               >
-                <Clock size={18} />
+                <Clock size={16} className="md:w-5 md:h-5" />
                 <span>5 min read</span>
               </motion.div>
             </div>
           </div>
         </motion.div>
+
+        {/* Mobile Title */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="md:hidden text-3xl font-bold text-gray-900 dark:text-white mb-6"
+        >
+          {post.title}
+        </motion.h1>
 
         {/* Content Section */}
         <motion.div
