@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft, Play, Clock, User } from "lucide-react";
+import { ArrowLeft, Play, Clock, User, ChevronRight, ChevronLeft, Share2, Bookmark } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 type GameTimelineItem = {
@@ -213,16 +213,18 @@ export const GameDetail: React.FC = () => {
   const location = useLocation();
   const game = gameDetails[gameId || ""];
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState(0);
+  const [isVideoExpanded, setIsVideoExpanded] = useState(false);
   const isNavigating = useRef(false);
+  const videoRef = useRef<HTMLDivElement>(null);
 
   const handleVideoClick = (videoId: string) => {
     setPlayingVideoId(videoId);
+    setIsVideoExpanded(true);
   };
 
   const handleBackClick = () => {
-    // Store current scroll position
     const currentScroll = window.scrollY;
-    // Navigate to home with hash
     navigate('/#gaming', { 
       state: { 
         scrollPosition: currentScroll,
@@ -231,11 +233,21 @@ export const GameDetail: React.FC = () => {
     });
   };
 
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: game.title,
+        text: game.excerpt,
+        url: window.location.href
+      });
+    }
+  };
+
   useEffect(() => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        const yOffset = -100; // Adjust this value to account for any fixed headers
+        const yOffset = -100;
         const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
         window.scrollTo({
           top: y,
@@ -266,8 +278,8 @@ export const GameDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">
-      {/* Hero Section */}
-      <div className="relative h-[60vh] min-h-[500px] w-full overflow-hidden">
+      {/* Hero Section with Parallax Effect */}
+      <div className="relative h-screen w-full overflow-hidden">
         <motion.div
           initial={{ scale: 1.1 }}
           animate={{ scale: 1 }}
@@ -279,170 +291,486 @@ export const GameDetail: React.FC = () => {
             alt={game.title}
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80" />
         </motion.div>
 
-        <div className="absolute inset-0 flex items-end pb-12">
+        <div className="absolute inset-0 flex flex-col justify-end pb-12">
           <div className="container mx-auto px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="max-w-3xl"
-            >
-              <motion.button
-                whileHover={{ x: -5 }}
-                onClick={handleBackClick}
-                className="flex items-center gap-2 text-white/80 hover:text-white mb-8"
+            {/* Mobile Layout */}
+            <div className="lg:hidden">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="max-w-4xl mx-auto"
               >
-                <ArrowLeft size={20} />
-                <span>Back to Games</span>
-              </motion.button>
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={handleBackClick}
+                  className="flex items-center gap-2 text-white/80 hover:text-white mb-8"
+                >
+                  <ArrowLeft size={20} />
+                  <span>Back to Games</span>
+                </motion.button>
 
-              <div className="flex items-center gap-6 text-white/80 mb-6">
-                <div className="flex items-center gap-2">
-                  <Clock size={18} />
-                  <span>{game.date}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <User size={18} />
-                  <span>{game.author}</span>
-                </div>
-              </div>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-6 text-white/80">
+                    <div className="flex items-center gap-2">
+                      <Clock size={18} />
+                      <span>{game.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <User size={18} />
+                      <span>{game.author}</span>
+                    </div>
+                  </div>
 
-              <p className="text-lg text-white/90 max-w-2xl">
-                {game.excerpt}
-              </p>
-            </motion.div>
+                  <p className="text-xl text-white/90">
+                    {game.excerpt}
+                  </p>
+
+                  <div className="flex items-center gap-4">
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveSection(0)}
+                      className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-sm transition-colors duration-300"
+                    >
+                      Watch Gameplay
+                    </motion.button>
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => setActiveSection(1)}
+                      className="px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-full backdrop-blur-sm transition-colors duration-300"
+                    >
+                      Read More
+                    </motion.button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Desktop Layout */}
+            <div className="hidden lg:flex items-end justify-between">
+              {/* Left side content */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+                className="max-w-2xl"
+              >
+                <motion.button
+                  whileHover={{ x: -5 }}
+                  onClick={handleBackClick}
+                  className="flex items-center gap-2 text-white/80 hover:text-white mb-12 group"
+                >
+                  <ArrowLeft size={20} className="transform group-hover:-translate-x-1 transition-transform duration-300" />
+                  <span className="text-sm font-medium tracking-wide uppercase">Back to Games</span>
+                </motion.button>
+
+                <div className="space-y-8">
+                  <motion.h1 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="text-5xl font-bold text-white tracking-tight leading-tight"
+                  >
+                    {game.title}
+                  </motion.h1>
+
+                  <motion.p 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="text-xl text-white/90 leading-relaxed font-light"
+                  >
+                    {game.excerpt}
+                  </motion.p>
+                </div>
+              </motion.div>
+
+              {/* Right side content */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="flex items-center gap-8 text-white/80"
+              >
+                <div className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300">
+                    <Clock size={20} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium tracking-wide uppercase opacity-60">Date</span>
+                    <span className="text-lg">{game.date}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 group">
+                  <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300">
+                    <User size={20} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium tracking-wide uppercase opacity-60">Author</span>
+                    <span className="text-lg">{game.author}</span>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Content Section */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Gameplay Videos Sidebar - Now larger on desktop */}
-          <div className="lg:col-span-6">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-              className="space-y-8 sticky top-8"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-2">
-                <Play className="w-6 h-6 text-gray-500 dark:text-gray-400" />
-                Gameplay Highlights
-              </h2>
-              <div className="space-y-8">
-                {game.timeline.map((item, index) => (
-                  <motion.div
-                    key={item.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8 + index * 0.1 }}
-                    className="rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
-                  >
-                    <div 
-                      className="aspect-video relative group cursor-pointer"
-                      onClick={() => handleVideoClick(item.id)}
-                    >
-                      {playingVideoId === item.id ? (
-                        <iframe
-                          src={item.videoUrl}
-                          className="w-full h-full"
-                          frameBorder="0"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                          allowFullScreen
-                          title={item.title}
-                        />
-                      ) : (
-                        <>
-                          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                            <Play className="w-20 h-20 text-white" />
-                          </div>
-                          <img
-                            src={`https://img.youtube.com/vi/${item.videoUrl.split('/').pop()?.split('?')[0]}/maxresdefault.jpg`}
-                            alt={item.title}
-                            className="w-full h-full object-cover"
-                          />
-                        </>
-                      )}
-                    </div>
+      <div className="relative">
+        {/* Floating Navigation - Mobile Only */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="lg:hidden sticky top-4 z-50 mx-4"
+        >
+          <div className="bg-white/40 dark:bg-gray-900/40 backdrop-blur-md rounded-full shadow-lg p-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveSection(0)}
+                  className={`px-4 py-2 rounded-full transition-all duration-300 ${
+                    activeSection === 0
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50"
+                  }`}
+                >
+                  Gameplay
+                </button>
+                <button
+                  onClick={() => setActiveSection(1)}
+                  className={`px-4 py-2 rounded-full transition-all duration-300 ${
+                    activeSection === 1
+                      ? "bg-blue-500 text-white"
+                      : "text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50"
+                  }`}
+                >
+                  Details
+                </button>
+              </div>
+              <div className="flex items-center gap-2">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleShare}
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-full transition-colors duration-300"
+                >
+                  <Share2 size={20} />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="p-2 text-gray-600 dark:text-gray-300 hover:bg-white/50 dark:hover:bg-gray-800/50 rounded-full transition-colors duration-300"
+                >
+                  <Bookmark size={20} />
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        </motion.div>
 
-                    <div className="p-4 lg:p-6 lg:pl-8">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Clock size={16} className="text-gray-500 dark:text-gray-400" />
-                        <span className="text-sm font-medium tracking-wide text-gray-500 dark:text-gray-400 uppercase">
-                          {item.timestamp}
-                        </span>
+        {/* Content Area */}
+        <div className="container mx-auto px-4 py-12">
+          <AnimatePresence mode="wait">
+            {/* Desktop View - Always show gameplay with overview */}
+            <div className="hidden lg:block">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-2 gap-8"
+              >
+                {/* Video Grid */}
+                <div className="space-y-8">
+                  {game.timeline.map((item, index) => (
+                    <motion.div
+                      key={item.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 + index * 0.1 }}
+                      className="group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
+                    >
+                      <div 
+                        className="aspect-video relative cursor-pointer"
+                        onClick={() => handleVideoClick(item.id)}
+                      >
+                        {playingVideoId === item.id ? (
+                          <iframe
+                            src={item.videoUrl}
+                            className="w-full h-full"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            title={item.title}
+                          />
+                        ) : (
+                          <>
+                            <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors duration-300">
+                              <Play className="w-20 h-20 text-white transform group-hover:scale-110 transition-transform duration-300" />
+                            </div>
+                            <img
+                              src={`https://img.youtube.com/vi/${item.videoUrl.split('/').pop()?.split('?')[0]}/maxresdefault.jpg`}
+                              alt={item.title}
+                              className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                            />
+                          </>
+                        )}
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 tracking-tight">
-                        {item.title}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed font-light">
-                        {item.description}
-                      </p>
+
+                      <div className="p-6">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Clock size={16} className="text-gray-500 dark:text-gray-400" />
+                          <span className="text-sm font-medium tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                            {item.timestamp}
+                          </span>
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+                          {item.title}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed font-light">
+                          {item.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Game Overview - Always visible on desktop */}
+                <div className="sticky top-24">
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4 }}
+                    className="bg-transparent dark:bg-transparent p-8"
+                  >
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                      Game Overview
+                    </h2>
+                    <div className="prose dark:prose-invert max-w-none">
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ children }) => (
+                            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mt-12 mb-6 tracking-tight flex items-center gap-3">
+                              <span className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+                              {children}
+                            </h2>
+                          ),
+                          p: ({ children }) => (
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                              {children}
+                            </p>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="space-y-4 my-8">
+                              {children}
+                            </ul>
+                          ),
+                          li: ({ children }) => (
+                            <li className="flex items-start gap-3 text-gray-600 dark:text-gray-300 text-lg group">
+                              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 group-hover:scale-150 transition-transform duration-300" />
+                              <span className="group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">{children}</span>
+                            </li>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="text-gray-900 dark:text-white font-semibold">
+                              {children}
+                            </strong>
+                          ),
+                          em: ({ children }) => (
+                            <em className="text-gray-600 dark:text-gray-300 italic">
+                              {children}
+                            </em>
+                          ),
+                        }}
+                      >
+                        {game.content}
+                      </ReactMarkdown>
                     </div>
                   </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+                </div>
+              </motion.div>
+            </div>
 
-          {/* Main Content - Now more compact and right-aligned on desktop */}
-          <div className="lg:col-span-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="prose dark:prose-invert max-w-none lg:max-w-xl lg:ml-auto"
-            >
-              <ReactMarkdown
-                components={{
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl lg:text-4xl font-bold mb-6 lg:mb-8 text-gray-900 dark:text-white tracking-tight">
-                      {children}
-                    </h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-xl lg:text-2xl font-semibold mt-8 lg:mt-10 mb-4 lg:mb-6 text-gray-900 dark:text-white tracking-tight">
-                      {children}
-                    </h2>
-                  ),
-                  p: ({ children }) => (
-                    <p className="text-gray-700 dark:text-gray-300 mb-4 lg:mb-6 leading-relaxed text-base lg:text-lg font-light">
-                      {children}
-                    </p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="space-y-4 lg:space-y-5 my-6 lg:my-8 pl-5 list-outside">
-                      {children}
-                    </ul>
-                  ),
-                  li: ({ children }) => (
-                    <li className="relative pl-6 mb-2 lg:mb-3 text-gray-700 dark:text-gray-300">
-                      <span className="absolute left-0 top-1.5 w-1.5 h-1.5 rounded-full bg-gray-400 dark:bg-gray-500" />
-                      <span className="text-base lg:text-lg leading-relaxed font-light">{children}</span>
-                    </li>
-                  ),
-                  strong: ({ children }) => (
-                    <strong className="text-gray-900 dark:text-white font-semibold">
-                      {children}
-                    </strong>
-                  ),
-                  em: ({ children }) => (
-                    <em className="text-gray-700 dark:text-gray-300 italic">
-                      {children}
-                    </em>
-                  ),
-                }}
-              >
-                {game.content}
-              </ReactMarkdown>
-            </motion.div>
-          </div>
+            {/* Mobile View - Toggle between gameplay and details */}
+            <div className="lg:hidden">
+              <AnimatePresence mode="wait">
+                {activeSection === 0 ? (
+                  <motion.div
+                    key="gameplay"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="space-y-8"
+                  >
+                    {game.timeline.map((item, index) => (
+                      <motion.div
+                        key={item.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 + index * 0.1 }}
+                        className="group relative rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
+                      >
+                        <div 
+                          className="aspect-video relative cursor-pointer"
+                          onClick={() => handleVideoClick(item.id)}
+                        >
+                          {playingVideoId === item.id ? (
+                            <iframe
+                              src={item.videoUrl}
+                              className="w-full h-full"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title={item.title}
+                            />
+                          ) : (
+                            <>
+                              <div className="absolute inset-0 bg-black/40 flex items-center justify-center group-hover:bg-black/50 transition-colors duration-300">
+                                <Play className="w-20 h-20 text-white transform group-hover:scale-110 transition-transform duration-300" />
+                              </div>
+                              <img
+                                src={`https://img.youtube.com/vi/${item.videoUrl.split('/').pop()?.split('?')[0]}/maxresdefault.jpg`}
+                                alt={item.title}
+                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+                              />
+                            </>
+                          )}
+                        </div>
+
+                        <div className="p-6">
+                          <div className="flex items-center gap-2 mb-3">
+                            <Clock size={16} className="text-gray-500 dark:text-gray-400" />
+                            <span className="text-sm font-medium tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                              {item.timestamp}
+                            </span>
+                          </div>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 tracking-tight">
+                            {item.title}
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-300 text-base leading-relaxed font-light">
+                            {item.description}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="details"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.3 }}
+                    className="max-w-4xl mx-auto"
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 }}
+                      className="prose dark:prose-invert max-w-none"
+                    >
+                      <ReactMarkdown
+                        components={{
+                          h1: ({ children }) => (
+                            <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight">
+                              {children}
+                            </h1>
+                          ),
+                          h2: ({ children }) => (
+                            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mt-12 mb-6 tracking-tight flex items-center gap-3">
+                              <span className="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
+                              {children}
+                            </h2>
+                          ),
+                          p: ({ children }) => (
+                            <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg leading-relaxed">
+                              {children}
+                            </p>
+                          ),
+                          ul: ({ children }) => (
+                            <ul className="space-y-4 my-8">
+                              {children}
+                            </ul>
+                          ),
+                          li: ({ children }) => (
+                            <li className="flex items-start gap-3 text-gray-600 dark:text-gray-300 text-lg group">
+                              <span className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 mt-2 group-hover:scale-150 transition-transform duration-300" />
+                              <span className="group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">{children}</span>
+                            </li>
+                          ),
+                          strong: ({ children }) => (
+                            <strong className="text-gray-900 dark:text-white font-semibold">
+                              {children}
+                            </strong>
+                          ),
+                          em: ({ children }) => (
+                            <em className="text-gray-600 dark:text-gray-300 italic">
+                              {children}
+                            </em>
+                          ),
+                        }}
+                      >
+                        {game.content}
+                      </ReactMarkdown>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </AnimatePresence>
         </div>
       </div>
+
+      {/* Expanded Video Modal */}
+      <AnimatePresence>
+        {isVideoExpanded && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+            onClick={() => setIsVideoExpanded(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.9 }}
+              className="relative w-full max-w-4xl aspect-video"
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setIsVideoExpanded(false)}
+                className="absolute -top-4 -right-4 w-8 h-8 bg-white dark:bg-gray-900 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <iframe
+                src={game.timeline.find(item => item.id === playingVideoId)?.videoUrl}
+                className="w-full h-full rounded-lg"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                title="Gameplay Video"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
