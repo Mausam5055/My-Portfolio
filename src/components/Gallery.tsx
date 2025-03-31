@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import { Search } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { cn } from "../lib/utils";
 import type { GalleryImage } from "../types";
 
@@ -122,53 +123,25 @@ const galleryImages: GalleryImage[] = [
 ];
 
 export const Gallery: React.FC = () => {
-  const [selectedImage, setSelectedImage] = useState<GalleryImage | null>(null);
-  const [currentSubphotoIndex, setCurrentSubphotoIndex] = useState(0);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const openModal = (image: GalleryImage) => {
-    setSelectedImage(image);
-    setCurrentSubphotoIndex(0);
-    document.body.style.overflow = "hidden";
-  };
-
-  const closeModal = () => {
-    setSelectedImage(null);
-    setCurrentSubphotoIndex(0);
-    document.body.style.overflow = "unset";
-  };
-
-  const nextSubphoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (selectedImage?.subphotos) {
-      setCurrentSubphotoIndex(
-        (prev) => (prev + 1) % selectedImage.subphotos!.length,
-      );
+  // Handle scrolling to gallery section when returning from detail page
+  useEffect(() => {
+    if (location.state?.scrollToGallery) {
+      const gallerySection = document.getElementById('gallery');
+      if (gallerySection) {
+        gallerySection.scrollIntoView({ behavior: 'smooth' });
+      }
+      // Clear the state after scrolling
+      window.history.replaceState({}, document.title);
     }
-  };
+  }, [location.state]);
 
-  const prevSubphoto = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (selectedImage?.subphotos) {
-      setCurrentSubphotoIndex((prev) =>
-        prev === 0 ? selectedImage.subphotos!.length - 1 : prev - 1,
-      );
-    }
-  };
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (!selectedImage) return;
-
-    switch (event.key) {
-      case "Escape":
-        closeModal();
-        break;
-      case "ArrowLeft":
-        prevSubphoto(event as any);
-        break;
-      case "ArrowRight":
-        nextSubphoto(event as any);
-        break;
-    }
+  const handleImageClick = (imageId: string) => {
+    // Prevent default scroll behavior
+    window.scrollTo(0, 0);
+    navigate(`/gallery/${imageId}`, { state: { fromGallery: true } });
   };
 
   return (
@@ -176,7 +149,7 @@ export const Gallery: React.FC = () => {
       id="gallery"
       className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
       style={{
-        backgroundColor: "rgba(255, 255, 204, 0.05)", // Light yellow accent in light theme
+        backgroundColor: "rgba(255, 255, 204, 0.05)",
       }}
     >
       <div className="container mx-auto px-4">
@@ -226,7 +199,7 @@ export const Gallery: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
-              onClick={() => openModal(image)}
+              onClick={() => handleImageClick(image.url.split("/").pop()?.split(".")[0] || "")}
               className={cn(
                 "relative aspect-square rounded-xl overflow-hidden",
                 "shadow-xl group cursor-pointer",
@@ -270,134 +243,6 @@ export const Gallery: React.FC = () => {
             </motion.div>
           ))}
         </motion.div>
-
-        <AnimatePresence>
-          {selectedImage && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={closeModal}
-              className={cn(
-                "fixed inset-0 z-50",
-                "bg-black/95 backdrop-blur-md",
-                "flex items-center justify-center",
-                "p-4 md:p-8",
-              )}
-            >
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className={cn(
-                  "bg-white dark:bg-gray-900",
-                  "rounded-xl overflow-hidden",
-                  "max-w-6xl w-full",
-                  "relative shadow-2xl",
-                  "flex flex-col",
-                )}
-                style={{ maxHeight: "90vh" }}
-              >
-                <div className="relative flex-1">
-                  <motion.div
-                    key={currentSubphotoIndex}
-                    initial={{ opacity: 0, x: selectedImage.subphotos ? 50 : 0 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: selectedImage.subphotos ? -50 : 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="h-full flex items-center justify-center p-0 sm:p-4"
-                  >
-                    <img
-                      src={
-                        selectedImage.subphotos
-                          ? selectedImage.subphotos[currentSubphotoIndex].url
-                          : selectedImage.url
-                      }
-                      alt={
-                        selectedImage.subphotos
-                          ? selectedImage.subphotos[currentSubphotoIndex].title
-                          : selectedImage.title
-                      }
-                      className="w-full h-full sm:h-auto sm:max-h-[75vh] object-contain sm:rounded-lg"
-                      loading="lazy"
-                      decoding="async"
-                      fetchPriority="low"
-                    />
-                  </motion.div>
-
-                  {selectedImage.subphotos && selectedImage.subphotos.length > 1 && (
-                    <>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={prevSubphoto}
-                        className={cn(
-                          "absolute left-1 sm:left-4 top-1/2 -translate-y-1/2",
-                          "p-1.5 sm:p-3 rounded-full",
-                          "bg-black/50 hover:bg-black/70",
-                          "text-white",
-                          "transition-all duration-200",
-                          "md:backdrop-blur-sm"
-                        )}
-                      >
-                        <ChevronLeft className="w-4 h-4 sm:w-6 sm:h-6" />
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={nextSubphoto}
-                        className={cn(
-                          "absolute right-1 sm:right-4 top-1/2 -translate-y-1/2",
-                          "p-1.5 sm:p-3 rounded-full",
-                          "bg-black/50 hover:bg-black/70",
-                          "text-white",
-                          "transition-all duration-200",
-                          "md:backdrop-blur-sm"
-                        )}
-                      >
-                        <ChevronRight className="w-4 h-4 sm:w-6 sm:h-6" />
-                      </motion.button>
-                    </>
-                  )}
-                </div>
-
-                {selectedImage.subphotos && (
-                  <div className="p-1.5 sm:p-4 border-t border-gray-100 dark:border-gray-800 bg-white/50 dark:bg-gray-900/50 md:backdrop-blur-sm">
-                    <div className="flex overflow-x-auto pb-1 sm:pb-2 space-x-1.5 sm:space-x-3 snap-x scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
-                      {selectedImage.subphotos.map((subphoto, index) => (
-                        <motion.button
-                          key={index}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => setCurrentSubphotoIndex(index)}
-                          className={cn(
-                            "relative w-10 h-10 sm:w-20 sm:h-20 flex-shrink-0 rounded-lg overflow-hidden",
-                            "focus:outline-none focus:ring-2 focus:ring-green-500",
-                            "border transition-all duration-200",
-                            "hover:border-blue-500/50 dark:hover:border-blue-400/50",
-                            currentSubphotoIndex === index
-                              ? "ring-2 ring-green-500 dark:ring-green-400 border-transparent scale-105"
-                              : "border-white/10 dark:border-gray-700/50",
-                          )}
-                        >
-                          <img
-                            src={subphoto.url}
-                            alt={subphoto.title}
-                            className="w-full h-full object-cover"
-                            loading="lazy"
-                            decoding="async"
-                            fetchPriority="low"
-                          />
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </section>
   );

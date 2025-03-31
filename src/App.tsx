@@ -28,6 +28,7 @@ import 'aos/dist/aos.css';
 import ThemeTransition from './components/ThemeTransition';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { GameDetail } from './pages/GameDetail';
+import { GalleryDetail } from './pages/GalleryDetail';
 
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
@@ -221,6 +222,7 @@ function AppContent() {
               <Route path="/blog/:id" element={<BlogDetail />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
               <Route path="/games/:gameId" element={<GameDetail />} />
+              <Route path="/gallery/:id" element={<GalleryDetail />} />
             </Routes>
           </div>
         </>
