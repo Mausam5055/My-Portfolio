@@ -217,6 +217,7 @@ export const GameDetail: React.FC = () => {
   const [isVideoExpanded, setIsVideoExpanded] = useState(false);
   const isNavigating = useRef(false);
   const videoRef = useRef<HTMLDivElement>(null);
+  const isDetailsPage = location.pathname.startsWith('/projects/') || location.pathname.startsWith('/games/') || location.pathname.startsWith('/blog/');
 
   const handleVideoClick = (videoId: string) => {
     setPlayingVideoId(videoId);
