@@ -225,27 +225,12 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Use a more reliable way to detect mobile
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (isMobile) {
-      // For mobile, use replace and prevent default scroll behavior
-      navigate('/', { 
-        replace: true,
-        state: { 
-          scrollToGaming: true,
-          fromMobile: true,
-          preventScroll: true
-        }
-      });
-    } else {
-      // For desktop, keep the existing behavior
-      navigate('/', { 
-        state: { 
-          scrollToGaming: true
-        }
-      });
-    }
+    // Simple navigation with scroll state
+    navigate('/', { 
+      state: { 
+        scrollToGaming: true
+      }
+    });
   };
 
   const handleShare = () => {
@@ -262,34 +247,21 @@ export const GameDetail: React.FC = () => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        // Check if we're coming from mobile view and should prevent scroll
-        const isFromMobile = location.state?.fromMobile;
-        const shouldPreventScroll = location.state?.preventScroll;
+        // Simple scroll to gaming section
+        const yOffset = -100;
+        const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
         
-        if (isFromMobile && shouldPreventScroll) {
-          // For mobile, prevent default scroll and set position directly
-          const yOffset = -100;
-          const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          
-          // Use requestAnimationFrame to ensure DOM is ready
-          requestAnimationFrame(() => {
-            window.scrollTo(0, y);
-            // Clear the state after scrolling
-            window.history.replaceState({}, document.title);
-          });
-        } else {
-          // For desktop, use smooth scrolling
-          const yOffset = -100;
-          const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        // Use setTimeout to ensure DOM is ready
+        setTimeout(() => {
           window.scrollTo({
             top: y,
             behavior: 'smooth'
           });
-        }
+        }, 100);
       }
       isNavigating.current = false;
     }
-  }, [location.pathname, location.state]);
+  }, [location.pathname]);
 
   if (!game) {
     return (
