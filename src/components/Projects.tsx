@@ -18,7 +18,6 @@ const projects = [
 
 The portfolio effectively communicates the client's brand identity while maintaining a clean and professional aesthetic.`,
     videoPreview: 'https://www.youtube.com/embed/9z46-46o3CE',
-    imagePreview: '/assets/projects/3.png',
     technologies: [
       { name: 'JavaScript', percentage: 80 },
       { name: 'React', percentage: 90 },
@@ -45,7 +44,6 @@ The portfolio effectively communicates the client's brand identity while maintai
 
 This portfolio demonstrates my commitment to creating engaging and efficient web applications.`,
     videoPreview: 'https://www.youtube.com/embed/sluWyngYKOI',
-    imagePreview: '/assets/projects/2.png',
     technologies: [
       { name: 'HTML', percentage: 85 },
       { name: 'CSS', percentage: 75 },
@@ -71,7 +69,6 @@ This portfolio demonstrates my commitment to creating engaging and efficient web
 
 This portfolio represents my initial steps in web development and my passion for creating digital experiences.`,
     videoPreview: "https://www.youtube.com/embed/TxX6PeCusWM",
-    imagePreview: '/assets/projects/1.png',
     technologies: [
       { name: 'Node.js', percentage: 80 },
       { name: 'Express', percentage: 70 },

@@ -133,7 +133,7 @@ export default function Hero() {
               }}
             >
               <img
-                src="/assets/about3.jpg"
+                src="/assets/profile.jpg"
                 alt="Mausam Kar - Web Developer and UI/UX Designer"
                 className="w-full h-full object-cover"
                 loading="eager"

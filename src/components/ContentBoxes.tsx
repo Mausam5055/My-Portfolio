@@ -71,9 +71,9 @@ const boxes: ContentBox[] = [
   },
   {
     id: 12,
-    title: "Inspirations",
-    description: "People and ideas that drive my creativity.",
-    image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400"
+    title: "Blog",
+    description: "Insights, tutorials, and thoughts on web development and technology.",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 13,

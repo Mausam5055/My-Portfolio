@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
 import ReactMarkdown from "react-markdown";
 
@@ -142,13 +142,22 @@ Join me as I push these incredible machines to their limits, pulling off insane 
     date: "2024-03-15",
     author: "Mausam Kar",
   },
+  
 ];
+
+const ITEMS_PER_PAGE = 3;
 
 export const Gaming: React.FC = () => {
   const [selectedPost, setSelectedPost] = useState<GamingPost | null>(null);
-  const [showAll, setShowAll] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const displayedPosts = showAll ? gamingPosts : gamingPosts.slice(0, 3);
+  const totalPages = Math.ceil(gamingPosts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const displayedPosts = gamingPosts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   return (
     <section
@@ -248,26 +257,42 @@ export const Gaming: React.FC = () => {
           ))}
         </div>
 
-        {gamingPosts.length > 3 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-8 text-center"
+        {totalPages > 1 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-12 flex items-center justify-center gap-4"
           >
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
+            <motion.button
+              whileHover={{ x: -3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
+                currentPage === 1
+                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              }`}
             >
-              {showAll ? (
-                <>
-                  Show Less <ChevronUp className="w-5 h-5" />
-                </>
-              ) : (
-                <>
-                  Show More <ChevronDown className="w-5 h-5" />
-                </>
-              )}
-            </button>
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Previous</span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ x: 3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
+                currentPage === totalPages
+                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              }`}
+            >
+              <span className="text-sm font-medium">Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
           </motion.div>
         )}
 
