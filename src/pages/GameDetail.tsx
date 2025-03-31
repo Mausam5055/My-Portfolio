@@ -225,20 +225,16 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Check if we're in mobile view (window width < 1024px)
-    const isMobile = window.innerWidth < 1024;
+    // Store current scroll position in history state
+    const scrollPosition = window.scrollY;
     
-    if (isMobile) {
-      // For mobile, navigate without scroll state
-      navigate('/', { replace: true });
-    } else {
-      // For desktop, keep the existing scroll behavior
-      navigate('/', { 
-        state: { 
-          scrollToGaming: true 
-        }
-      });
-    }
+    // Navigate back with scroll position
+    navigate('/', { 
+      state: { 
+        scrollToGaming: true,
+        scrollPosition: scrollPosition
+      }
+    });
   };
 
   const handleShare = () => {
@@ -255,16 +251,25 @@ export const GameDetail: React.FC = () => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        const yOffset = -100;
-        const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-        window.scrollTo({
-          top: y,
-          behavior: 'smooth'
-        });
+        // Get the stored scroll position from history state
+        const storedScrollPosition = location.state?.scrollPosition;
+        
+        if (storedScrollPosition) {
+          // If we have a stored position, scroll to it
+          window.scrollTo(0, storedScrollPosition);
+        } else {
+          // Otherwise, use the default behavior
+          const yOffset = -100;
+          const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({
+            top: y,
+            behavior: 'smooth'
+          });
+        }
       }
       isNavigating.current = false;
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.state]);
 
   if (!game) {
     return (
