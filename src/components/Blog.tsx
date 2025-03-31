@@ -80,17 +80,25 @@ export const Blog: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      // Use setTimeout to ensure the DOM is fully rendered
+      // First scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      
+      // Then scroll to blog section after a delay
       setTimeout(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
-          const targetScroll = blogSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          // Get the element's position relative to the viewport
+          const rect = blogSection.getBoundingClientRect();
+          // Calculate the target scroll position with offset for mobile
+          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 80 : 100);
+          
+          // Use smooth scrolling with a longer duration for mobile
           window.scrollTo({
             top: targetScroll,
             behavior: 'smooth'
           });
         }
-      }, 100);
+      }, 800); // Increased delay for better mobile experience
       
       // Clear the state
       window.history.replaceState({}, document.title);
@@ -108,12 +116,15 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
-    // Scroll to top instantly without animation
+    // Scroll to top smoothly
     window.scrollTo({
       top: 0,
-      behavior: 'instant'
+      behavior: 'smooth'
     });
-    navigate(`/blog/${postId}`, { state: { fromBlogDetail: true } });
+    // Navigate after a small delay
+    setTimeout(() => {
+      navigate(`/blog/${postId}`, { state: { fromBlogDetail: true } });
+    }, 500); // Increased delay for better mobile experience
   };
 
   return (

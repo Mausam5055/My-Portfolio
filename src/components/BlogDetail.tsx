@@ -90,18 +90,33 @@ export const BlogDetail: React.FC = () => {
   const post = blogPosts.find(p => p.id === id);
 
   useEffect(() => {
+    // Smooth scroll to top on mount
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
   // Handle browser back button
   useEffect(() => {
     const handlePopState = () => {
-      navigate('/', { state: { scrollToBlog: true } });
+      // First scroll to top smoothly
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Then navigate after a small delay to ensure smooth transition
+      setTimeout(() => {
+        navigate('/', { state: { scrollToBlog: true } });
+      }, 500); // Increased delay for better mobile experience
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [navigate]);
+
+  const handleBack = () => {
+    // First scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Then navigate after a small delay to ensure smooth transition
+    setTimeout(() => {
+      navigate('/', { state: { scrollToBlog: true } });
+    }, 500); // Increased delay for better mobile experience
+  };
 
   if (!post) {
     return (
@@ -110,7 +125,7 @@ export const BlogDetail: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
           <motion.button
-            onClick={() => navigate('/', { state: { scrollToBlog: true } })}
+            onClick={handleBack}
             className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -132,7 +147,7 @@ export const BlogDetail: React.FC = () => {
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <motion.button
-          onClick={() => navigate('/', { state: { scrollToBlog: true } })}
+          onClick={handleBack}
           className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 mb-8"
           whileHover={{ x: -5 }}
           whileTap={{ scale: 0.95 }}
