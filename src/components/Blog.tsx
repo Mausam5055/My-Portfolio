@@ -34,7 +34,7 @@ As you progress, you'll discover more sophisticated ways to create digital art..
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97',
     excerpt: 'Building scalable and consistent design systems for the modern web...',
     content: `
-# Design Systems in Modern Web Development
+# Design Systems in Modern Web Dev.
 
 A comprehensive design system is the foundation of any successful digital product...
 
