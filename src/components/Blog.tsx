@@ -80,22 +80,18 @@ export const Blog: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      // Use requestAnimationFrame to ensure the DOM is ready
-      requestAnimationFrame(() => {
+      // Use setTimeout to ensure the DOM is fully rendered
+      setTimeout(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
-          // Calculate the target scroll position
           const targetScroll = blogSection.getBoundingClientRect().top + window.pageYOffset - 100;
-          
-          // If we're already at the top, scroll instantly
-          if (window.scrollY === 0) {
-            window.scrollTo(0, targetScroll);
-          } else {
-            // If we're not at the top, jump to position first
-            window.scrollTo(0, targetScroll);
-          }
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'smooth'
+          });
         }
-      });
+      }, 100);
+      
       // Clear the state
       window.history.replaceState({}, document.title);
     }

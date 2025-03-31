@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Clock, Tag } from 'lucide-react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
@@ -85,12 +85,23 @@ What's next in the world of web development? We're seeing a shift towards more i
 
 export const BlogDetail: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const post = blogPosts.find(p => p.id === id);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
+
+  // Handle browser back button
+  useEffect(() => {
+    const handlePopState = () => {
+      navigate('/', { state: { scrollToBlog: true } });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigate]);
 
   if (!post) {
     return (
@@ -99,7 +110,7 @@ export const BlogDetail: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
           <motion.button
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/', { state: { scrollToBlog: true } })}
             className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
