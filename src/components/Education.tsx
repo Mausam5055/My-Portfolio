@@ -1435,22 +1435,22 @@ export const Education = () => {
           />
         </motion.div>
         {!selectedSubject ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {subjects.map((subject) => (
               <motion.div
                 key={subject.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 whileHover={{ scale: 1.02 }}
-                className="bg-white dark:bg-[#0f172a] rounded-xl p-8 cursor-pointer border border-gray-200 dark:border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
+                className="bg-white dark:bg-[#0f172a] rounded-xl p-4 md:p-8 cursor-pointer border border-gray-200 dark:border-[#1e293b] hover:border-blue-500/30 transition-all duration-300"
                 onClick={() => handleSubjectClick(subject)}
               >
                 <div className="flex flex-col items-center text-center">
                   {getSubjectIcon(subject.icon)}
-                  <h3 className="mt-6 text-2xl font-semibold text-gray-900 dark:text-white">
+                  <h3 className="mt-4 md:mt-6 text-lg md:text-2xl font-semibold text-gray-900 dark:text-white">
                     {subject.name}
                   </h3>
-                  <p className="mt-2 text-gray-600 dark:text-gray-400 text-sm">
+                  <p className="hidden md:block mt-2 text-gray-600 dark:text-gray-400 text-sm">
                     {subject.description}
                   </p>
                 </div>
