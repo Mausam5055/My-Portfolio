@@ -158,17 +158,22 @@ export const Gaming: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToGaming) {
-      const gamingSection = document.getElementById('gaming');
-      if (gamingSection) {
-        // Calculate the target scroll position
-        const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
-        
-        // Use instant scroll behavior
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'instant'
-        });
-      }
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const gamingSection = document.getElementById('gaming');
+        if (gamingSection) {
+          // Calculate the target scroll position
+          const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // If we're already at the top, scroll instantly
+          if (window.scrollY === 0) {
+            window.scrollTo(0, targetScroll);
+          } else {
+            // If we're not at the top, jump to position first
+            window.scrollTo(0, targetScroll);
+          }
+        }
+      });
       // Clear the state
       window.history.replaceState({}, document.title);
     }
