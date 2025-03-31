@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { projects } from '../data/projects';
 
 const ITEMS_PER_PAGE = 3;
@@ -11,6 +11,7 @@ export const Projects: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
   const location = useLocation();
+  const navigate = useNavigate();
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedProjects = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
@@ -119,7 +120,15 @@ export const Projects: React.FC = () => {
               {/* Content wrapper */}
               <div className="relative z-10">
                 {/* Image container with loading state */}
-                <Link to={`/projects/${project.id}`} className="block">
+                <Link 
+                  to={`/projects/${project.id}`} 
+                  className="block"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, 0);
+                    navigate(`/projects/${project.id}`);
+                  }}
+                >
                   <div className="overflow-hidden rounded-2xl mb-4 md:mb-6 relative aspect-video">
                     {isLoading ? (
                       <div className="w-full h-full bg-gray-200 dark:bg-gray-800 animate-pulse rounded-2xl" />
@@ -146,7 +155,14 @@ export const Projects: React.FC = () => {
                 </Link>
 
                 {/* Project title */}
-                <Link to={`/projects/${project.id}`}>
+                <Link 
+                  to={`/projects/${project.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    window.scrollTo(0, 0);
+                    navigate(`/projects/${project.id}`);
+                  }}
+                >
                   <motion.h3 
                     className="text-xl md:text-2xl font-bold mb-3 md:mb-4 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent"
                     whileHover={prefersReducedMotion ? {} : { scale: 1.02 }}
