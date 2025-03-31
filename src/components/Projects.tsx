@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { projects } from '../data/projects';
 
 const ITEMS_PER_PAGE = 3;
@@ -10,9 +10,33 @@ export const Projects: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
+  const location = useLocation();
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const displayedProjects = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    if (location.state?.scrollToProjects) {
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const projectsSection = document.getElementById('projects');
+        if (projectsSection) {
+          // Calculate the target scroll position
+          const targetScroll = projectsSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // If we're already at the top, scroll instantly
+          if (window.scrollY === 0) {
+            window.scrollTo(0, targetScroll);
+          } else {
+            // If we're not at the top, jump to position first
+            window.scrollTo(0, targetScroll);
+          }
+        }
+      });
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   // Optimize image loading
   useEffect(() => {

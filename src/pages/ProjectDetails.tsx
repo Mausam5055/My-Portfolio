@@ -31,13 +31,18 @@ export const ProjectDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/');
+    // First navigate to home
+    navigate('/', { 
+      replace: true,
+      state: { scrollToProjects: true }
+    });
+    // Then scroll to projects section after a small delay to ensure navigation is complete
     setTimeout(() => {
       const projectsSection = document.getElementById('projects');
       if (projectsSection) {
-        projectsSection.scrollIntoView({ behavior: 'smooth' });
+        projectsSection.scrollIntoView({ behavior: 'instant' });
       }
-    }, 100);
+    }, 50);
   };
 
   return (

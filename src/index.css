@@ -10,6 +10,11 @@
     scrollbar-width: none;
   }
 
+  /* Only apply smooth scroll to anchor links */
+  html[data-smooth-scroll="true"] {
+    scroll-behavior: smooth;
+  }
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   html::-webkit-scrollbar {
     display: none;
