@@ -157,32 +157,25 @@ export const Gaming: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
-    // Only handle scroll if we're coming from game detail
-    if (location.state?.fromGameDetail) {
-      const gamingSection = document.getElementById('gaming');
-      if (gamingSection) {
-        // Calculate the target scroll position
-        const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
-        
-        // If we're already at the top, scroll smoothly
-        if (window.scrollY === 0) {
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'smooth'
-          });
-        } else {
-          // If we're not at the top, jump to position first then smooth scroll
-          window.scrollTo(0, targetScroll);
-          requestAnimationFrame(() => {
-            window.scrollTo({
-              top: targetScroll,
-              behavior: 'smooth'
-            });
-          });
+    if (location.state?.scrollToGaming) {
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const gamingSection = document.getElementById('gaming');
+        if (gamingSection) {
+          // Calculate the target scroll position
+          const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // If we're already at the top, scroll instantly
+          if (window.scrollY === 0) {
+            window.scrollTo(0, targetScroll);
+          } else {
+            // If we're not at the top, jump to position first
+            window.scrollTo(0, targetScroll);
+          }
         }
-      }
+      });
       // Clear the state
-      window.history.replaceState({}, document.title, window.location.pathname);
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
@@ -195,7 +188,7 @@ export const Gaming: React.FC = () => {
   };
 
   const handlePostClick = (slug: string) => {
-    // Navigate to the game detail page without any scroll behavior
+    window.scrollTo(0, 0);
     navigate(`/games/${slug}`, { state: { fromGameDetail: true } });
   };
 

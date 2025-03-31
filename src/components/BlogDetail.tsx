@@ -121,7 +121,7 @@ export const BlogDetail: React.FC = () => {
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <motion.button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate('/', { state: { scrollToBlog: true } })}
           className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 mb-8"
           whileHover={{ x: -5 }}
           whileTap={{ scale: 0.95 }}

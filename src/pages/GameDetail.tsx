@@ -225,11 +225,9 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    const currentScroll = window.scrollY;
-    navigate('/#gaming', { 
+    navigate('/', { 
       state: { 
-        scrollPosition: currentScroll,
-        fromGameDetail: true 
+        scrollToGaming: true 
       }
     });
   };

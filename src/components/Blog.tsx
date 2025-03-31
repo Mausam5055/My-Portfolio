@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Clock, Tag, Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
 
@@ -74,8 +74,32 @@ What's next in the world of web development...
 
 export const Blog: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  useEffect(() => {
+    if (location.state?.scrollToBlog) {
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          // Calculate the target scroll position
+          const targetScroll = blogSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // If we're already at the top, scroll instantly
+          if (window.scrollY === 0) {
+            window.scrollTo(0, targetScroll);
+          } else {
+            // If we're not at the top, jump to position first
+            window.scrollTo(0, targetScroll);
+          }
+        }
+      });
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   const categories = ['all', 'technology', 'web development', 'programming', 'design'];
 
@@ -88,7 +112,8 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
-    navigate(`/blog/${postId}`);
+    window.scrollTo(0, 0);
+    navigate(`/blog/${postId}`, { state: { fromBlogDetail: true } });
   };
 
   return (
