@@ -129,11 +129,21 @@ export const Gallery: React.FC = () => {
   // Handle scrolling to gallery section when returning from detail page
   useEffect(() => {
     if (location.state?.scrollToGallery) {
-      const gallerySection = document.getElementById('gallery');
-      if (gallerySection) {
-        gallerySection.scrollIntoView({ behavior: 'smooth' });
-      }
-      // Clear the state after scrolling
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const gallerySection = document.getElementById('gallery');
+        if (gallerySection) {
+          // Calculate the target scroll position
+          const targetScroll = gallerySection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // Always use instant scroll behavior
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'instant'
+          });
+        }
+      });
+      // Clear the state
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);

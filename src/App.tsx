@@ -72,7 +72,7 @@ function AppContent() {
 
   const scrollToSection = (section: keyof typeof sectionRefs) => {
     sectionRefs[section].current?.scrollIntoView({ 
-      behavior: 'smooth',
+      behavior: 'instant',
       block: 'start'
     });
   };
