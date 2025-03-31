@@ -185,13 +185,13 @@ export const ProjectDetails: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mb-16"
+            className="mb-8 sm:mb-16"
           >
-            <div className="flex items-center gap-3 mb-6">
-              <FaImage className="text-2xl text-blue-500" />
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Project Gallery</h2>
+            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+              <FaImage className="text-xl sm:text-2xl text-blue-500" />
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">Project Gallery</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4 md:gap-6">
               {[1, 2, 3].map((index) => (
                 <motion.div
                   key={index}
@@ -199,7 +199,7 @@ export const ProjectDetails: React.FC = () => {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.4 + index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
-                  className="group relative aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                  className="group relative aspect-square rounded-lg sm:rounded-xl overflow-hidden shadow-md sm:shadow-lg hover:shadow-xl sm:hover:shadow-2xl transition-all duration-300"
                 >
                   <img
                     src={`https://source.unsplash.com/random/800x800?technology,${index}`}
@@ -207,13 +207,13 @@ export const ProjectDetails: React.FC = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-white text-sm font-medium">
+                        <span className="text-white text-xs sm:text-sm font-medium">
                           Preview {index}
                         </span>
-                        <button className="p-2 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-colors">
-                          <FaExpand className="text-white text-lg" />
+                        <button className="p-1.5 sm:p-2 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-colors">
+                          <FaExpand className="text-white text-sm sm:text-lg" />
                         </button>
                       </div>
                     </div>
@@ -221,14 +221,14 @@ export const ProjectDetails: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-            <div className="mt-6 flex justify-center">
+            <div className="mt-4 sm:mt-6 flex justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="px-4 sm:px-6 py-1.5 sm:py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2 text-sm sm:text-base"
               >
                 View All Images
-                <FaImage className="text-lg" />
+                <FaImage className="text-base sm:text-lg" />
               </motion.button>
             </div>
           </motion.div>
