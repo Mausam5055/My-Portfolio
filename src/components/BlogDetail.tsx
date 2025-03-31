@@ -16,15 +16,15 @@ const blogPosts: BlogPost[] = [
     content: `
 # The Art of Creative Coding
 
-Creative coding is where art meets technology, where expression finds form through algorithms and interactivity...
+Creative coding is where art meets technology, where expression finds form through algorithms and interactivity. It's a fascinating realm where programmers become artists, and artists become programmers. This unique blend of disciplines opens up endless possibilities for creating engaging and interactive experiences.
 
 ## Getting Started
 
-The journey begins with understanding the basics of programming and visual arts...
+The journey begins with understanding the basics of programming and visual arts. As you dive into creative coding, you'll discover that it's not just about writing code, but about expressing ideas through digital mediums. The fundamentals of both programming and design principles become your building blocks for creating compelling digital experiences.
 
 ## Advanced Techniques
 
-As you progress, you'll discover more sophisticated ways to create digital art...
+As you progress, you'll discover more sophisticated ways to create digital art. From particle systems to procedural generation, from interactive installations to generative art, the possibilities are endless. Each technique adds a new dimension to your creative toolkit, allowing you to craft increasingly complex and engaging experiences.
     `,
     date: '2024-03-15',
     author: 'Mausam Kar'
@@ -37,15 +37,25 @@ As you progress, you'll discover more sophisticated ways to create digital art..
     content: `
 # Design Systems in Modern Web Development
 
-A comprehensive design system is the foundation of any successful digital product...
+A comprehensive design system is the foundation of any successful digital product. It serves as a single source of truth that helps teams build better products faster by providing consistent, reusable components and clear guidelines. In today's fast-paced development environment, a well-structured design system is not just a luxury but a necessity.
 
 ## Core Components
 
-Every design system needs these essential building blocks...
+Every design system needs these essential building blocks. Design tokens form the atomic elements of your system, defining colors, typography, spacing, and other visual properties. These tokens ensure consistency across your entire product. The component library brings these tokens to life, creating reusable UI elements that maintain both consistency and accessibility. The pattern library then takes these components and shows how they work together to solve common design problems.
 
 ## Implementation Strategies
 
-Learn how to effectively implement your design system...
+Learn how to effectively implement your design system. Start small with basic components and expand gradually as your needs grow. Maintain consistency by ensuring all components follow the same patterns and principles. Use version control to track changes systematically, and implement thorough testing procedures for all components. Keep documentation up-to-date and easily accessible to your team.
+
+## Best Practices
+
+When building and maintaining a design system, follow these best practices. Use semantic versioning for releases to track changes effectively. Establish a clear contribution process that makes it easy for team members to contribute while maintaining quality. Conduct regular audits and updates to keep the system fresh and relevant. Ensure cross-browser and device testing for consistent experiences. Focus on performance optimization and accessibility compliance to create inclusive, fast-loading components.
+
+## Tools and Technologies
+
+Popular tools for building design systems include Storybook for component documentation, Figma for design files, CSS-in-JS solutions for styling, component testing frameworks for quality assurance, and version control systems for change management. These tools work together to create a robust ecosystem for your design system.
+
+Remember that a design system is never truly finished - it should evolve with your product and team needs while maintaining consistency and quality.
     `,
     date: '2024-03-10',
     author: 'Mausam Kar'
@@ -58,15 +68,15 @@ Learn how to effectively implement your design system...
     content: `
 # The Future of Web Development
 
-The web development landscape is constantly evolving...
+The web development landscape is constantly evolving, driven by technological advancements and changing user expectations. As we look ahead, several key trends and technologies are shaping the future of how we build and experience the web.
 
 ## Emerging Technologies
 
-From WebAssembly to Edge Computing...
+From WebAssembly to Edge Computing, new technologies are revolutionizing web development. WebAssembly is enabling high-performance applications to run in the browser, while Edge Computing is bringing processing power closer to users for faster, more responsive experiences. These technologies, along with others like Progressive Web Apps and Web Components, are creating new possibilities for web applications.
 
 ## Future Trends
 
-What's next in the world of web development...
+What's next in the world of web development? We're seeing a shift towards more intelligent, personalized experiences powered by AI and machine learning. The rise of immersive technologies like WebXR is creating new opportunities for interactive web experiences. As we move forward, the focus is increasingly on creating more accessible, performant, and user-centric web applications that work seamlessly across all devices and platforms.
     `,
     date: '2024-03-05',
     author: 'Mausam Kar'
@@ -188,9 +198,9 @@ export const BlogDetail: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="prose dark:prose-invert max-w-none mx-auto"
+          className="prose dark:prose-invert max-w-none mx-auto md:text-lg lg:text-xl leading-relaxed"
         >
-          <ReactMarkdown className="text-gray-700 dark:text-gray-300">
+          <ReactMarkdown className="text-gray-700 dark:text-gray-300 [&>h1]:text-4xl md:[&>h1]:text-5xl lg:[&>h1]:text-6xl [&>h1]:font-bold [&>h1]:mb-8 [&>h2]:text-2xl md:[&>h2]:text-3xl lg:[&>h2]:text-4xl [&>h2]:font-semibold [&>h2]:mt-12 [&>h2]:mb-6 [&>p]:text-base md:[&>p]:text-lg lg:[&>p]:text-xl [&>p]:leading-relaxed">
             {post.content}
           </ReactMarkdown>
         </motion.div>
