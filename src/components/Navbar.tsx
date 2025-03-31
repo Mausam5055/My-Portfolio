@@ -179,9 +179,9 @@ export default function Navbar({
               onClick={toggleTheme}
               className={`ml-4 p-2.5 rounded-xl ${
                 isDark 
-                  ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30 text-white hover:from-purple-500/40 hover:to-pink-500/40" 
-                  : "bg-white shadow-md text-purple-900 hover:bg-purple-50"
-              } backdrop-blur-sm transition-all duration-200`}
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1, rotate: 180 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, x: 20 }}
@@ -198,9 +198,9 @@ export default function Navbar({
               onClick={toggleTheme}
               className={`p-2.5 rounded-xl ${
                 isDark 
-                  ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30 text-white" 
-                  : "bg-white shadow-md text-purple-900"
-              } backdrop-blur-sm`}
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
@@ -212,9 +212,9 @@ export default function Navbar({
               onClick={() => setIsOpen(!isOpen)}
               className={`p-2.5 rounded-xl ${
                 isDark 
-                  ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30 text-white" 
-                  : "bg-white shadow-md text-purple-900"
-              } backdrop-blur-sm`}
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle mobile menu"
