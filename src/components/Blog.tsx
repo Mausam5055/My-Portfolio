@@ -30,7 +30,7 @@ As you progress, you'll discover more sophisticated ways to create digital art..
   },
   {
     id: '2',
-    title: 'Design Systems in Modern Web Development',
+    title: 'Design Systems in Modern Web Dev.',
     image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97',
     excerpt: 'Building scalable and consistent design systems for the modern web...',
     content: `
