@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
 
+// This would typically come from an API or database
 const blogPosts: BlogPost[] = [
   {
     id: '1',
@@ -85,6 +86,10 @@ export const Blog: React.FC = () => {
                            post.content.toLowerCase().includes(selectedCategory.toLowerCase());
     return matchesSearch && matchesCategory;
   });
+
+  const handlePostClick = (postId: string) => {
+    navigate(`/blog/${postId}`);
+  };
 
   return (
     <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
@@ -169,7 +174,7 @@ export const Blog: React.FC = () => {
                 "border border-white/20 dark:border-gray-700/50",
                 "group relative cursor-pointer"
               )}
-              onClick={() => navigate(`/blog/${post.id}`)}
+              onClick={() => handlePostClick(post.id)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
@@ -236,7 +241,7 @@ export const Blog: React.FC = () => {
         <div className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none" />
       </div>
 
-      <style jsx global>{`
+      <style>{`
         @keyframes pulse-slow {
           0%, 100% { opacity: 0.1; }
           50% { opacity: 0.2; }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useThemeStore } from './store/theme';
 import SEO from './components/SEO';
 import FlashIntro from './components/FlashIntro';
@@ -14,7 +14,8 @@ import { Skills } from './components/Skills';
 import { Education } from './components/Education';
 import { Gallery } from './components/Gallery';
 import { CubingContent } from './components/CubingContent';
-import { Inspirations } from './components/Inspirations';
+import { Blog } from './components/Blog';
+import { BlogDetail } from './components/BlogDetail';
 import { FutureGoals } from './components/FutureGoals';
 import { FunFacts } from './components/FunFacts';
 import { Gaming } from './components/Gaming';
@@ -40,7 +41,7 @@ function App() {
     education: useRef<HTMLDivElement>(null),
     gallery: useRef<HTMLDivElement>(null),
     cubing: useRef<HTMLDivElement>(null),
-    inspirations: useRef<HTMLDivElement>(null),
+    blog: useRef<HTMLDivElement>(null),
     futureGoals: useRef<HTMLDivElement>(null),
     funFacts: useRef<HTMLDivElement>(null),
     Gaming: useRef<HTMLDivElement>(null),
@@ -118,10 +119,10 @@ function App() {
       description: "Discover my passion for speed cubing, achievements, and how this hobby has enhanced my problem-solving skills and analytical thinking.",
       keywords: "Speed Cubing, Rubik's Cube, Cube Solving, Problem Solving, Analytical Skills"
     },
-    inspirations: {
-      title: "Sources of Inspiration",
-      description: "Learn about the people, technologies, and experiences that inspire my work in web development and UI/UX design.",
-      keywords: "Inspiration, Web Development Inspiration, UI/UX Design Inspiration, Creative Influences, Professional Role Models"
+    blog: {
+      title: "Blog - Web Development & UI/UX Insights",
+      description: "Explore my thoughts, insights, and experiences in web development, UI/UX design, and technology. Read about the latest trends, best practices, and creative solutions.",
+      keywords: "Web Development Blog, UI/UX Design Blog, Tech Blog, Web Development Tips, UI/UX Design Tips, Technology Insights, Web Development Articles"
     },
     futureGoals: {
       title: "Future Goals & Aspirations",
@@ -190,24 +191,31 @@ function App() {
           <ThemeTransition isChanging={isChanging} isDark={isDark} />
           <div className={`min-h-screen bg-white dark:bg-black transition-colors duration-500 ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
             <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />
-            <Hero />
-            <ContentBoxes refs={sectionRefs} />
-            <div ref={sectionRefs.about}><About /></div>
-            <div ref={sectionRefs.journey}><Journey /></div>
-            <div ref={sectionRefs.qualifications}><Qualifications /></div>
-            <div ref={sectionRefs.certifications}><Certifications /></div>
-            <div ref={sectionRefs.skills}><Skills /></div>
-            <div ref={sectionRefs.education}><Education /></div>
-            <div ref={sectionRefs.gallery}><Gallery /></div>
-            <div ref={sectionRefs.cubing}><CubingContent /></div>
-            <div ref={sectionRefs.inspirations}><Inspirations /></div>
-            <div ref={sectionRefs.Gaming}><Gaming /></div>
-            <div ref={sectionRefs.funFacts}><FunFacts /></div>
-            <div ref={sectionRefs.projects}><Projects /></div>
-            <div ref={sectionRefs.futureGoals}><FutureGoals /></div>
-            <div ref={sectionRefs.testimonials}><Testimonials /></div>
-            <div ref={sectionRefs.contact}><Contact /></div>
-            <Footer />
+            <Routes>
+              <Route path="/" element={
+                <>
+                  <Hero />
+                  <ContentBoxes refs={sectionRefs} />
+                  <div ref={sectionRefs.about}><About /></div>
+                  <div ref={sectionRefs.journey}><Journey /></div>
+                  <div ref={sectionRefs.qualifications}><Qualifications /></div>
+                  <div ref={sectionRefs.certifications}><Certifications /></div>
+                  <div ref={sectionRefs.skills}><Skills /></div>
+                  <div ref={sectionRefs.education}><Education /></div>
+                  <div ref={sectionRefs.gallery}><Gallery /></div>
+                  <div ref={sectionRefs.cubing}><CubingContent /></div>
+                  <div ref={sectionRefs.blog}><Blog /></div>
+                  <div ref={sectionRefs.Gaming}><Gaming /></div>
+                  <div ref={sectionRefs.funFacts}><FunFacts /></div>
+                  <div ref={sectionRefs.projects}><Projects /></div>
+                  <div ref={sectionRefs.futureGoals}><FutureGoals /></div>
+                  <div ref={sectionRefs.testimonials}><Testimonials /></div>
+                  <div ref={sectionRefs.contact}><Contact /></div>
+                  <Footer />
+                </>
+              } />
+              <Route path="/blog/:id" element={<BlogDetail />} />
+            </Routes>
           </div>
         </>
       )}
