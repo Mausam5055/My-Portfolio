@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCode, FaUsers, FaTools, FaRocket, FaCheckCircle } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCode, FaUsers, FaTools, FaRocket, FaCheckCircle, FaExpand, FaImage } from 'react-icons/fa';
 import { projects } from '../data/projects';
 
 export const ProjectDetails: React.FC = () => {
@@ -130,7 +130,7 @@ export const ProjectDetails: React.FC = () => {
               <h2 className="text-3xl font-bold text-gray-900 dark:text-white">About This Project</h2>
             </div>
             <div className="prose dark:prose-invert max-w-none">
-              <p className="text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-200 leading-relaxed md:leading-loose max-w-3xl">
                 {project.detailedDescription.split('\n').find(p => !p.trim().startsWith('•')) || 
                 "This project showcases a comprehensive web application built with modern technologies and best practices. It demonstrates expertise in front-end development, user experience design, and responsive layouts. The implementation includes advanced features, smooth animations, and optimized performance, making it a standout example of professional web development."}
               </p>
@@ -152,6 +152,59 @@ export const ProjectDetails: React.FC = () => {
             />
           </motion.div>
 
+          {/* Image Gallery */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-16"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <FaImage className="text-2xl text-blue-500" />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Project Gallery</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              {[1, 2, 3].map((index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="group relative aspect-square rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                >
+                  <img
+                    src={`https://source.unsplash.com/random/800x800?technology,${index}`}
+                    alt={`${project.name} preview ${index}`}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-white text-sm font-medium">
+                          Preview {index}
+                        </span>
+                        <button className="p-2 bg-white/10 backdrop-blur-sm rounded-full hover:bg-white/20 transition-colors">
+                          <FaExpand className="text-white text-lg" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            <div className="mt-6 flex justify-center">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2"
+              >
+                View All Images
+                <FaImage className="text-lg" />
+              </motion.button>
+            </div>
+          </motion.div>
+
           {/* Project Overview */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -171,13 +224,13 @@ export const ProjectDetails: React.FC = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 + index * 0.1 }}
-                    className={`text-gray-700 dark:text-gray-200 leading-relaxed ${
-                      paragraph.startsWith('•') ? 'flex items-start gap-2' : ''
+                    className={`text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 dark:text-gray-200 leading-relaxed md:leading-loose max-w-3xl ${
+                      paragraph.startsWith('•') ? 'flex items-start gap-3 md:gap-4' : ''
                     }`}
                   >
                     {paragraph.startsWith('•') ? (
                       <>
-                        <FaCheckCircle className="text-blue-500 dark:text-blue-400 mt-1 flex-shrink-0" />
+                        <FaCheckCircle className="text-blue-500 dark:text-blue-400 mt-1.5 md:mt-2 flex-shrink-0 text-lg md:text-xl lg:text-2xl" />
                         <span>{paragraph.slice(1).trim()}</span>
                       </>
                     ) : (
@@ -202,16 +255,16 @@ export const ProjectDetails: React.FC = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {project.technologies.map((tech) => (
-                <div key={tech.name} className="space-y-3">
+                <div key={tech.name} className="space-y-3 md:space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-medium text-gray-800 dark:text-gray-100">
+                    <span className="text-base sm:text-lg md:text-xl lg:text-2xl font-medium text-gray-800 dark:text-gray-100">
                       {tech.name}
                     </span>
-                    <span className="text-sm font-medium text-blue-500">
+                    <span className="text-sm sm:text-base md:text-lg text-blue-500">
                       {tech.percentage}%
                     </span>
                   </div>
-                  <div className="h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                  <div className="h-2.5 md:h-3 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: `${tech.percentage}%` }}
@@ -245,10 +298,10 @@ export const ProjectDetails: React.FC = () => {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.7 + index * 0.1 }}
-                    className="flex items-start gap-3 p-4 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm"
+                    className="flex items-start gap-3 md:gap-4 p-4 md:p-6 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm"
                   >
-                    <FaCheckCircle className="text-blue-500 dark:text-blue-400 mt-1 flex-shrink-0" />
-                    <span className="text-gray-800 dark:text-gray-100">
+                    <FaCheckCircle className="text-blue-500 dark:text-blue-400 mt-1.5 md:mt-2 flex-shrink-0 text-lg md:text-xl lg:text-2xl" />
+                    <span className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-800 dark:text-gray-100 leading-relaxed md:leading-loose">
                       {feature.slice(1).trim()}
                     </span>
                   </motion.div>

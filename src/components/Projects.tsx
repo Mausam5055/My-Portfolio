@@ -101,7 +101,7 @@ export const Projects: React.FC = () => {
                       <div className="w-full h-full bg-gray-200 dark:bg-gray-800 animate-pulse rounded-2xl" />
                     ) : (
                       <motion.img
-                        src={project.imagePreview}
+                        src={project.outerPreviewImage}
                         alt={project.name}
                         className="w-full h-full object-cover rounded-2xl"
                         initial={{ scale: 1 }}
