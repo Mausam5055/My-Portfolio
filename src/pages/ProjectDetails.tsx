@@ -31,14 +31,18 @@ export const ProjectDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Force scroll to top before navigation
-    document.body.scrollTop = 0;
-    document.documentElement.scrollTop = 0;
-    // Navigate with replace to prevent scroll position restoration
+    // First navigate to home
     navigate('/', { 
       replace: true,
       state: { scrollToProjects: true }
     });
+    // Then scroll to projects section after a small delay to ensure navigation is complete
+    setTimeout(() => {
+      const projectsSection = document.getElementById('projects');
+      if (projectsSection) {
+        projectsSection.scrollIntoView({ behavior: 'instant' });
+      }
+    }, 50);
   };
 
   return (

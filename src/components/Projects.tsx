@@ -125,11 +125,8 @@ export const Projects: React.FC = () => {
                   className="block"
                   onClick={(e) => {
                     e.preventDefault();
-                    // Force scroll to top before navigation
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                    // Use replace to prevent back button from restoring scroll position
-                    navigate(`/projects/${project.id}`, { replace: true });
+                    window.scrollTo(0, 0);
+                    navigate(`/projects/${project.id}`);
                   }}
                 >
                   <div className="overflow-hidden rounded-2xl mb-4 md:mb-6 relative aspect-video">
@@ -162,11 +159,8 @@ export const Projects: React.FC = () => {
                   to={`/projects/${project.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    // Force scroll to top before navigation
-                    document.body.scrollTop = 0;
-                    document.documentElement.scrollTop = 0;
-                    // Use replace to prevent back button from restoring scroll position
-                    navigate(`/projects/${project.id}`, { replace: true });
+                    window.scrollTo(0, 0);
+                    navigate(`/projects/${project.id}`);
                   }}
                 >
                   <motion.h3 
