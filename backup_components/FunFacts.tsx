@@ -60,7 +60,7 @@ const funFacts: FunFact[] = [
 ];
 
 const getIcon = (iconName: string) => {
-  const icons: { [key: string]: React.ComponentType } = {
+  const icons: { [key: string]: React.ComponentType<any> } = {
     Laptop,
     Plane,
     Coffee,
@@ -106,7 +106,7 @@ export const FunFacts: React.FC = () => {
           />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {funFacts.map((fact, index) => {
             const Icon = getIcon(fact.icon);
             return (
@@ -123,7 +123,7 @@ export const FunFacts: React.FC = () => {
                 }}
                 className={cn(
                   "group bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-gray-900 dark:to-gray-900",
-                  "rounded-2xl p-6 border border-blue-200/30 dark:border-gray-700",
+                  "rounded-2xl p-4 sm:p-6 border border-blue-200/30 dark:border-gray-700",
                   "shadow-xl hover:shadow-2xl backdrop-blur-sm",
                   "transform transition-all duration-300 relative",
                   "hover:border-blue-300/50 dark:hover:border-purple-500/30",
@@ -160,7 +160,7 @@ export const FunFacts: React.FC = () => {
                 <motion.p
                   initial={{ opacity: 0.9 }}
                   whileHover={{ opacity: 1 }}
-                  className="text-gray-600 dark:text-gray-300 text-sm text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent font-medium"
+                  className="hidden sm:block text-gray-600 dark:text-gray-300 text-sm text-center bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent font-medium"
                 >
                   {fact.description}
                 </motion.p>

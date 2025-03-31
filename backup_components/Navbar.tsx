@@ -84,7 +84,11 @@ export default function Navbar({
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? "bg-black/80 backdrop-blur-lg shadow-lg" : "bg-transparent"
+        scrolled 
+          ? isDark 
+            ? "bg-black/80 backdrop-blur-lg shadow-lg" 
+            : "bg-white/80 backdrop-blur-lg shadow-md"
+          : "bg-transparent"
       }`}
       role="navigation"
       aria-label="Main navigation"
@@ -101,12 +105,20 @@ export default function Navbar({
             <motion.div
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.5 }}
-              className="p-2 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm shadow-lg"
+              className={`p-2 rounded-xl ${
+                isDark 
+                  ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30" 
+                  : "bg-gradient-to-br from-purple-500/10 to-pink-500/10"
+              } backdrop-blur-sm shadow-lg`}
             >
-              <User className="w-6 h-6 text-white" aria-hidden="true" />
+              <User className={`w-6 h-6 ${isDark ? "text-white" : "text-gray-800"}`} aria-hidden="true" />
             </motion.div>
             <motion.h1
-              className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent"
+              className={`text-2xl font-bold bg-gradient-to-r ${
+                isDark 
+                  ? "from-purple-400 via-pink-400 to-purple-400" 
+                  : "from-purple-600 via-pink-600 to-purple-600"
+              } bg-clip-text text-transparent`}
               style={{ fontFamily: "'Dancing Script', cursive" }}
               whileHover={{ scale: 1.05 }}
             >
@@ -116,15 +128,23 @@ export default function Navbar({
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            <div className="flex items-center bg-white/5 backdrop-blur-sm rounded-full p-1.5" role="menubar">
+            <div className={`flex items-center ${
+              isDark 
+                ? "bg-white/5" 
+                : "bg-white/80"
+              } backdrop-blur-sm rounded-full p-1.5`} role="menubar">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item}
                   onClick={() => handleLinkClick(item)}
                   className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                     activeSection === item
-                      ? "text-white bg-purple-500/20"
-                      : "text-white/70 hover:text-white"
+                      ? isDark 
+                        ? "text-white bg-purple-500/20"
+                        : "text-purple-900 bg-purple-100 shadow-sm"
+                      : isDark
+                        ? "text-white/70 hover:text-white"
+                        : "text-gray-700 hover:text-purple-900"
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -137,7 +157,11 @@ export default function Navbar({
                   {getDisplayName(item)}
                   {activeSection === item && (
                     <motion.div
-                      className="absolute bottom-0 left-0 right-0 h-full bg-purple-400/10 rounded-full"
+                      className={`absolute bottom-0 left-0 right-0 h-full rounded-full ${
+                        isDark 
+                          ? "bg-purple-400/10" 
+                          : "bg-purple-100/80"
+                      }`}
                       layoutId="activeSection"
                       transition={{
                         type: "spring",
@@ -153,7 +177,11 @@ export default function Navbar({
 
             <motion.button
               onClick={toggleTheme}
-              className="ml-4 p-2.5 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm text-white hover:from-purple-500/40 hover:to-pink-500/40 transition-all duration-200 shadow-lg"
+              className={`ml-4 p-2.5 rounded-xl ${
+                isDark 
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1, rotate: 180 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, x: 20 }}
@@ -168,7 +196,11 @@ export default function Navbar({
           <div className="md:hidden flex items-center space-x-3">
             <motion.button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm text-white shadow-lg"
+              className={`p-2.5 rounded-xl ${
+                isDark 
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
@@ -178,7 +210,11 @@ export default function Navbar({
 
             <motion.button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 backdrop-blur-sm text-white shadow-lg"
+              className={`p-2.5 rounded-xl ${
+                isDark 
+                  ? "text-white" 
+                  : "text-purple-900"
+              }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               aria-label="Toggle mobile menu"
@@ -221,7 +257,11 @@ export default function Navbar({
                 opacity: { duration: 0.2 },
               },
             }}
-            className="md:hidden fixed top-16 left-4 right-4 overflow-hidden bg-black/95 backdrop-blur-xl border border-purple-500/20 rounded-2xl shadow-lg"
+            className={`md:hidden fixed top-16 left-4 right-4 overflow-hidden ${
+              isDark 
+                ? "bg-black/95 backdrop-blur-xl border border-purple-500/20" 
+                : "bg-white/95 backdrop-blur-xl border border-purple-200"
+            } rounded-2xl shadow-lg`}
             role="dialog"
             aria-label="Mobile navigation menu"
           >
@@ -244,10 +284,14 @@ export default function Navbar({
                 <motion.button
                   key={item}
                   onClick={() => handleLinkClick(item)}
-                  className={`block w-full text-left px-4 py-3 rounded-xl text-white transition-all duration-200 capitalize ${
+                  className={`block w-full text-left px-4 py-3 rounded-xl transition-all duration-200 capitalize ${
                     activeSection === item
-                      ? "bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg"
-                      : "hover:bg-white/5"
+                      ? isDark
+                        ? "bg-gradient-to-r from-purple-500/30 to-pink-500/30 text-white shadow-lg"
+                        : "bg-white text-purple-900 shadow-sm border border-purple-100"
+                      : isDark
+                        ? "hover:bg-white/5 text-white/70 hover:text-white"
+                        : "hover:bg-purple-50 text-gray-900 hover:text-purple-900"
                   }`}
                   variants={{
                     open: {
@@ -270,7 +314,7 @@ export default function Navbar({
                   role="menuitem"
                   aria-current={activeSection === item ? "page" : undefined}
                 >
-                  <span className="font-medium">{getDisplayName(item)}</span>
+                  <span className="font-semibold">{getDisplayName(item)}</span>
                 </motion.button>
               ))}
             </motion.div>

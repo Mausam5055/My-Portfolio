@@ -1,12 +1,12 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ExternalLink, GraduationCap } from "lucide-react";
+import { ExternalLink, GraduationCap, School, BookOpen, Award } from "lucide-react";
 import type { Qualification } from "../types";
 
 const qualifications: Qualification[] = [
   {
     id: "Bachelor of Technology ",
-    degree: "💡BACHELOR OF TECHNOLOGY (AIML)",
+    degree: "BACHELOR OF TECHNOLOGY (AIML)",
     institution: "VIT Bhopal University",
     year: "2024-2028",
     image: "/assets/vit.webp",
@@ -17,7 +17,7 @@ const qualifications: Qualification[] = [
   },
   {
     id: "Secondary Education",
-    degree: "💡SECONDARY EDUCATION",
+    degree: "SECONDARY EDUCATION",
     institution: "Ramanuj Gupta Senior Secondary School",
     year: "2021-2023",
     image: "/assets/ramanuj.jpg",
@@ -28,7 +28,7 @@ const qualifications: Qualification[] = [
   },
   {
     id: "PRIMARY EDUCATION",
-    degree: "💡PRIMARY EDUCATION",
+    degree: " PRIMARY EDUCATION",
     institution: "Saint Vianney High School",
     year: "2008-2020",
     image: "/assets/education1.jpg",
@@ -77,7 +77,7 @@ export const Qualifications: React.FC = () => {
               viewport={{ once: true }}
               className="group relative overflow-hidden rounded-xl bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-shadow duration-300"
             >
-              <div className="flex flex-col md:flex-row-reverse gap-6 p-8">
+              <div className="flex flex-col md:flex-row-reverse gap-6 p-4 md:p-8">
                 <motion.div
                   className="md:w-1/3 relative overflow-hidden rounded-2xl shadow-lg"
                   initial={{ opacity: 0, scale: 0.9 }}
@@ -99,39 +99,49 @@ export const Qualifications: React.FC = () => {
                   </motion.div>
                 </motion.div>
 
-                <div className="flex-1 space-y-6">
+                <div className="flex-1 space-y-4 md:space-y-6">
                   <div className="space-y-2">
-                    <h3 className="text-xl font-bold text-blue-600 dark:text-purple-400">
-                      {qualification.degree}
-                    </h3>
-                    <div className="pl-4 space-y-1">
-                      <p className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                    <div className="space-y-2 md:space-y-3">
+                      <h3 className="text-lg md:text-2xl font-bold text-purple-600 dark:text-purple-400 tracking-tight flex items-center gap-2 md:gap-3">
+                        {qualification.id === "Bachelor of Technology " ? (
+                          <Award className="w-5 h-5 md:w-7 md:h-7 text-purple-500 dark:text-purple-400" />
+                        ) : qualification.id === "Secondary Education" ? (
+                          <School className="w-5 h-5 md:w-7 md:h-7 text-purple-500 dark:text-purple-400" />
+                        ) : (
+                          <BookOpen className="w-5 h-5 md:w-7 md:h-7 text-purple-500 dark:text-purple-400" />
+                        )}
+                        {qualification.degree}
+                      </h3>
+                    </div>
+                    <div className="pl-2 md:pl-4 space-y-1">
+                      <p className="text-base md:text-lg font-semibold text-gray-800 dark:text-gray-200">
                         {qualification.institution}
                       </p>
-                      <p className="text-blue-500 dark:text-purple-400 text-sm font-medium">
+                      <p className="text-purple-500 dark:text-purple-400 text-sm font-medium">
                         {qualification.year}
                       </p>
                     </div>
                   </div>
 
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed tracking-wide text-justify border-l-2 border-blue-500 dark:border-purple-400 pl-4">
-                    {qualification.description}
-                  </p>
-
-                  <div className="flex justify-end">
-                    <a
-                      href={qualification.driveLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-4 py-2 text-blue-500 dark:text-purple-400 hover:text-blue-700 dark:hover:text-purple-300 transition-colors"
-                    >
-                      <span className="font-medium">Credentials</span>
-                      <ExternalLink size={16} />
-                    </a>
+                  <div className="space-y-3 md:space-y-4">
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed tracking-wide text-justify border-l-2 border-purple-500 dark:border-purple-400 pl-3 md:pl-6 py-1 md:py-2 text-sm md:text-base">
+                      {qualification.description}
+                    </p>
+                    <div className="flex justify-end">
+                      <a
+                        href={qualification.driveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 text-purple-500 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors text-sm md:text-base"
+                      >
+                        <span className="font-medium">Credentials</span>
+                        <ExternalLink size={14} className="md:w-4 md:h-4" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-purple-600 dark:from-purple-400 dark:to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </motion.div>
           ))}
         </div>

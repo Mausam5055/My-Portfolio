@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   Code2,
@@ -127,6 +127,8 @@ const levelColors = {
 };
 
 export const Skills: React.FC = () => {
+  const [activeSkill, setActiveSkill] = useState<string | null>(null);
+
   return (
     <section
       id="skills"
@@ -161,6 +163,7 @@ export const Skills: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {skills.map((skill, index) => {
             const Icon = getIcon(skill.icon);
+            const isActive = activeSkill === skill.name;
             return (
               <motion.div
                 key={skill.name}
@@ -173,6 +176,7 @@ export const Skills: React.FC = () => {
                   type: "spring",
                   stiffness: 100,
                 }}
+                onClick={() => setActiveSkill(isActive ? null : skill.name)}
                 className={cn(
                   "group relative bg-white dark:bg-gray-900",
                   "rounded-2xl p-6",
@@ -180,6 +184,7 @@ export const Skills: React.FC = () => {
                   "transform transition-all duration-300",
                   "border-2 border-transparent hover:border-blue-500/20 dark:border-gray-800 dark:hover:border-indigo-500/30",
                   "before:absolute before:inset-0 before:bg-gradient-to-br before:from-blue-500/10 before:to-purple-500/10 before:opacity-0 group-hover:before:opacity-100 before:transition-opacity before:duration-300",
+                  isActive && "border-blue-500/20 dark:border-indigo-500/30 before:opacity-100"
                 )}
               >
                 <div className="relative z-10">
@@ -217,6 +222,7 @@ export const Skills: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     whileHover={{ opacity: 1, y: 0 }}
+                    animate={{ opacity: isActive ? 1 : 0, y: isActive ? 0 : 20 }}
                     className={cn(
                       "absolute inset-0 rounded-2xl p-6",
                       "bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm",
@@ -231,7 +237,10 @@ export const Skills: React.FC = () => {
                 </div>
 
                 <div className="absolute inset-0 overflow-hidden rounded-2xl">
-                  <div className="absolute -inset-24 opacity-0 group-hover:opacity-30 transition-opacity duration-500">
+                  <div className={cn(
+                    "absolute -inset-24 opacity-0 group-hover:opacity-30 transition-opacity duration-500",
+                    isActive && "opacity-30"
+                  )}>
                     <div className="animate-shine w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                   </div>
                 </div>
