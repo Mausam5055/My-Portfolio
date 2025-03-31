@@ -267,13 +267,13 @@ export default function ContentBoxes({ refs }: { refs: any }) {
                 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
-                  <div className="transform transition-all duration-300">
-                    <h3 className="font-bold text-white text-lg md:text-xl mb-2">
-                      {box.title}
-                    </h3>
-                    <p className="hidden md:block text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                  <div className="transform transition-all duration-300 flex flex-col md:flex-col">
+                    <p className="opacity-0 md:group-hover:opacity-100 text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none transition-all duration-300 transform translate-y-2 md:group-hover:translate-y-0 mb-2">
                       {box.description}
                     </p>
+                    <h3 className="font-bold text-white text-lg md:text-xl mt-auto md:mt-0">
+                      {box.title}
+                    </h3>
                   </div>
                 </div>
 
