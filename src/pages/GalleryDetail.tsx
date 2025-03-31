@@ -42,16 +42,16 @@ const galleryImages: GalleryImage[] = [
         title: "Creative Tools",
         description: "Essential tools for creative work",
       },
-      {
-        url: "/assets/gallery/17.jpg",
-        title: "Creative Tools",
-        description: "Essential tools for creative work",
-      },
-      {
-        url: "/assets/gallery/18.jpg",
-        title: "Creative Tools",
-        description: "Essential tools for creative work",
-      },
+      // {
+      //   url: "/assets/gallery/17.jpg",
+      //   title: "Creative Tools",
+      //   description: "Essential tools for creative work",
+      // },
+      // {
+      //   url: "/assets/gallery/18.jpg",
+      //   title: "Creative Tools",
+      //   description: "Essential tools for creative work",
+      // },
     ],
   },
   {
@@ -296,20 +296,6 @@ export const GalleryDetail: React.FC = () => {
         >
           <div className="container mx-auto">
             <div className="flex flex-col md:flex-row items-start gap-8">
-              {/* Preview Image */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
-                className="hidden md:block w-48 h-48 rounded-xl overflow-hidden shadow-2xl border-2 border-white/20 backdrop-blur-sm bg-black/20"
-              >
-                <img
-                  src={galleryImage.url}
-                  alt={`${galleryImage.title} Preview`}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                />
-              </motion.div>
-
               {/* Text Content */}
               <div className="flex-1 space-y-4">
                 <motion.h1 
