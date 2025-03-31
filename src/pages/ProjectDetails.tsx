@@ -53,66 +53,94 @@ export const ProjectDetails: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80" />
         </div>
         <div className="relative h-full flex items-end">
-          <div className="container mx-auto px-4 pb-8 md:pb-16">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="max-w-4xl"
-            >
+          <div className="container mx-auto px-4 pb-8 md:pb-16 w-full">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="max-w-2xl hidden sm:block"
+              >
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
+                  {project.name}
+                </h1>
+                <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-4 sm:mb-6 max-w-2xl leading-relaxed">
+                  {project.description}
+                </p>
+                <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
+                  {project.technologies.map((tech) => (
+                    <span
+                      key={tech.name}
+                      className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs sm:text-sm"
+                    >
+                      {tech.name}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6"
+                className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4"
               >
                 <button
                   onClick={handleBackClick}
-                  className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors text-sm sm:text-base"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors text-sm sm:text-base order-3 sm:order-1"
                 >
                   <FaArrowLeft className="text-sm sm:text-base" />
                   Back to Projects
                 </button>
-                <div className="flex gap-2">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base"
-                  >
-                    <FaGithub className="text-lg sm:text-xl" />
-                    GitHub
-                  </a>
-                  <a
-                    href={project.liveDemo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors text-sm sm:text-base"
-                  >
-                    <FaExternalLinkAlt className="text-lg sm:text-xl" />
-                    Live Demo
-                  </a>
-                </div>
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors text-sm sm:text-base font-medium order-1 sm:order-2"
+                >
+                  <FaGithub className="text-lg sm:text-xl" />
+                  GitHub
+                </a>
+                <a
+                  href={project.liveDemo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-transparent border-2 border-white text-white rounded-lg hover:bg-white/10 transition-colors text-sm sm:text-base font-medium order-2 sm:order-3"
+                >
+                  <FaExternalLinkAlt className="text-lg sm:text-xl" />
+                  Live Demo
+                </a>
               </motion.div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
-                {project.name}
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-200 mb-4 sm:mb-6 md:mb-8 max-w-2xl leading-relaxed">
-                {project.description}
-              </p>
-              <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
-                {project.technologies.map((tech) => (
-                  <span
-                    key={tech.name}
-                    className="px-2.5 py-1 sm:px-3 sm:py-1.5 bg-white/10 backdrop-blur-sm text-white rounded-full text-xs sm:text-sm"
-                  >
-                    {tech.name}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Mobile Title and Description */}
+      <div className="sm:hidden container mx-auto px-4 py-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-2xl"
+        >
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">
+            {project.name}
+          </h1>
+          <p className="text-base text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {project.technologies.map((tech) => (
+              <span
+                key={tech.name}
+                className="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-xs"
+              >
+                {tech.name}
+              </span>
+            ))}
+          </div>
+        </motion.div>
       </div>
 
       {/* Main Content */}
