@@ -225,11 +225,20 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/', { 
-      state: { 
-        scrollToGaming: true 
-      }
-    });
+    // Check if we're in mobile view (window width < 1024px)
+    const isMobile = window.innerWidth < 1024;
+    
+    if (isMobile) {
+      // For mobile, navigate without scroll state
+      navigate('/', { replace: true });
+    } else {
+      // For desktop, keep the existing scroll behavior
+      navigate('/', { 
+        state: { 
+          scrollToGaming: true 
+        }
+      });
+    }
   };
 
   const handleShare = () => {
