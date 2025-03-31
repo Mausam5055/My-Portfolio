@@ -212,12 +212,19 @@ export const GalleryDetail: React.FC = () => {
   }, [galleryImage.subphotos]);
 
   const handleBack = () => {
-    // Navigate instantly without any scroll effects
-    navigate("/", { 
-      state: { scrollToGallery: true },
+    // Navigate with scroll state and replace the current history entry
+    navigate('/', { 
+      state: { 
+        scrollToGallery: true
+      },
       replace: true
     });
   };
+
+  useEffect(() => {
+    // Add a new history entry when the component mounts
+    window.history.pushState({ scrollToGallery: true }, '', window.location.href);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">

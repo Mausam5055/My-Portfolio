@@ -70,6 +70,193 @@ function AppContent() {
     }
   }, [isDark]);
 
+  // Handle browser back button and device back button
+  useEffect(() => {
+    const handlePopState = (event: PopStateEvent) => {
+      // Get the current location state
+      const currentState = event.state;
+      
+      // If we have a scroll state in the current location, handle it
+      if (currentState?.scrollToGaming || currentState?.scrollToGallery || currentState?.scrollToProjects || currentState?.scrollToBlog) {
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+          let targetSection: keyof typeof sectionRefs | null = null;
+          
+          if (currentState.scrollToGaming) targetSection = 'Gaming';
+          else if (currentState.scrollToGallery) targetSection = 'gallery';
+          else if (currentState.scrollToProjects) targetSection = 'projects';
+          else if (currentState.scrollToBlog) targetSection = 'blog';
+
+          if (targetSection && sectionRefs[targetSection]?.current) {
+            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'instant'
+            });
+          }
+        });
+      }
+    };
+
+    // Listen for popstate events
+    window.addEventListener('popstate', handlePopState);
+
+    // Handle initial state if it exists
+    if (location.state) {
+      handlePopState({ state: location.state } as PopStateEvent);
+    }
+
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [location.state]);
+
+  // Add a new effect to handle navigation state changes
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const state = location.state || {};
+      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
+        requestAnimationFrame(() => {
+          let targetSection: keyof typeof sectionRefs | null = null;
+          
+          if (state.scrollToGaming) targetSection = 'Gaming';
+          else if (state.scrollToGallery) targetSection = 'gallery';
+          else if (state.scrollToProjects) targetSection = 'projects';
+          else if (state.scrollToBlog) targetSection = 'blog';
+
+          if (targetSection && sectionRefs[targetSection]?.current) {
+            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'instant'
+            });
+          }
+        });
+      }
+    };
+
+    handleLocationChange();
+  }, [location.pathname]);
+
+  // Add a new effect to handle initial navigation
+  useEffect(() => {
+    // If we're on a detail page, add a history entry
+    if (isDetailsPage) {
+      const path = location.pathname;
+      let scrollState = {};
+      
+      if (path.startsWith('/games/')) {
+        scrollState = { scrollToGaming: true };
+      } else if (path.startsWith('/gallery/')) {
+        scrollState = { scrollToGallery: true };
+      } else if (path.startsWith('/projects/')) {
+        scrollState = { scrollToProjects: true };
+      } else if (path.startsWith('/blog/')) {
+        scrollState = { scrollToBlog: true };
+      }
+
+      window.history.pushState(scrollState, '', window.location.href);
+    }
+  }, [isDetailsPage, location.pathname]);
+
+  // Add a new effect to handle section navigation
+  useEffect(() => {
+    const handleSectionNavigation = () => {
+      const state = location.state || {};
+      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
+        requestAnimationFrame(() => {
+          let targetSection: keyof typeof sectionRefs | null = null;
+          
+          if (state.scrollToGaming) targetSection = 'Gaming';
+          else if (state.scrollToGallery) targetSection = 'gallery';
+          else if (state.scrollToProjects) targetSection = 'projects';
+          else if (state.scrollToBlog) targetSection = 'blog';
+
+          if (targetSection && sectionRefs[targetSection]?.current) {
+            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'instant'
+            });
+          }
+        });
+      }
+    };
+
+    handleSectionNavigation();
+  }, [location.pathname, location.state]);
+
+  // Add a new effect to handle back button navigation
+  useEffect(() => {
+    const handleBackButton = () => {
+      // If we're on a detail page, add a history entry with the correct scroll state
+      if (isDetailsPage) {
+        const path = location.pathname;
+        let scrollState = {};
+        
+        if (path.startsWith('/games/')) {
+          scrollState = { scrollToGaming: true };
+        } else if (path.startsWith('/gallery/')) {
+          scrollState = { scrollToGallery: true };
+        } else if (path.startsWith('/projects/')) {
+          scrollState = { scrollToProjects: true };
+        } else if (path.startsWith('/blog/')) {
+          scrollState = { scrollToBlog: true };
+        }
+
+        window.history.pushState(scrollState, '', window.location.href);
+      }
+    };
+
+    handleBackButton();
+  }, [isDetailsPage, location.pathname]);
+
+  // Add a new effect to handle initial page load
+  useEffect(() => {
+    // If we're on a detail page, add a history entry with the correct scroll state
+    if (isDetailsPage) {
+      const path = location.pathname;
+      let scrollState = {};
+      
+      if (path.startsWith('/games/')) {
+        scrollState = { scrollToGaming: true };
+      } else if (path.startsWith('/gallery/')) {
+        scrollState = { scrollToGallery: true };
+      } else if (path.startsWith('/projects/')) {
+        scrollState = { scrollToProjects: true };
+      } else if (path.startsWith('/blog/')) {
+        scrollState = { scrollToBlog: true };
+      }
+
+      window.history.pushState(scrollState, '', window.location.href);
+    }
+  }, []);
+
+  // Add a new effect to handle navigation state changes
+  useEffect(() => {
+    const handleNavigationState = () => {
+      const state = location.state || {};
+      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
+        requestAnimationFrame(() => {
+          let targetSection: keyof typeof sectionRefs | null = null;
+          
+          if (state.scrollToGaming) targetSection = 'Gaming';
+          else if (state.scrollToGallery) targetSection = 'gallery';
+          else if (state.scrollToProjects) targetSection = 'projects';
+          else if (state.scrollToBlog) targetSection = 'blog';
+
+          if (targetSection && sectionRefs[targetSection]?.current) {
+            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({
+              top: targetScroll,
+              behavior: 'instant'
+            });
+          }
+        });
+      }
+    };
+
+    handleNavigationState();
+  }, [location.pathname, location.state]);
+
   const scrollToSection = (section: keyof typeof sectionRefs) => {
     sectionRefs[section].current?.scrollIntoView({ 
       behavior: 'instant',

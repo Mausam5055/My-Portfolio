@@ -17,6 +17,22 @@ export const ProjectDetails: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    // Add a new history entry when the component mounts
+    window.history.pushState({ scrollToProjects: true }, '', window.location.href);
+
+    // Handle browser back button
+    const handlePopState = () => {
+      navigate('/', { 
+        state: { scrollToProjects: true },
+        replace: true
+      });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigate]);
+
   if (!project) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -35,14 +51,8 @@ export const ProjectDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // First scroll to top instantly
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
-    // Then navigate immediately
     navigate('/', { 
-      state: { scrollToProjects: true, fromProjectDetail: true },
+      state: { scrollToProjects: true },
       replace: true
     });
   };

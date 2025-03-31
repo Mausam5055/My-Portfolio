@@ -224,12 +224,10 @@ export const GameDetail: React.FC = () => {
     setIsVideoExpanded(true);
   };
 
-  const handleBackClick = () => {
-    // Navigate instantly without any scroll effects
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     navigate('/', { 
-      state: { 
-        scrollToGaming: true
-      },
+      state: { scrollToGaming: true },
       replace: true
     });
   };
@@ -243,6 +241,11 @@ export const GameDetail: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    // Add a new history entry when the component mounts
+    window.history.pushState({ scrollToGaming: true }, '', window.location.href);
+  }, []);
 
   useEffect(() => {
     if (isNavigating.current) {
