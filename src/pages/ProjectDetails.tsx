@@ -35,9 +35,14 @@ export const ProjectDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Navigate to home with state
+    // First scroll to top instantly
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+    // Then navigate immediately
     navigate('/', { 
-      state: { scrollToProjects: true },
+      state: { scrollToProjects: true, fromProjectDetail: true },
       replace: true
     });
   };

@@ -18,21 +18,16 @@ export const Projects: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToProjects) {
-      // First ensure we're at the top
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      
-      // Then wait for the next frame to ensure DOM is ready
-      requestAnimationFrame(() => {
-        const projectsSection = document.getElementById('projects');
-        if (projectsSection) {
-          const rect = projectsSection.getBoundingClientRect();
-          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'instant'
-          });
-        }
-      });
+      // Immediately scroll to projects section
+      const projectsSection = document.getElementById('projects');
+      if (projectsSection) {
+        const rect = projectsSection.getBoundingClientRect();
+        const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'instant'
+        });
+      }
       
       // Clear the state
       window.history.replaceState({}, document.title);
