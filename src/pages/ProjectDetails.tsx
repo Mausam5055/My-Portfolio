@@ -10,7 +10,11 @@ export const ProjectDetails: React.FC = () => {
   const project = projects.find(p => p.id === parseInt(id || ''));
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    // Ensure scroll to top with instant behavior
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
   }, []);
 
   if (!project) {

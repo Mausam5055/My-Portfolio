@@ -125,7 +125,11 @@ export const Projects: React.FC = () => {
                   className="block"
                   onClick={(e) => {
                     e.preventDefault();
-                    window.scrollTo(0, 0);
+                    // Ensure smooth scroll to top before navigation
+                    window.scrollTo({
+                      top: 0,
+                      behavior: 'instant'
+                    });
                     navigate(`/projects/${project.id}`);
                   }}
                 >
@@ -159,7 +163,11 @@ export const Projects: React.FC = () => {
                   to={`/projects/${project.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    window.scrollTo(0, 0);
+                    // Ensure smooth scroll to top before navigation
+                    window.scrollTo({
+                      top: 0,
+                      behavior: 'instant'
+                    });
                     navigate(`/projects/${project.id}`);
                   }}
                 >
