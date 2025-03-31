@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { LoadingSpinner } from './LoadingSpinner';
 import { Book, Atom, TestTube, Calculator, Code, ArrowLeft, ExternalLink } from 'lucide-react';
@@ -1363,6 +1363,23 @@ export const Education = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const chaptersRef = useRef<HTMLDivElement>(null);
+
+  // Add effect to handle browser back button for subject view
+  useEffect(() => {
+    if (selectedSubject) {
+      // Push a new history entry when subject is selected
+      window.history.pushState({ subjectSelected: true }, '', window.location.href);
+
+      // Handle browser back button
+      const handlePopState = () => {
+        // Close the subject view when back button is pressed
+        handleBack();
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [selectedSubject]);
 
   const handleSubjectClick = async (subject: Subject) => {
     setIsLoading(true);
