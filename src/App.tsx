@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useThemeStore } from './store/theme';
 import SEO from './components/SEO';
 import FlashIntro from './components/FlashIntro';
@@ -29,10 +29,12 @@ import ThemeTransition from './components/ThemeTransition';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { GameDetail } from './pages/GameDetail';
 
-function App() {
+function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
   const [showIntro, setShowIntro] = useState(true);
   const [currentSection, setCurrentSection] = useState('home');
+  const location = useLocation();
+  const isDetailsPage = location.pathname.startsWith('/projects/') || location.pathname.startsWith('/games/') || location.pathname.startsWith('/blog/');
 
   const sectionRefs = {
     about: useRef<HTMLDivElement>(null),
@@ -178,7 +180,7 @@ function App() {
   }, []);
 
   return (
-    <Router>
+    <>
       <SEO 
         title={seoData[currentSection as keyof typeof seoData]?.title || seoData.home.title}
         description={seoData[currentSection as keyof typeof seoData]?.description || seoData.home.description}
@@ -192,7 +194,7 @@ function App() {
         <>
           <ThemeTransition isChanging={isChanging} isDark={isDark} />
           <div className={`min-h-screen bg-white dark:bg-black transition-colors duration-500 ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
-            <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />
+            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />}
             <Routes>
               <Route path="/" element={
                 <>
@@ -223,6 +225,14 @@ function App() {
           </div>
         </>
       )}
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
