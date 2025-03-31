@@ -224,7 +224,22 @@ export const GalleryDetail: React.FC = () => {
   useEffect(() => {
     // Add a new history entry when the component mounts
     window.history.pushState({ scrollToGallery: true }, '', window.location.href);
-  }, []);
+
+    // Handle browser back button
+    const handlePopState = () => {
+      // Prevent default navigation
+      window.history.pushState({ scrollToGallery: true }, '', window.location.href);
+      
+      // Directly navigate to home with scroll state
+      navigate('/', { 
+        state: { scrollToGallery: true },
+        replace: true
+      });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigate]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">
