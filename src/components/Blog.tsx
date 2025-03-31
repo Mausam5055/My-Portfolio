@@ -80,11 +80,8 @@ export const Blog: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      // First scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      // Then scroll to blog section after a delay
-      setTimeout(() => {
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
           // Get the element's position relative to the viewport
@@ -98,7 +95,7 @@ export const Blog: React.FC = () => {
             behavior: 'smooth'
           });
         }
-      }, 800); // Increased delay for better mobile experience
+      });
       
       // Clear the state
       window.history.replaceState({}, document.title);
@@ -116,15 +113,11 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
-    // Scroll to top smoothly
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+    // Navigate immediately without scrolling first
+    navigate(`/blog/${postId}`, { 
+      state: { fromBlogDetail: true },
+      replace: true // This replaces the current history entry instead of adding a new one
     });
-    // Navigate after a small delay
-    setTimeout(() => {
-      navigate(`/blog/${postId}`, { state: { fromBlogDetail: true } });
-    }, 500); // Increased delay for better mobile experience
   };
 
   return (

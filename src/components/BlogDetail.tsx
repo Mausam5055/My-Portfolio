@@ -97,12 +97,11 @@ export const BlogDetail: React.FC = () => {
   // Handle browser back button
   useEffect(() => {
     const handlePopState = () => {
-      // First scroll to top smoothly
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Then navigate after a small delay to ensure smooth transition
-      setTimeout(() => {
-        navigate('/', { state: { scrollToBlog: true } });
-      }, 500); // Increased delay for better mobile experience
+      // Navigate first with state
+      navigate('/', { 
+        state: { scrollToBlog: true },
+        replace: true // This replaces the current history entry instead of adding a new one
+      });
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -110,12 +109,11 @@ export const BlogDetail: React.FC = () => {
   }, [navigate]);
 
   const handleBack = () => {
-    // First scroll to top smoothly
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    // Then navigate after a small delay to ensure smooth transition
-    setTimeout(() => {
-      navigate('/', { state: { scrollToBlog: true } });
-    }, 500); // Increased delay for better mobile experience
+    // Navigate first with state
+    navigate('/', { 
+      state: { scrollToBlog: true },
+      replace: true // This replaces the current history entry instead of adding a new one
+    });
   };
 
   if (!post) {
