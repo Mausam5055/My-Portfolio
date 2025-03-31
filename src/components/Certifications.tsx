@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ExternalLink,
@@ -110,6 +110,23 @@ export const Certifications: React.FC = () => {
   const [expandedCert, setExpandedCert] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showAllMobile, setShowAllMobile] = useState(false);
+
+  // Add effect to handle browser back button for modal
+  useEffect(() => {
+    if (isModalOpen) {
+      // Push a new history entry when modal opens
+      window.history.pushState({ modalOpen: true }, '', window.location.href);
+
+      // Handle browser back button
+      const handlePopState = () => {
+        // Close the modal when back button is pressed
+        handleCloseModal();
+      };
+
+      window.addEventListener('popstate', handlePopState);
+      return () => window.removeEventListener('popstate', handlePopState);
+    }
+  }, [isModalOpen]);
 
   const handleCardClick = (certId: string) => {
     setIsModalOpen(true);
