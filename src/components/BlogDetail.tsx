@@ -156,42 +156,32 @@ export const BlogDetail: React.FC = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
               >
-                <Calendar size={16} className="md:w-5 md:h-5" />
-                <span>{post.date}</span>
+                <Calendar size={16} className="md:w-5 md:h-5 text-purple-300" />
+                <span className="font-medium">{post.date}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
               >
-                <User size={16} className="md:w-5 md:h-5" />
-                <span>{post.author}</span>
+                <User size={16} className="md:w-5 md:h-5 text-purple-300" />
+                <span className="font-medium">{post.author}</span>
               </motion.div>
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.5 }}
-                className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full"
+                className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 hover:bg-white/20 transition-all duration-300"
               >
-                <Clock size={16} className="md:w-5 md:h-5" />
-                <span>5 min read</span>
+                <Clock size={16} className="md:w-5 md:h-5 text-purple-300" />
+                <span className="font-medium">5 min read</span>
               </motion.div>
             </div>
           </div>
         </motion.div>
-
-        {/* Mobile Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="md:hidden text-3xl font-bold text-gray-900 dark:text-white mb-6"
-        >
-          {post.title}
-        </motion.h1>
 
         {/* Content Section */}
         <motion.div
@@ -200,7 +190,7 @@ export const BlogDetail: React.FC = () => {
           transition={{ delay: 0.6 }}
           className="prose dark:prose-invert max-w-none mx-auto md:text-lg lg:text-xl leading-relaxed"
         >
-          <ReactMarkdown className="text-gray-700 dark:text-gray-300 [&>h1]:text-4xl md:[&>h1]:text-5xl lg:[&>h1]:text-6xl [&>h1]:font-bold [&>h1]:mb-8 [&>h2]:text-2xl md:[&>h2]:text-3xl lg:[&>h2]:text-4xl [&>h2]:font-semibold [&>h2]:mt-12 [&>h2]:mb-6 [&>p]:text-base md:[&>p]:text-lg lg:[&>p]:text-xl [&>p]:leading-relaxed">
+          <ReactMarkdown className="text-gray-700 dark:text-gray-300 [&>h1]:text-4xl md:[&>h1]:text-5xl lg:[&>h1]:text-6xl [&>h1]:font-bold [&>h1]:mb-8 [&>h1]:md:hidden [&>h2]:text-2xl md:[&>h2]:text-3xl lg:[&>h2]:text-4xl [&>h2]:font-semibold [&>h2]:mt-12 [&>h2]:mb-6 [&>p]:text-base md:[&>p]:text-lg lg:[&>p]:text-xl [&>p]:leading-relaxed">
             {post.content}
           </ReactMarkdown>
         </motion.div>
