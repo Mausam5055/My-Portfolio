@@ -225,17 +225,17 @@ export const GameDetail: React.FC = () => {
   };
 
   const handleBackClick = () => {
-    // Check if we're in mobile view
-    const isMobile = window.innerWidth < 1024;
+    // Use a more reliable way to detect mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     if (isMobile) {
-      // For mobile, use replace to prevent adding to history stack
-      // and maintain the scroll position
+      // For mobile, use replace and prevent default scroll behavior
       navigate('/', { 
         replace: true,
         state: { 
           scrollToGaming: true,
-          fromMobile: true
+          fromMobile: true,
+          preventScroll: true
         }
       });
     } else {
@@ -262,14 +262,21 @@ export const GameDetail: React.FC = () => {
     if (isNavigating.current) {
       const gamingSection = document.getElementById('gaming');
       if (gamingSection) {
-        // Check if we're coming from mobile view
+        // Check if we're coming from mobile view and should prevent scroll
         const isFromMobile = location.state?.fromMobile;
+        const shouldPreventScroll = location.state?.preventScroll;
         
-        if (isFromMobile) {
-          // For mobile, scroll instantly without animation
+        if (isFromMobile && shouldPreventScroll) {
+          // For mobile, prevent default scroll and set position directly
           const yOffset = -100;
           const y = gamingSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo(0, y);
+          
+          // Use requestAnimationFrame to ensure DOM is ready
+          requestAnimationFrame(() => {
+            window.scrollTo(0, y);
+            // Clear the state after scrolling
+            window.history.replaceState({}, document.title);
+          });
         } else {
           // For desktop, use smooth scrolling
           const yOffset = -100;
