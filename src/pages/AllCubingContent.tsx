@@ -28,12 +28,15 @@ export const AllCubingContent: React.FC = () => {
     });
   }, []);
 
-  const handleCubeClick = (id: string) => {
-    navigate(`/cube/${id}`);
+  const handleBack = () => {
+    window.history.back();
   };
 
-  const handleBack = () => {
-    navigate(-1);
+  const handleCubeClick = (id: string) => {
+    navigate(`/cube/${id}`, {
+      state: { from: '/all-cubing-content' },
+      replace: false
+    });
   };
 
   return (

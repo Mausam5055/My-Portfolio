@@ -32,10 +32,13 @@ import { GalleryDetail } from './pages/GalleryDetail';
 import { CubeDetails } from './pages/CubeDetails';
 import { AllCubingContent } from './pages/AllCubingContent';
 
+type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
+
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
   const [showIntro, setShowIntro] = useState(true);
-  const [currentSection, setCurrentSection] = useState('home');
+  const [currentSection, setCurrentSection] = useState<SectionType>('home');
+  const [navigationStack, setNavigationStack] = useState<SectionType[]>([]);
   const location = useLocation();
   const navigate = useNavigate();
   const isDetailsPage = location.pathname.startsWith('/projects/') || 
@@ -71,7 +74,7 @@ function AppContent() {
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sectionRefs[sections[i]].current;
         if (section && section.offsetTop <= scrollPosition) {
-          setCurrentSection(sections[i]);
+          setCurrentSection(sections[i] as SectionType);
           break;
         }
       }
@@ -81,46 +84,57 @@ function AppContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (section: keyof typeof sectionRefs) => {
+  const scrollToSection = (section: SectionType) => {
     // Don't update if we're already in that section
     if (currentSection === section) return;
+
+    // Update navigation stack
+    setNavigationStack(prev => [...prev, currentSection]);
 
     // Update the URL with the section
     navigate(`/${section}`, { 
       state: { scrollToSection: section },
-      replace: true 
+      replace: false
     });
     
     // Scroll to the section
-    sectionRefs[section].current?.scrollIntoView({ 
-      behavior: 'instant',
-      block: 'start'
-    });
+    if (section === 'home') {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    } else if (sectionRefs[section]?.current) {
+      sectionRefs[section].current?.scrollIntoView({ 
+        behavior: 'instant',
+        block: 'start'
+      });
+    }
+  };
+
+  // Handle back navigation
+  const handleBack = () => {
+    if (navigationStack.length > 0) {
+      const previousSection = navigationStack[navigationStack.length - 1];
+      setNavigationStack(prev => prev.slice(0, -1));
+      
+      // Use browser's history to go back
+      window.history.back();
+      
+      // Update current section without forcing scroll
+      setCurrentSection(previousSection);
+    }
   };
 
   // Handle navigation and scroll restoration
   useEffect(() => {
-    const state = location.state as { scrollToSection?: keyof typeof sectionRefs } | null;
+    const state = location.state as { scrollToSection?: SectionType } | null;
     
     if (state?.scrollToSection) {
       const targetSection = state.scrollToSection;
-      if (sectionRefs[targetSection]?.current) {
-        const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'instant'
-        });
-      }
-    }
-  }, [location.state]);
-
-  // Handle back button
-  useEffect(() => {
-    const handlePopState = () => {
-      const state = location.state as { scrollToSection?: keyof typeof sectionRefs } | null;
-      if (state?.scrollToSection) {
-        const targetSection = state.scrollToSection;
-        if (sectionRefs[targetSection]?.current) {
+      setCurrentSection(targetSection);
+      
+      // Only scroll if this is a new navigation, not a back button press
+      if (!location.key || location.key === 'default') {
+        if (targetSection === 'home') {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        } else if (sectionRefs[targetSection]?.current) {
           const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
           window.scrollTo({
             top: targetScroll,
@@ -128,12 +142,24 @@ function AppContent() {
           });
         }
       }
+    }
+  }, [location.state, location.key]);
+
+  // Handle back button
+  useEffect(() => {
+    const handlePopState = () => {
+      if (navigationStack.length > 0) {
+        const previousSection = navigationStack[navigationStack.length - 1];
+        setNavigationStack(prev => prev.slice(0, -1));
+        setCurrentSection(previousSection);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [location.state]);
+  }, [navigationStack]);
 
+  // Initialize AOS
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -248,7 +274,7 @@ function AppContent() {
         <>
           <ThemeTransition isChanging={isChanging} isDark={isDark} />
           <div className={`min-h-screen bg-white dark:bg-black transition-colors duration-500 ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
-            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />}
+            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} onBack={handleBack} />}
             <Routes>
               <Route path="/" element={
                 <>

@@ -43,7 +43,10 @@ export const CubingContent: React.FC = () => {
   };
 
   const handleCubeClick = (id: string) => {
-    navigate(`/cube/${id}`);
+    navigate(`/cube/${id}`, {
+      state: { from: '/all-cubing-content' },
+      replace: false
+    });
   };
 
   const handleShowMore = () => {
@@ -55,7 +58,7 @@ export const CubingContent: React.FC = () => {
     // Navigate to the new page
     navigate('/all-cubing-content', { 
       state: { scrollToTop: true },
-      replace: true
+      replace: false
     });
   };
 

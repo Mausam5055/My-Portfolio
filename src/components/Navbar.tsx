@@ -2,18 +2,20 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon, User, ChevronDown } from "lucide-react";
 
-type SectionType = "about" | "journey" | "qualifications" | "certifications" | "skills" | "education" | "gallery" | "cubing" | "blog" | "futureGoals" | "funFacts" | "Gaming" | "projects" | "testimonials" | "contact";
+type SectionType = 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
 
 interface NavbarProps {
   isDark: boolean;
   toggleTheme: () => void;
   scrollToSection: (section: SectionType) => void;
+  onBack: () => void;
 }
 
 export default function Navbar({
   isDark,
   toggleTheme,
   scrollToSection,
+  onBack,
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
