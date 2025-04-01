@@ -49,6 +49,12 @@ export const AllCubingContent: React.FC = () => {
   };
 
   const handleCubeClick = (id: string) => {
+    // Ensure we're at the top before navigation
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+    
     navigate(`/cube/${id}`, {
       state: { 
         from: 'cubing',

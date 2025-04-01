@@ -31,7 +31,6 @@ export const CubeDetails: React.FC = () => {
     // Store the current state in history
     const currentState = {
       from: location.state?.from || '/',
-      scrollPosition: location.state?.scrollPosition || 0,
       timestamp: Date.now()
     };
 
@@ -48,14 +47,14 @@ export const CubeDetails: React.FC = () => {
       // Clean up any stored state when leaving the page
       sessionStorage.removeItem('cubeDetailsScroll');
     };
-  }, [location.state?.from, location.state?.scrollPosition]);
+  }, [location.state?.from]);
 
   useEffect(() => {
     // Handle browser back button
     const handlePopState = (event: PopStateEvent) => {
       const state = event.state;
       if (state?.from) {
-        // Direct navigation to the previous section
+        // Direct navigation to the previous section without scroll
         navigate(`/${state.from}`, { 
           state: { 
             scrollToSection: state.from as SectionType,
@@ -78,7 +77,6 @@ export const CubeDetails: React.FC = () => {
     // Store current state before going back
     const currentState = {
       from: location.state?.from || '/',
-      scrollPosition: window.scrollY,
       timestamp: Date.now()
     };
     
