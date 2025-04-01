@@ -118,8 +118,14 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     
     if (state?.scrollToSection) {
       setCurrentSection(state.scrollToSection);
-      // If it's a direct navigation, scroll instantly
+      // If it's a direct navigation, scroll to the section immediately
       if (state.directNavigation && sectionRefs[state.scrollToSection]?.current) {
+        // Ensure we're at the top before scrolling to section
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+        // Then scroll to the section
         sectionRefs[state.scrollToSection].current?.scrollIntoView({ behavior: 'instant' });
       }
     }
@@ -130,6 +136,12 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     const handlePopState = () => {
       // Special handling for AllCubingContent
       if (location.pathname === '/all-cubing-content') {
+        // Ensure we're at the top before navigation
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
         navigate('/cubing', { 
           state: { 
             scrollToSection: 'cubing',
@@ -145,6 +157,12 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // For detail pages, check if we have a specific "from" state
         const state = location.state as { from?: string } | null;
         if (state?.from) {
+          // Ensure we're at the top before navigation
+          window.scrollTo({
+            top: 0,
+            behavior: 'instant'
+          });
+
           // Direct navigation to the previous section
           navigate(`/${state.from}`, { 
             state: { 
@@ -165,6 +183,12 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
+        // Ensure we're at the top before navigation
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
         // Direct navigation to previous section
         navigate(`/${previousSection}`, { 
           state: { 
