@@ -4,11 +4,11 @@ import { useEffect, useState } from "react";
 const greetings = [
   { text: 'Namaste', lang: 'Hindi' },
   { text: 'Hello', lang: 'English' },
-  { text: 'こんにちは', lang: 'Japanese' },
+  { text: 'হ্যালো', lang: 'Bengali' },
   { text: 'Hola', lang: 'Spanish' },
   { text: 'Ciao', lang: 'Italian' },
-  { text: '안녕하세요', lang: 'Korean' },
-  { text: '你好', lang: 'Chinese' },
+  { text: 'வணக்கம்', lang: 'Tamil' },
+  { text: 'नमस्कार', lang: 'Marathi' },
   { text: 'Bonjour', lang: 'French' },
   { text: 'Hallo', lang: 'German' },
   { text: 'Olá', lang: 'Portuguese' }

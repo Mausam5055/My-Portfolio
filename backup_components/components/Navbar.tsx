@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon, User, ChevronDown } from "lucide-react";
 
-type SectionType = "about" | "journey" | "qualifications" | "certifications" | "skills" | "education" | "gallery" | "cubing" | "inspirations" | "futureGoals" | "funFacts" | "Gaming" | "projects" | "testimonials" | "contact";
+type SectionType = "about" | "journey" | "qualifications" | "certifications" | "skills" | "education" | "gallery" | "cubing" | "blog" | "futureGoals" | "funFacts" | "Gaming" | "projects" | "testimonials" | "contact";
 
 interface NavbarProps {
   isDark: boolean;
@@ -64,7 +64,7 @@ export default function Navbar({
       education: "Education",
       gallery: "Gallery",
       cubing: "Cubing",
-      inspirations: "Inspirations",
+      blog: "Blog",
       futureGoals: "Future Goals",
       funFacts: "Fun Facts",
       Gaming: "Gaming",
