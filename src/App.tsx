@@ -117,7 +117,7 @@ function AppContent() {
       
       // Update URL without triggering scroll
       navigate(`/${previousSection}`, { 
-        state: { scrollToSection: previousSection },
+        state: { scrollToSection: previousSection, instant: true },
         replace: true
       });
     }
@@ -125,14 +125,14 @@ function AppContent() {
 
   // Handle navigation and scroll restoration
   useEffect(() => {
-    const state = location.state as { scrollToSection?: SectionType } | null;
+    const state = location.state as { scrollToSection?: SectionType; instant?: boolean } | null;
     
     if (state?.scrollToSection) {
       const targetSection = state.scrollToSection;
       setCurrentSection(targetSection);
       
-      // Only scroll if this is a new navigation, not a back button press
-      if (!location.key || location.key === 'default') {
+      // Only scroll if this is not an instant navigation
+      if (!state.instant) {
         if (targetSection === 'home') {
           window.scrollTo({ top: 0, behavior: 'instant' });
         } else if (sectionRefs[targetSection]?.current) {
@@ -144,7 +144,7 @@ function AppContent() {
         }
       }
     }
-  }, [location.state, location.key]);
+  }, [location.state]);
 
   // Handle back button
   useEffect(() => {
@@ -153,17 +153,6 @@ function AppContent() {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         setCurrentSection(previousSection);
-        
-        // Prevent default scroll behavior
-        if (previousSection === 'home') {
-          window.scrollTo({ top: 0, behavior: 'instant' });
-        } else if (sectionRefs[previousSection]?.current) {
-          const targetScroll = sectionRefs[previousSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'instant'
-          });
-        }
       }
     };
 

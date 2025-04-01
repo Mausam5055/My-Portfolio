@@ -38,10 +38,18 @@ export const AllCubingContent: React.FC = () => {
 
   const handleCubeClick = (id: string) => {
     navigate(`/cube/${id}`, {
-      state: { from: '/all-cubing-content' },
+      state: { from: '/all-cubing-content', instant: true },
       replace: false
     });
   };
+
+  useEffect(() => {
+    // Remove the scroll to top behavior
+    return () => {
+      // Clean up any stored state when leaving the page
+      sessionStorage.removeItem('cubeDetailsScroll');
+    };
+  }, []);
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300">
