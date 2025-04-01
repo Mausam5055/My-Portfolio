@@ -128,23 +128,8 @@ export const CubeDetails: React.FC = () => {
       {/* Content Section */}
       <div className="container mx-auto px-4 py-12 -mt-20 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content - Description and Video */}
-          <div className="lg:col-span-7 space-y-8">
-            {/* Description Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Description
-              </h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {cube.content.description}
-              </p>
-            </motion.div>
-
+          {/* Main Content - Video and Description */}
+          <div className="lg:col-span-8 space-y-8">
             {/* Video Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -160,7 +145,7 @@ export const CubeDetails: React.FC = () => {
                 className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group"
               >
                 <img
-                  src={cube.videoPreviewImage}
+                  src={cube.image}
                   alt="Video thumbnail"
                   className="w-full h-full object-cover"
                 />
@@ -172,38 +157,24 @@ export const CubeDetails: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Algorithms Section */}
+            {/* Description Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 0.5 }}
               className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
             >
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Algorithms
+                Description
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {cube.content.algorithms.map((algo, index) => (
-                  <div key={index} className="space-y-3">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      {algo.name}
-                    </h3>
-                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                      <p className="font-mono text-lg text-blue-500 dark:text-blue-400">
-                        {algo.notation}
-                      </p>
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      {algo.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {cube.content.description}
+              </p>
             </motion.div>
           </div>
 
           {/* Sidebar - Stats and Tips */}
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-4 space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -266,6 +237,37 @@ export const CubeDetails: React.FC = () => {
                   </li>
                 ))}
               </ul>
+            </motion.div>
+          </div>
+
+          {/* Algorithms Section - Full Width */}
+          <div className="lg:col-span-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                Algorithms
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {cube.content.algorithms.map((algo, index) => (
+                  <div key={index} className="space-y-3">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {algo.name}
+                    </h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p className="font-mono text-lg text-blue-500 dark:text-blue-400">
+                        {algo.notation}
+                      </p>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {algo.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </div>
