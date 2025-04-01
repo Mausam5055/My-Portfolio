@@ -25,7 +25,8 @@ export const AllCubingContent: React.FC = () => {
     // Store the current state in history
     const currentState = {
       from: location.state?.from || '/',
-      scrollPosition: window.scrollY
+      scrollPosition: window.scrollY,
+      timestamp: Date.now()
     };
 
     // Replace the current history state
@@ -52,6 +53,16 @@ export const AllCubingContent: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    // Store current state before going back
+    const currentState = {
+      from: location.state?.from || '/',
+      scrollPosition: window.scrollY,
+      timestamp: Date.now()
+    };
+    
+    // Replace current state before going back
+    window.history.replaceState(currentState, '', window.location.href);
+    
     // Use browser's history to go back
     window.history.back();
   };
@@ -60,18 +71,20 @@ export const AllCubingContent: React.FC = () => {
     // Store current scroll position before navigation
     const currentState = {
       from: '/all-cubing-content',
-      scrollPosition: window.scrollY
+      scrollPosition: window.scrollY,
+      timestamp: Date.now()
     };
     
-    // Prevent default scroll behavior
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
-    
+    // Navigate to cube details
     navigate(`/cube/${id}`, {
       state: currentState,
       replace: false
+    });
+
+    // Ensure we start at the top of the cube details page
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
     });
   };
 
