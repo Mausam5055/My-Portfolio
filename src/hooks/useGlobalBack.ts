@@ -24,24 +24,43 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // Update navigation stack
     setNavigationStack(prev => [...prev, currentSection]);
 
-    // Update the URL with the section
+    // Direct navigation without scroll
     navigate(`/${section}`, { 
-      state: { scrollToSection: section },
+      state: { 
+        scrollToSection: section,
+        directNavigation: true
+      },
       replace: false
     });
     
-    // Direct navigation without scroll
+    // Update section immediately
     setCurrentSection(section);
   };
 
   const handleBack = () => {
+    // Special handling for AllCubingContent
+    if (location.pathname === '/all-cubing-content') {
+      navigate('/cubing', { 
+        state: { 
+          scrollToSection: 'cubing',
+          directNavigation: true
+        },
+        replace: true
+      });
+      setCurrentSection('cubing');
+      return;
+    }
+
     if (isDetailsPage) {
       // For detail pages, check if we have a specific "from" state
       const state = location.state as { from?: string } | null;
       if (state?.from) {
         // Direct navigation to the previous section
-        navigate(state.from, { 
-          state: { scrollToSection: state.from as SectionType },
+        navigate(`/${state.from}`, { 
+          state: { 
+            scrollToSection: state.from as SectionType,
+            directNavigation: true
+          },
           replace: true
         });
         setCurrentSection(state.from as SectionType);
@@ -55,7 +74,10 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       
       // Direct navigation to previous section
       navigate(`/${previousSection}`, { 
-        state: { scrollToSection: previousSection },
+        state: { 
+          scrollToSection: previousSection,
+          directNavigation: true
+        },
         replace: true
       });
       setCurrentSection(previousSection);
@@ -67,6 +89,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     const state = location.state as { 
       scrollToSection?: SectionType;
       from?: string;
+      directNavigation?: boolean;
     } | null;
     
     if (state?.scrollToSection) {
@@ -77,13 +100,29 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
   // Handle back button
   useEffect(() => {
     const handlePopState = () => {
+      // Special handling for AllCubingContent
+      if (location.pathname === '/all-cubing-content') {
+        navigate('/cubing', { 
+          state: { 
+            scrollToSection: 'cubing',
+            directNavigation: true
+          },
+          replace: true
+        });
+        setCurrentSection('cubing');
+        return;
+      }
+
       if (isDetailsPage) {
         // For detail pages, check if we have a specific "from" state
         const state = location.state as { from?: string } | null;
         if (state?.from) {
           // Direct navigation to the previous section
-          navigate(state.from, { 
-            state: { scrollToSection: state.from as SectionType },
+          navigate(`/${state.from}`, { 
+            state: { 
+              scrollToSection: state.from as SectionType,
+              directNavigation: true
+            },
             replace: true
           });
           setCurrentSection(state.from as SectionType);
@@ -100,7 +139,10 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         
         // Direct navigation to previous section
         navigate(`/${previousSection}`, { 
-          state: { scrollToSection: previousSection },
+          state: { 
+            scrollToSection: previousSection,
+            directNavigation: true
+          },
           replace: true
         });
         setCurrentSection(previousSection);
@@ -109,7 +151,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigationStack, isDetailsPage, setCurrentSection, navigate, location.state]);
+  }, [navigationStack, isDetailsPage, setCurrentSection, navigate, location.pathname, location.state]);
 
   return {
     navigationStack,

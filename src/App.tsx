@@ -88,6 +88,21 @@ function AppContent() {
     }
   }, [isDark]);
 
+  // Handle section updates from URL
+  useEffect(() => {
+    const path = location.pathname.slice(1); // Remove leading slash
+    const state = location.state as { directNavigation?: boolean } | null;
+    
+    if (path && path !== 'all-cubing-content' && !isDetailsPage) {
+      setCurrentSection(path as SectionType);
+      
+      // If it's a direct navigation, scroll to the section immediately
+      if (state?.directNavigation && sectionRefs[path as SectionType]?.current) {
+        sectionRefs[path as SectionType].current?.scrollIntoView({ behavior: 'instant' });
+      }
+    }
+  }, [location.pathname, location.state, isDetailsPage]);
+
   // Add section-specific SEO data
   const seoData = {
     home: {

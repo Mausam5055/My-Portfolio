@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Clock, Award, Box, Brain, Star, Zap, ArrowLeft } from "lucide-react";
 import { cubingContent } from "../data/cubingContent";
-import { useGlobalBack } from "../hooks/useGlobalBack";
 
 const difficultyColors = {
   beginner: "bg-green-500",
@@ -20,56 +19,18 @@ const methodIcons = {
 
 export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
-  
-  // Create refs for all sections
-  const sectionRefs = {
-    home: useRef<HTMLDivElement>(null),
-    about: useRef<HTMLDivElement>(null),
-    journey: useRef<HTMLDivElement>(null),
-    qualifications: useRef<HTMLDivElement>(null),
-    certifications: useRef<HTMLDivElement>(null),
-    skills: useRef<HTMLDivElement>(null),
-    education: useRef<HTMLDivElement>(null),
-    gallery: useRef<HTMLDivElement>(null),
-    cubing: useRef<HTMLDivElement>(null),
-    blog: useRef<HTMLDivElement>(null),
-    futureGoals: useRef<HTMLDivElement>(null),
-    funFacts: useRef<HTMLDivElement>(null),
-    Gaming: useRef<HTMLDivElement>(null),
-    projects: useRef<HTMLDivElement>(null),
-    testimonials: useRef<HTMLDivElement>(null),
-    contact: useRef<HTMLDivElement>(null),
-  };
 
-  const { handleBack } = useGlobalBack({
-    currentSection: 'cubing',
-    setCurrentSection: () => {},
-    sectionRefs,
-    isDetailsPage: true
-  });
+  const handleBack = () => {
+    // Direct navigation to cubing section
+    navigate('/cubing', { 
+      replace: true
+    });
+  };
 
   const handleCubeClick = (id: string) => {
     navigate(`/cube/${id}`, {
-      state: { from: '/all-cubing-content' },
+      state: { from: 'cubing' },
       replace: false
-    });
-  };
-
-  const handleCompetitionClick = (competition: Competition) => {
-    navigate(`/cubing/competition/${competition.id}`, {
-      state: { from: 'cubing' }
-    });
-  };
-
-  const handleAchievementClick = (achievement: Achievement) => {
-    navigate(`/cubing/achievement/${achievement.id}`, {
-      state: { from: 'cubing' }
-    });
-  };
-
-  const handleMethodClick = (method: Method) => {
-    navigate(`/cubing/method/${method.id}`, {
-      state: { from: 'cubing' }
     });
   };
 
