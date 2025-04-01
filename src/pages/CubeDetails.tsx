@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Clock, Target, Award, Brain, Star, Box, Zap, Play, X } from 'lucide-react';
 import type { CubingContent } from '../types';
@@ -21,25 +21,39 @@ const difficultyColors = {
 export const CubeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const cube = cubingContent.find(c => c.id === id);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
+    // Store the current state in history
+    const currentState = {
+      from: location.state?.from || '/'
+    };
+
+    // Replace the current history state
+    window.history.replaceState(currentState, '', window.location.href);
+
     // Ensure scroll to top with instant behavior
     window.scrollTo({
       top: 0,
       behavior: 'instant'
     });
-  }, []);
+
+    return () => {
+      // Clean up any stored state when leaving the page
+      sessionStorage.removeItem('cubeDetailsScroll');
+    };
+  }, [location.state?.from]);
 
   useEffect(() => {
-    // Add a new history entry when the component mounts
-    window.history.pushState({ scrollToCubing: true }, '', window.location.href);
-
     // Handle browser back button
-    const handlePopState = () => {
-      navigate('/', { 
-        state: { scrollToCubing: true },
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state;
+      const previousPath = state?.from || '/';
+      
+      // Navigate to the previous path
+      navigate(previousPath, { 
         replace: true
       });
     };
@@ -50,8 +64,10 @@ export const CubeDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/', { 
-      state: { scrollToCubing: true },
+    const previousPath = location.state?.from || '/';
+    
+    // Navigate back to the previous path
+    navigate(previousPath, { 
       replace: true
     });
   };
