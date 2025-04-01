@@ -21,15 +21,22 @@ export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    // Direct navigation to cubing section
+    // Direct navigation to cubing section with instant scroll
     navigate('/cubing', { 
+      state: { 
+        directNavigation: true,
+        scrollToSection: 'cubing'
+      },
       replace: true
     });
   };
 
   const handleCubeClick = (id: string) => {
     navigate(`/cube/${id}`, {
-      state: { from: 'cubing' },
+      state: { 
+        from: 'cubing',
+        directNavigation: true
+      },
       replace: false
     });
   };

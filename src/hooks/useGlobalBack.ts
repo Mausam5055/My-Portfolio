@@ -94,8 +94,12 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     
     if (state?.scrollToSection) {
       setCurrentSection(state.scrollToSection);
+      // If it's a direct navigation, scroll instantly
+      if (state.directNavigation && sectionRefs[state.scrollToSection]?.current) {
+        sectionRefs[state.scrollToSection].current?.scrollIntoView({ behavior: 'instant' });
+      }
     }
-  }, [location.state, setCurrentSection]);
+  }, [location.state, setCurrentSection, sectionRefs]);
 
   // Handle back button
   useEffect(() => {

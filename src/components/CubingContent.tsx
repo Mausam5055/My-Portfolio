@@ -44,7 +44,10 @@ export const CubingContent: React.FC = () => {
 
   const handleCubeClick = (id: string) => {
     navigate(`/cube/${id}`, {
-      state: { from: '/all-cubing-content' },
+      state: { 
+        from: '/all-cubing-content',
+        directNavigation: true
+      },
       replace: false
     });
   };
@@ -55,9 +58,12 @@ export const CubingContent: React.FC = () => {
       top: 0,
       behavior: 'instant'
     });
-    // Navigate to the new page
+    // Navigate to the new page with instant scroll
     navigate('/all-cubing-content', { 
-      state: { scrollToTop: true },
+      state: { 
+        directNavigation: true,
+        scrollToTop: true
+      },
       replace: false
     });
   };
