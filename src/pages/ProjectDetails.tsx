@@ -104,10 +104,10 @@ export const ProjectDetails: React.FC = () => {
               >
                 <button
                   onClick={handleBackClick}
-                  className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors text-sm sm:text-base order-3 sm:order-1"
+                  className="fixed top-4 left-4 sm:static sm:top-auto sm:left-auto flex items-center justify-center gap-2 px-3 py-2 sm:px-6 sm:py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors text-xs sm:text-base z-50"
                 >
-                  <FaArrowLeft className="text-sm sm:text-base" />
-                  Back to Projects
+                  <FaArrowLeft className="text-xs sm:text-base" />
+                  <span className="hidden sm:inline">Back to Projects</span>
                 </button>
                 <a
                   href={project.github}
