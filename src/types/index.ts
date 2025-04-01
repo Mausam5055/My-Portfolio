@@ -156,32 +156,38 @@ export interface FunFact {
   category: 'tech' | 'personal' | 'travel' | 'hobby';
 }
 
-export interface ContentBox { // Added ContentBox interface
+export interface ContentBox {
   id: number;
   title: string;
   description: string;
   image: string;
 }
 
-export interface Quote { // Added Quote interface
+export interface Quote {
   text: string;
   author: string;
 }
 
-export type Chapter = {
+export interface CubingContent {
   id: string;
   title: string;
   image: string;
+  videoPreviewImage: string;
   description: string;
-  driveLinks: string[]; // Changed from driveLink to driveLinks array
+  videoUrl: string;
+  cubeType: string;
+  solveTime: string;
+  method: string;
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  personalBest: string;
+  videoId: string;
+  content: {
+    description: string;
+    algorithms: {
+      name: string;
+      notation: string;
+      description: string;
+    }[];
+    tips: string[];
+  };
 }
-
-export type BlogPost = {
-  id: string;
-  title: string;
-  image: string;
-  excerpt: string;
-  content: string;
-  date: string;
-  author: string;
-};

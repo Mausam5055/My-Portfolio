@@ -29,13 +29,18 @@ import ThemeTransition from './components/ThemeTransition';
 import { ProjectDetails } from './pages/ProjectDetails';
 import { GameDetail } from './pages/GameDetail';
 import { GalleryDetail } from './pages/GalleryDetail';
+import { CubeDetails } from './pages/CubeDetails';
 
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
   const [showIntro, setShowIntro] = useState(true);
   const [currentSection, setCurrentSection] = useState('home');
   const location = useLocation();
-  const isDetailsPage = location.pathname.startsWith('/projects/') || location.pathname.startsWith('/games/') || location.pathname.startsWith('/blog/');
+  const isDetailsPage = location.pathname.startsWith('/projects/') || 
+                       location.pathname.startsWith('/games/') || 
+                       location.pathname.startsWith('/blog/') ||
+                       location.pathname.startsWith('/gallery/') ||
+                       location.pathname.startsWith('/cube/');
 
   const sectionRefs = {
     about: useRef<HTMLDivElement>(null),
@@ -73,12 +78,11 @@ function AppContent() {
   // Handle browser back button and device back button
   useEffect(() => {
     const handlePopState = (event: PopStateEvent) => {
-      // Get the current location state
       const currentState = event.state;
       
-      // If we have a scroll state in the current location, handle it
-      if (currentState?.scrollToGaming || currentState?.scrollToGallery || currentState?.scrollToProjects || currentState?.scrollToBlog) {
-        // Use requestAnimationFrame to ensure DOM is ready
+      if (currentState?.scrollToGaming || currentState?.scrollToGallery || 
+          currentState?.scrollToProjects || currentState?.scrollToBlog ||
+          currentState?.scrollToCubing) {
         requestAnimationFrame(() => {
           let targetSection: keyof typeof sectionRefs | null = null;
           
@@ -86,6 +90,7 @@ function AppContent() {
           else if (currentState.scrollToGallery) targetSection = 'gallery';
           else if (currentState.scrollToProjects) targetSection = 'projects';
           else if (currentState.scrollToBlog) targetSection = 'blog';
+          else if (currentState.scrollToCubing) targetSection = 'cubing';
 
           if (targetSection && sectionRefs[targetSection]?.current) {
             const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
@@ -98,10 +103,8 @@ function AppContent() {
       }
     };
 
-    // Listen for popstate events
     window.addEventListener('popstate', handlePopState);
 
-    // Handle initial state if it exists
     if (location.state) {
       handlePopState({ state: location.state } as PopStateEvent);
     }
@@ -113,7 +116,9 @@ function AppContent() {
   useEffect(() => {
     const handleLocationChange = () => {
       const state = location.state || {};
-      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
+      if (state?.scrollToGaming || state?.scrollToGallery || 
+          state?.scrollToProjects || state?.scrollToBlog ||
+          state?.scrollToCubing) {
         requestAnimationFrame(() => {
           let targetSection: keyof typeof sectionRefs | null = null;
           
@@ -121,6 +126,7 @@ function AppContent() {
           else if (state.scrollToGallery) targetSection = 'gallery';
           else if (state.scrollToProjects) targetSection = 'projects';
           else if (state.scrollToBlog) targetSection = 'blog';
+          else if (state.scrollToCubing) targetSection = 'cubing';
 
           if (targetSection && sectionRefs[targetSection]?.current) {
             const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
@@ -410,6 +416,7 @@ function AppContent() {
               <Route path="/projects/:id" element={<ProjectDetails />} />
               <Route path="/games/:gameId" element={<GameDetail />} />
               <Route path="/gallery/:id" element={<GalleryDetail />} />
+              <Route path="/cube/:id" element={<CubeDetails />} />
             </Routes>
           </div>
         </>
