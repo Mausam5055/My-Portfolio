@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Clock, Award, Box, Brain, Star, Zap, ArrowLeft } from "lucide-react";
@@ -19,6 +19,23 @@ const methodIcons = {
 
 export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Handle browser back button
+    const handlePopState = () => {
+      // Direct navigation to cubing section with instant scroll
+      navigate('/cubing', { 
+        state: { 
+          directNavigation: true,
+          scrollToSection: 'cubing'
+        },
+        replace: true
+      });
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [navigate]);
 
   const handleBack = () => {
     // Direct navigation to cubing section with instant scroll

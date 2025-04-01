@@ -5,6 +5,8 @@ import { ArrowLeft, Clock, Target, Award, Brain, Star, Box, Zap, Play, X } from 
 import type { CubingContent } from '../types';
 import { cubingContent } from '../data/cubingContent';
 
+type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
+
 const methodIcons = {
   CFOP: <Brain className="w-5 h-5 text-purple-500" />,
   Ortega: <Zap className="w-5 h-5 text-blue-500" />,
@@ -52,14 +54,24 @@ export const CubeDetails: React.FC = () => {
     // Handle browser back button
     const handlePopState = (event: PopStateEvent) => {
       const state = event.state;
-      if (state?.scrollPosition) {
-        window.scrollTo(0, state.scrollPosition);
+      if (state?.from) {
+        // Direct navigation to the previous section
+        navigate(`/${state.from}`, { 
+          state: { 
+            scrollToSection: state.from as SectionType,
+            directNavigation: true
+          },
+          replace: true
+        });
+      } else {
+        // Fallback to browser back
+        window.history.back();
       }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
+  }, [navigate]);
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
