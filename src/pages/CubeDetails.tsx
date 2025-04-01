@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Clock, Target, Award, Brain, Star, Box, Zap, Play, X } from 'lucide-react';
 import type { CubingContent } from '../types';
 import { cubingContent } from '../data/cubingContent';
+
+type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
 
 const methodIcons = {
   CFOP: <Brain className="w-5 h-5 text-purple-500" />,
@@ -21,27 +23,49 @@ const difficultyColors = {
 export const CubeDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const cube = cubingContent.find(c => c.id === id);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
   useEffect(() => {
-    // Ensure scroll to top with instant behavior
+    // Store the current state in history
+    const currentState = {
+      from: location.state?.from || '/',
+      timestamp: Date.now()
+    };
+
+    // Replace the current history state
+    window.history.replaceState(currentState, '', window.location.href);
+
+    // Ensure we start at the top of the page
     window.scrollTo({
       top: 0,
       behavior: 'instant'
     });
-  }, []);
+
+    return () => {
+      // Clean up any stored state when leaving the page
+      sessionStorage.removeItem('cubeDetailsScroll');
+    };
+  }, [location.state?.from]);
 
   useEffect(() => {
-    // Add a new history entry when the component mounts
-    window.history.pushState({ scrollToCubing: true }, '', window.location.href);
-
     // Handle browser back button
-    const handlePopState = () => {
-      navigate('/', { 
-        state: { scrollToCubing: true },
-        replace: true
-      });
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state;
+      if (state?.from) {
+        // Direct navigation to the previous section without scroll
+        navigate(`/${state.from}`, { 
+          state: { 
+            scrollToSection: state.from as SectionType,
+            directNavigation: true
+          },
+          replace: true
+        });
+      } else {
+        // Fallback to browser back
+        window.history.back();
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -50,10 +74,17 @@ export const CubeDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigate('/', { 
-      state: { scrollToCubing: true },
-      replace: true
-    });
+    // Store current state before going back
+    const currentState = {
+      from: location.state?.from || '/',
+      timestamp: Date.now()
+    };
+    
+    // Replace current state before going back
+    window.history.replaceState(currentState, '', window.location.href);
+    
+    // Use browser's history to go back
+    window.history.back();
   };
 
   const handleVideoClick = () => {
@@ -128,8 +159,23 @@ export const CubeDetails: React.FC = () => {
       {/* Content Section */}
       <div className="container mx-auto px-4 py-12 -mt-20 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Main Content - Video and Description */}
-          <div className="lg:col-span-8 space-y-8">
+          {/* Main Content - Description and Video */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Description Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
+            >
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+                Description
+              </h2>
+              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                {cube.content.description}
+              </p>
+            </motion.div>
+
             {/* Video Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -145,7 +191,7 @@ export const CubeDetails: React.FC = () => {
                 className="relative aspect-video rounded-lg overflow-hidden cursor-pointer group"
               >
                 <img
-                  src={cube.image}
+                  src={cube.videoPreviewImage}
                   alt="Video thumbnail"
                   className="w-full h-full object-cover"
                 />
@@ -157,24 +203,38 @@ export const CubeDetails: React.FC = () => {
               </div>
             </motion.div>
 
-            {/* Description Section */}
+            {/* Algorithms Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.8 }}
               className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
             >
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Description
+                Algorithms
               </h2>
-              <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                {cube.content.description}
-              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {cube.content.algorithms.map((algo, index) => (
+                  <div key={index} className="space-y-3">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {algo.name}
+                    </h3>
+                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
+                      <p className="font-mono text-lg text-blue-500 dark:text-blue-400">
+                        {algo.notation}
+                      </p>
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      {algo.description}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
 
           {/* Sidebar - Stats and Tips */}
-          <div className="lg:col-span-4 space-y-8">
+          <div className="lg:col-span-5 space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -237,37 +297,6 @@ export const CubeDetails: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            </motion.div>
-          </div>
-
-          {/* Algorithms Section - Full Width */}
-          <div className="lg:col-span-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 shadow-lg"
-            >
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Algorithms
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {cube.content.algorithms.map((algo, index) => (
-                  <div key={index} className="space-y-3">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      {algo.name}
-                    </h3>
-                    <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
-                      <p className="font-mono text-lg text-blue-500 dark:text-blue-400">
-                        {algo.notation}
-                      </p>
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      {algo.description}
-                    </p>
-                  </div>
-                ))}
-              </div>
             </motion.div>
           </div>
         </div>
