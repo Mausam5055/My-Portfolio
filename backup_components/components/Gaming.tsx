@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "../lib/utils";
-import ReactMarkdown from "react-markdown";
+import { useNavigate, useLocation } from "react-router-dom";
 
 type GamingPost = {
   id: string;
@@ -13,6 +13,7 @@ type GamingPost = {
   content: string;
   date: string;
   author: string;
+  slug: string;
 };
 
 const gamingPosts: GamingPost[] = [
@@ -57,6 +58,7 @@ Join me as I showcase the most exciting moments from my playthrough, including e
     `,
     date: "2024-03-20",
     author: "Mausam Kar",
+    slug: "spider-man"
   },
   {
     id: "2",
@@ -99,6 +101,7 @@ Experience the thrill of intense firefights, strategic gameplay, and those heart
     `,
     date: "2024-03-18",
     author: "Mausam Kar",
+    slug: "bgmi"
   },
   {
     id: "3",
@@ -141,14 +144,64 @@ Join me as I push these incredible machines to their limits, pulling off insane 
     `,
     date: "2024-03-15",
     author: "Mausam Kar",
+    slug: "asphalt-9"
   },
+  
 ];
 
-export const Gaming: React.FC = () => {
-  const [selectedPost, setSelectedPost] = useState<GamingPost | null>(null);
-  const [showAll, setShowAll] = useState(false);
+const ITEMS_PER_PAGE = 3;
 
-  const displayedPosts = showAll ? gamingPosts : gamingPosts.slice(0, 3);
+export const Gaming: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToGaming) {
+      // Use requestAnimationFrame to ensure the DOM is ready
+      requestAnimationFrame(() => {
+        const gamingSection = document.getElementById('gaming');
+        if (gamingSection) {
+          // Calculate the target scroll position
+          const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
+          
+          // Always use instant scroll behavior
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'instant'
+          });
+        }
+      });
+      // Clear the state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
+
+  const totalPages = Math.ceil(gamingPosts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const displayedPosts = gamingPosts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handlePostClick = (slug: string) => {
+    // Ensure smooth scroll to top before navigation
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+    navigate(`/games/${slug}`, { state: { fromGameDetail: true } });
+  };
+
+  // Add scroll restoration effect
+  useEffect(() => {
+    // Reset scroll position when component mounts
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+  }, []);
 
   return (
     <section
@@ -197,7 +250,7 @@ export const Gaming: React.FC = () => {
                 "border border-white/20 dark:border-gray-700/50",
                 "group relative cursor-pointer z-10",
               )}
-              onClick={() => setSelectedPost(post)}
+              onClick={() => handlePostClick(post.slug)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
@@ -233,13 +286,13 @@ export const Gaming: React.FC = () => {
                     "group/link relative flex items-center gap-2",
                   )}
                 >
-                  <span className="relative z-10">Watch Gameplay</span>
+                  <span className="relative z-10">View Details</span>
                   <motion.span
                     className="inline-block"
                     whileHover={{ rotate: 45 }}
                     transition={{ type: "spring" }}
                   >
-                    <X size={18} className="transform rotate-45" />
+                    <ChevronRight size={18} />
                   </motion.span>
                   <div className="absolute bottom-0 left-0 w-0 h-px bg-blue-400 group-hover/link:w-full transition-all duration-300" />
                 </motion.div>
@@ -248,116 +301,44 @@ export const Gaming: React.FC = () => {
           ))}
         </div>
 
-        {gamingPosts.length > 3 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mt-8 text-center"
+        {totalPages > 1 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mt-12 flex items-center justify-center gap-4"
           >
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full font-medium hover:opacity-90 transition-opacity"
+            <motion.button
+              whileHover={{ x: -3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
+                currentPage === 1
+                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              }`}
             >
-              {showAll ? (
-                <>
-                  Show Less <ChevronUp className="w-5 h-5" />
-                </>
-              ) : (
-                <>
-                  Show More <ChevronDown className="w-5 h-5" />
-                </>
-              )}
-            </button>
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-sm font-medium">Previous</span>
+            </motion.button>
+
+            <motion.button
+              whileHover={{ x: 3 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
+                currentPage === totalPages
+                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              }`}
+            >
+              <span className="text-sm font-medium">Next</span>
+              <ChevronRight className="w-4 h-4" />
+            </motion.button>
           </motion.div>
         )}
-
-        <AnimatePresence>
-          {selectedPost && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-start justify-center overflow-y-auto"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) {
-                  setSelectedPost(null);
-                }
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-xl w-full max-w-3xl mx-4 my-8 overflow-hidden border border-white/20 dark:border-gray-700/50 flex flex-col h-[90vh]"
-              >
-                <div className="sticky top-0 bg-white/95 dark:bg-gray-900/95 p-4 border-b dark:border-gray-700 flex justify-between items-center backdrop-blur-sm z-10">
-                  <h3 className="text-lg sm:text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent dark:text-white line-clamp-1 pr-4">
-                    {selectedPost.title}
-                  </h3>
-                  <motion.button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedPost(null);
-                    }}
-                    whileHover={{ rotate: 90 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 flex-shrink-0"
-                  >
-                    <X size={24} />
-                  </motion.button>
-                </div>
-
-                <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-6 max-h-screen scrollbar-hide">
-                  <div className="aspect-video mb-6 sm:mb-8 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800">
-                    <iframe
-                      src={selectedPost.videoUrl}
-                      className="w-full h-full"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                      title={selectedPost.title}
-                    />
-                  </div>
-
-                  <div className="prose dark:prose-invert max-w-none w-full text-gray-900 dark:text-white px-2 sm:px-0">
-                    <ReactMarkdown
-                      components={{
-                        h1: ({ children }) => (
-                          <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-gray-900 dark:text-white break-words">
-                            {children}
-                          </h1>
-                        ),
-                        p: ({ children }) => (
-                          <p className="mb-4 text-base sm:text-lg leading-relaxed text-gray-700 dark:text-gray-300 break-words">
-                            {children}
-                          </p>
-                        ),
-                        ul: ({ children }) => (
-                          <ul className="space-y-3 my-6 pl-5 list-outside">
-                            {children}
-                          </ul>
-                        ),
-                        li: ({ children }) => (
-                          <li className="relative pl-6 mb-2 text-gray-700 dark:text-gray-300 break-words">
-                            <span className="absolute left-0 text-blue-500">
-                              •
-                            </span>
-                            <span className="text-base sm:text-lg leading-relaxed">
-                              {children}
-                            </span>
-                          </li>
-                        ),
-                      }}
-                    >
-                      {selectedPost.content}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <div className="absolute -top-20 left-1/3 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
         <div className="absolute -bottom-20 right-1/3 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none" />
@@ -375,13 +356,6 @@ export const Gaming: React.FC = () => {
         }
         .animate-pulse-slow {
           animation: pulse-slow 6s ease-in-out infinite;
-        }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
         }
       `}</style>
     </section>

@@ -71,9 +71,9 @@ const boxes: ContentBox[] = [
   },
   {
     id: 12,
-    title: "Inspirations",
-    description: "People and ideas that drive my creativity.",
-    image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400"
+    title: "Blog",
+    description: "Insights, tutorials, and thoughts on web development and technology.",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 13,
@@ -267,13 +267,13 @@ export default function ContentBoxes({ refs }: { refs: any }) {
                 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 flex flex-col justify-end p-4 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
-                  <div className="transform transition-all duration-300">
-                    <h3 className="font-bold text-white text-lg md:text-xl mb-2">
-                      {box.title}
-                    </h3>
-                    <p className="text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none">
+                  <div className="transform transition-all duration-300 flex flex-col md:flex-col">
+                    <p className="opacity-0 md:group-hover:opacity-100 text-white/90 text-sm md:text-base line-clamp-2 md:line-clamp-none transition-all duration-300 transform translate-y-2 md:group-hover:translate-y-0 mb-2">
                       {box.description}
                     </p>
+                    <h3 className="font-bold text-white text-lg md:text-xl mt-auto md:mt-0">
+                      {box.title}
+                    </h3>
                   </div>
                 </div>
 
