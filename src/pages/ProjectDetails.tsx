@@ -102,13 +102,15 @@ export const ProjectDetails: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4"
               >
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleBackClick}
-                  className="fixed top-4 left-4 sm:static sm:top-auto sm:left-auto flex items-center justify-center gap-2 px-3 py-2 sm:px-6 sm:py-3 bg-white/10 backdrop-blur-sm text-white rounded-lg hover:bg-white/20 transition-colors text-xs sm:text-base z-50"
+                  className="fixed top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors duration-300 z-50 sm:static sm:w-auto sm:h-auto sm:px-6 sm:py-3 sm:rounded-lg sm:flex sm:items-center sm:gap-2"
                 >
-                  <FaArrowLeft className="text-xs sm:text-base" />
+                  <FaArrowLeft className="text-base sm:text-base" />
                   <span className="hidden sm:inline">Back to Projects</span>
-                </button>
+                </motion.button>
                 <a
                   href={project.github}
                   target="_blank"

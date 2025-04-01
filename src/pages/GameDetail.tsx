@@ -309,15 +309,15 @@ export const GameDetail: React.FC = () => {
                 className="max-w-4xl mx-auto"
               >
                 <motion.button
-                  whileHover={{ x: -5 }}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={handleBackClick}
-                  className="flex items-center gap-2 text-white/80 hover:text-white mb-8"
+                  className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors duration-300"
                 >
                   <ArrowLeft size={20} />
-                  <span>Back to Games</span>
                 </motion.button>
 
-                <div className="space-y-6">
+                <div className="space-y-6 pt-16">
                   <div className="flex items-center gap-6 text-white/80">
                     <div className="flex items-center gap-2">
                       <Clock size={18} />
