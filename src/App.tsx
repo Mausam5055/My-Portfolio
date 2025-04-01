@@ -30,6 +30,7 @@ import { ProjectDetails } from './pages/ProjectDetails';
 import { GameDetail } from './pages/GameDetail';
 import { GalleryDetail } from './pages/GalleryDetail';
 import { CubeDetails } from './pages/CubeDetails';
+import { AllCubingContent } from './pages/AllCubingContent';
 
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
@@ -417,6 +418,7 @@ function AppContent() {
               <Route path="/games/:gameId" element={<GameDetail />} />
               <Route path="/gallery/:id" element={<GalleryDetail />} />
               <Route path="/cube/:id" element={<CubeDetails />} />
+              <Route path="/all-cubing-content" element={<AllCubingContent />} />
             </Routes>
           </div>
         </>
