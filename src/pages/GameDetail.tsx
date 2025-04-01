@@ -267,14 +267,6 @@ export const GameDetail: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Game not found</h1>
-          <motion.button
-            whileHover={{ x: -5 }}
-            onClick={handleBackClick}
-            className="flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Games</span>
-          </motion.button>
         </div>
       </div>
     );
@@ -298,6 +290,17 @@ export const GameDetail: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80" />
         </motion.div>
 
+        {/* Back button at top left - only visible on mobile */}
+        <motion.button
+          whileHover={{ x: -5 }}
+          onClick={handleBackClick}
+          className="absolute top-4 left-4 flex items-center gap-2 text-white/80 hover:text-white group z-10 lg:hidden"
+        >
+          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+            <ArrowLeft size={20} className="transform group-hover:-translate-x-1 transition-transform duration-300" />
+          </div>
+        </motion.button>
+
         <div className="absolute inset-0 flex flex-col justify-end pb-12">
           <div className="container mx-auto px-4">
             {/* Mobile Layout */}
@@ -308,15 +311,6 @@ export const GameDetail: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="max-w-4xl mx-auto"
               >
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleBackClick}
-                  className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors duration-300"
-                >
-                  <ArrowLeft size={20} />
-                </motion.button>
-
                 <div className="space-y-6 pt-16">
                   <div className="flex items-center gap-6 text-white/80">
                     <div className="flex items-center gap-2">
