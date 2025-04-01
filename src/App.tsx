@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from
 import { useThemeStore } from './store/theme';
 import SEO from './components/SEO';
 import FlashIntro from './components/FlashIntro';
-import Navbar from './components/Navbar.tsx';
+import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import ContentBoxes from './components/ContentBoxes';
 import { About } from './components/About';

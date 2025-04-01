@@ -38,7 +38,7 @@ export const cubingContent: CubingContent[] = [
   {
     id: "3x3-speed",
     title: "3x3 Speed Solve",
-    image: "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=2048&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1539627831859-a911cf04d3cd?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     videoPreviewImage: "https://images.unsplash.com/photo-1577401239170-897942555fb3?q=80&w=2048&auto=format&fit=crop",
     description: "Personal best solve on the 3x3 Rubik's cube using CFOP method.",
     videoUrl: "https://youtu.be/ERZ5y3xPcWw?si=C-oT9orm8jGSSgPj",
