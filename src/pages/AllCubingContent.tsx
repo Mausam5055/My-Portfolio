@@ -29,7 +29,11 @@ export const AllCubingContent: React.FC = () => {
   }, []);
 
   const handleBack = () => {
-    window.history.back();
+    // Navigate back instantly without animation
+    navigate(-1 as any, { 
+      replace: true,
+      state: { instant: true }
+    });
   };
 
   const handleCubeClick = (id: string) => {

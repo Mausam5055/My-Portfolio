@@ -113,12 +113,13 @@ function AppContent() {
     if (navigationStack.length > 0) {
       const previousSection = navigationStack[navigationStack.length - 1];
       setNavigationStack(prev => prev.slice(0, -1));
-      
-      // Use browser's history to go back
-      window.history.back();
-      
-      // Update current section without forcing scroll
       setCurrentSection(previousSection);
+      
+      // Update URL without triggering scroll
+      navigate(`/${previousSection}`, { 
+        state: { scrollToSection: previousSection },
+        replace: true
+      });
     }
   };
 
@@ -152,6 +153,17 @@ function AppContent() {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         setCurrentSection(previousSection);
+        
+        // Prevent default scroll behavior
+        if (previousSection === 'home') {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+        } else if (sectionRefs[previousSection]?.current) {
+          const targetScroll = sectionRefs[previousSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'instant'
+          });
+        }
       }
     };
 
