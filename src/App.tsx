@@ -65,29 +65,11 @@ function AppContent() {
     contact: useRef<HTMLDivElement>(null),
   };
 
-  // Handle scroll position and section updates
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = Object.keys(sectionRefs) as Array<keyof typeof sectionRefs>;
-      const scrollPosition = window.scrollY + 100;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sectionRefs[sections[i]].current;
-        if (section && section.offsetTop <= scrollPosition) {
-          setCurrentSection(sections[i] as SectionType);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const { scrollToSection, handleBack } = useGlobalBack({
     currentSection,
     setCurrentSection,
-    sectionRefs
+    sectionRefs,
+    isDetailsPage
   });
 
   // Initialize AOS
