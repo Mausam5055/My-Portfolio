@@ -28,13 +28,14 @@ export const CubeDetails: React.FC = () => {
   useEffect(() => {
     // Store the current state in history
     const currentState = {
-      from: location.state?.from || '/'
+      from: location.state?.from || '/',
+      scrollPosition: location.state?.scrollPosition || 0
     };
 
     // Replace the current history state
     window.history.replaceState(currentState, '', window.location.href);
 
-    // Ensure scroll to top with instant behavior
+    // Ensure we start at the top of the page
     window.scrollTo({
       top: 0,
       behavior: 'instant'
@@ -44,32 +45,25 @@ export const CubeDetails: React.FC = () => {
       // Clean up any stored state when leaving the page
       sessionStorage.removeItem('cubeDetailsScroll');
     };
-  }, [location.state?.from]);
+  }, [location.state?.from, location.state?.scrollPosition]);
 
   useEffect(() => {
     // Handle browser back button
     const handlePopState = (event: PopStateEvent) => {
       const state = event.state;
-      const previousPath = state?.from || '/';
-      
-      // Navigate to the previous path
-      navigate(previousPath, { 
-        replace: true
-      });
+      if (state?.scrollPosition) {
+        window.scrollTo(0, state.scrollPosition);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
+  }, []);
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    const previousPath = location.state?.from || '/';
-    
-    // Navigate back to the previous path
-    navigate(previousPath, { 
-      replace: true
-    });
+    // Use browser's history to go back
+    window.history.back();
   };
 
   const handleVideoClick = () => {

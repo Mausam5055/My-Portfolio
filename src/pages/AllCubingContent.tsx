@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Clock, Award, Box, Brain, Star, Zap, ArrowLeft } from "lucide-react";
 import { cubingContent } from "../data/cubingContent";
 
@@ -19,37 +19,61 @@ const methodIcons = {
 
 export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    // Ensure scroll to top with instant behavior when component mounts
+    // Store the current state in history
+    const currentState = {
+      from: location.state?.from || '/',
+      scrollPosition: window.scrollY
+    };
+
+    // Replace the current history state
+    window.history.replaceState(currentState, '', window.location.href);
+
+    return () => {
+      // Clean up any stored state when leaving the page
+      sessionStorage.removeItem('allCubingScroll');
+    };
+  }, [location.state?.from]);
+
+  useEffect(() => {
+    // Handle browser back button
+    const handlePopState = (event: PopStateEvent) => {
+      const state = event.state;
+      if (state?.scrollPosition) {
+        window.scrollTo(0, state.scrollPosition);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleBackClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // Use browser's history to go back
+    window.history.back();
+  };
+
+  const handleCubeClick = (id: string) => {
+    // Store current scroll position before navigation
+    const currentState = {
+      from: '/all-cubing-content',
+      scrollPosition: window.scrollY
+    };
+    
+    // Prevent default scroll behavior
     window.scrollTo({
       top: 0,
       behavior: 'instant'
     });
-  }, []);
-
-  const handleBack = () => {
-    // Navigate back instantly without animation
-    navigate(-1 as any, { 
-      replace: true,
-      state: { instant: true }
-    });
-  };
-
-  const handleCubeClick = (id: string) => {
+    
     navigate(`/cube/${id}`, {
-      state: { from: '/all-cubing-content', instant: true },
+      state: currentState,
       replace: false
     });
   };
-
-  useEffect(() => {
-    // Remove the scroll to top behavior
-    return () => {
-      // Clean up any stored state when leaving the page
-      sessionStorage.removeItem('cubeDetailsScroll');
-    };
-  }, []);
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300">
@@ -64,7 +88,7 @@ export const AllCubingContent: React.FC = () => {
           <motion.button
             whileHover={{ x: -3 }}
             whileTap={{ scale: 0.95 }}
-            onClick={handleBack}
+            onClick={handleBackClick}
             className="flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm hover:shadow-md"
           >
             <ArrowLeft className="w-5 h-5" />
