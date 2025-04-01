@@ -55,6 +55,24 @@ export const AllCubingContent: React.FC = () => {
     });
   };
 
+  const handleCompetitionClick = (competition: Competition) => {
+    navigate(`/cubing/competition/${competition.id}`, {
+      state: { from: 'cubing' }
+    });
+  };
+
+  const handleAchievementClick = (achievement: Achievement) => {
+    navigate(`/cubing/achievement/${achievement.id}`, {
+      state: { from: 'cubing' }
+    });
+  };
+
+  const handleMethodClick = (method: Method) => {
+    navigate(`/cubing/method/${method.id}`, {
+      state: { from: 'cubing' }
+    });
+  };
+
   return (
     <section className="py-20 bg-gradient-to-b from-white to-gray-50 dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,204,0.1)_0%,_transparent_100%)] dark:bg-[radial-gradient(circle_at_center,_rgba(255,255,204,0.05)_0%,_transparent_100%)]" />

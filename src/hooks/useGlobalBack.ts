@@ -17,27 +17,6 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Handle scroll position and section updates
-  useEffect(() => {
-    if (!isDetailsPage) {
-      const handleScroll = () => {
-        const sections = Object.keys(sectionRefs) as Array<keyof typeof sectionRefs>;
-        const scrollPosition = window.scrollY + 100;
-
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const section = sectionRefs[sections[i]].current;
-          if (section && section.offsetTop <= scrollPosition) {
-            setCurrentSection(sections[i] as SectionType);
-            break;
-          }
-        }
-      };
-
-      window.addEventListener('scroll', handleScroll);
-      return () => window.removeEventListener('scroll', handleScroll);
-    }
-  }, [isDetailsPage, sectionRefs, setCurrentSection]);
-
   const scrollToSection = (section: SectionType) => {
     // Don't update if we're already in that section
     if (currentSection === section) return;
@@ -51,86 +30,86 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       replace: false
     });
     
-    // Scroll to the section
-    if (section === 'home') {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-    } else if (sectionRefs[section]?.current) {
-      sectionRefs[section].current?.scrollIntoView({ 
-        behavior: 'instant',
-        block: 'start'
-      });
-    }
+    // Direct navigation without scroll
+    setCurrentSection(section);
   };
 
   const handleBack = () => {
     if (isDetailsPage) {
-      // For detail pages, go back to the previous page
-      window.history.back();
+      // For detail pages, check if we have a specific "from" state
+      const state = location.state as { from?: string } | null;
+      if (state?.from) {
+        // Direct navigation to the previous section
+        navigate(state.from, { 
+          state: { scrollToSection: state.from as SectionType },
+          replace: true
+        });
+        setCurrentSection(state.from as SectionType);
+      } else {
+        // Fallback to browser back
+        window.history.back();
+      }
     } else if (navigationStack.length > 0) {
       const previousSection = navigationStack[navigationStack.length - 1];
       setNavigationStack(prev => prev.slice(0, -1));
-      setCurrentSection(previousSection);
       
-      // Direct navigation without scroll
+      // Direct navigation to previous section
       navigate(`/${previousSection}`, { 
-        state: { scrollToSection: previousSection, instant: true, fromBack: true },
+        state: { scrollToSection: previousSection },
         replace: true
       });
+      setCurrentSection(previousSection);
     }
   };
 
-  // Handle navigation and scroll restoration
+  // Handle navigation state updates
   useEffect(() => {
     const state = location.state as { 
-      scrollToSection?: SectionType; 
-      instant?: boolean;
-      fromBack?: boolean;
+      scrollToSection?: SectionType;
       from?: string;
     } | null;
     
     if (state?.scrollToSection) {
-      const targetSection = state.scrollToSection;
-      setCurrentSection(targetSection);
-      
-      // Only scroll if this is not a back navigation
-      if (!state.fromBack) {
-        if (targetSection === 'home') {
-          window.scrollTo({ top: 0, behavior: 'instant' });
-        } else if (sectionRefs[targetSection]?.current) {
-          const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'instant'
-          });
-        }
-      }
+      setCurrentSection(state.scrollToSection);
     }
-  }, [location.state, sectionRefs, setCurrentSection]);
+  }, [location.state, setCurrentSection]);
 
   // Handle back button
   useEffect(() => {
     const handlePopState = () => {
       if (isDetailsPage) {
-        // For detail pages, let the browser handle the back navigation
+        // For detail pages, check if we have a specific "from" state
+        const state = location.state as { from?: string } | null;
+        if (state?.from) {
+          // Direct navigation to the previous section
+          navigate(state.from, { 
+            state: { scrollToSection: state.from as SectionType },
+            replace: true
+          });
+          setCurrentSection(state.from as SectionType);
+        } else {
+          // Fallback to browser back
+          window.history.back();
+        }
         return;
       }
       
       if (navigationStack.length > 0) {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
-        setCurrentSection(previousSection);
         
-        // Direct navigation without scroll
+        // Direct navigation to previous section
         navigate(`/${previousSection}`, { 
-          state: { scrollToSection: previousSection, instant: true, fromBack: true },
+          state: { scrollToSection: previousSection },
           replace: true
         });
+        setCurrentSection(previousSection);
       }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigationStack, isDetailsPage, setCurrentSection, navigate]);
+  }, [navigationStack, isDetailsPage, setCurrentSection, navigate, location.state]);
 
   return {
     navigationStack,
