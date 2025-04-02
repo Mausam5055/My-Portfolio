@@ -114,7 +114,8 @@
         <a href="https://mausam03.vercel.app/">
           <img src="https://img.shields.io/badge/View_Live-Demo-2ea44f?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo" />
         </a>
-        <p><small>Deployed on Vercel's global edge network for optimal performance</small></p>
+        <p><small>🌐 Live at: <a href="https://mausam03.vercel.app/">https://mausam03.vercel.app/</a></small></p>
+        <p><small>🚀 Deployed on Vercel's global edge network for optimal performance</small></p>
       </td>
     </tr>
   </table>
