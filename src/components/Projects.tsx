@@ -1,24 +1,22 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight, FaArrowRight } from 'react-icons/fa';
+import { Grid } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { projects } from '../data/projects';
+import { cn } from '../lib/utils';
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_TO_SHOW = 3;
 
 export const Projects: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const prefersReducedMotion = useReducedMotion();
   const location = useLocation();
   const navigate = useNavigate();
-  const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const displayedProjects = projects.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const displayedProjects = projects.slice(0, ITEMS_TO_SHOW);
 
   useEffect(() => {
     if (location.state?.scrollToProjects) {
-      // Immediately scroll to projects section
       const projectsSection = document.getElementById('projects');
       if (projectsSection) {
         const rect = projectsSection.getBoundingClientRect();
@@ -28,8 +26,6 @@ export const Projects: React.FC = () => {
           behavior: 'instant'
         });
       }
-      
-      // Clear the state
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -56,10 +52,6 @@ export const Projects: React.FC = () => {
     };
 
     preloadImages();
-  }, []);
-
-  const handlePageChange = useCallback((page: number) => {
-    setCurrentPage(page);
   }, []);
 
   // Optimize animations based on user preference
@@ -200,42 +192,45 @@ export const Projects: React.FC = () => {
           ))}
         </div>
 
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <motion.div 
+        {/* View All Button - Desktop & Mobile */}
+        {projects.length > ITEMS_TO_SHOW && (
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-12 md:mt-16 flex items-center justify-center gap-3 md:gap-4"
+            className="flex justify-center mt-12 md:mt-16"
           >
             <motion.button
-              whileHover={prefersReducedMotion ? {} : { x: -3 }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center gap-1 md:gap-2 px-4 md:px-8 py-2 md:py-3 rounded-xl transition-all duration-300 ${
-                currentPage === 1
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                  : "bg-white/80 dark:bg-gray-900/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-2 border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl"
-              }`}
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'instant'
+                });
+                navigate('/projects/all', { 
+                  state: { fromProjects: true },
+                  replace: true 
+                });
+              }}
+              className={cn(
+                "group relative",
+                "flex items-center justify-center gap-2",
+                "px-6 py-3",
+                "rounded-full",
+                "bg-white/90 dark:bg-gray-800/90",
+                "backdrop-blur-sm",
+                "border border-gray-200 dark:border-white/10",
+                "shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)]",
+                "hover:shadow-[0_8px_24px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_8px_24px_rgba(0,0,0,0.4)]",
+                "transition-all duration-300"
+              )}
+              aria-label="View all projects"
             >
-              <FaChevronLeft className="w-3 h-3 md:w-4 md:h-4" />
-              <span className="text-xs md:text-sm font-medium">Previous</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={prefersReducedMotion ? {} : { x: 3 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`flex items-center gap-1 md:gap-2 px-4 md:px-8 py-2 md:py-3 rounded-xl transition-all duration-300 ${
-                currentPage === totalPages
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                  : "bg-white/80 dark:bg-gray-900/50 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 border-2 border-gray-200 dark:border-gray-800 shadow-lg hover:shadow-xl"
-              }`}
-            >
-              <span className="text-xs md:text-sm font-medium">Next</span>
-              <FaChevronRight className="w-3 h-3 md:w-4 md:h-4" />
+              <Grid className="w-5 h-5 text-gray-900 dark:text-white" />
+              <span className="text-sm font-medium text-gray-900 dark:text-white">
+                View All Projects
+              </span>
             </motion.button>
           </motion.div>
         )}

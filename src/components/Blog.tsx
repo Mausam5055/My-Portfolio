@@ -69,6 +69,69 @@ What's next in the world of web development...
     `,
     date: '2024-03-05',
     author: 'Mausam Kar'
+  },
+  {
+    id: '4',
+    title: 'Building Responsive Web Applications',
+    image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3',
+    excerpt: 'Learn the best practices for creating responsive web applications that work seamlessly across all devices...',
+    content: `
+# Building Responsive Web Applications
+
+Responsive design is no longer optional in today's digital landscape...
+
+## Mobile-First Approach
+
+Start with mobile and scale up for larger screens...
+
+## Performance Optimization
+
+Ensure your responsive sites load quickly and efficiently...
+    `,
+    date: '2024-03-01',
+    author: 'Mausam Kar'
+  },
+  {
+    id: '5',
+    title: 'The Power of CSS Grid',
+    image: 'https://images.unsplash.com/photo-1555066931-bf19f8e1083d',
+    excerpt: 'Master CSS Grid layout system for creating complex, responsive web layouts...',
+    content: `
+# The Power of CSS Grid
+
+CSS Grid is a powerful layout system that revolutionized web design...
+
+## Grid Basics
+
+Understanding the fundamentals of CSS Grid...
+
+## Advanced Grid Techniques
+
+Take your layouts to the next level with advanced Grid features...
+    `,
+    date: '2024-02-28',
+    author: 'Mausam Kar'
+  },
+  {
+    id: '6',
+    title: 'JavaScript Best Practices',
+    image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c',
+    excerpt: 'Essential JavaScript practices for writing clean, maintainable, and efficient code...',
+    content: `
+# JavaScript Best Practices
+
+Writing good JavaScript code is an art that requires practice and knowledge...
+
+## Code Organization
+
+Learn how to structure your JavaScript code effectively...
+
+## Performance Tips
+
+Optimize your JavaScript code for better performance...
+    `,
+    date: '2024-02-25',
+    author: 'Mausam Kar'
   }
 ];
 
@@ -114,6 +177,16 @@ export const Blog: React.FC = () => {
   const handlePostClick = (postId: string) => {
     navigate(`/blog/${postId}`, { 
       state: { fromBlogDetail: true },
+      replace: true
+    });
+  };
+
+  const handleShowAll = () => {
+    // First scroll to top
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    // Then navigate
+    navigate('/blogs/all', { 
+      state: { fromBlog: true },
       replace: true
     });
   };
@@ -186,7 +259,7 @@ export const Blog: React.FC = () => {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post, index) => (
+          {filteredPosts.slice(0, 3).map((post, index) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 20, rotateX: -10 }}
@@ -262,6 +335,31 @@ export const Blog: React.FC = () => {
             </motion.article>
           ))}
         </div>
+
+        {/* Show All Button */}
+        {filteredPosts.length > 3 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="mt-12 text-center"
+          >
+            <motion.button
+              onClick={handleShowAll}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
+                <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M14 4H20V10H14V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M4 14H10V20H4V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M14 14H20V20H14V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              View All Blog Posts
+            </motion.button>
+          </motion.div>
+        )}
 
         {/* Animated background elements */}
         <div className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />

@@ -188,55 +188,21 @@ export const CubingContent: React.FC = () => {
           ))}
         </div>
 
-        {totalPages > 1 && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mt-12 flex items-center justify-center gap-4"
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-12 flex items-center justify-center"
+        >
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleShowMore}
+            className="group flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm hover:shadow-md"
           >
-            {isMobile ? (
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleShowMore}
-                className="group flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm hover:shadow-md"
-              >
-                <ChevronDown className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-1" />
-              </motion.button>
-            ) : (
-              <>
-                <motion.button
-                  whileHover={{ x: -3 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ${
-                    currentPage === 1
-                      ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                      : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 shadow-sm hover:shadow-md"
-                  }`}
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </motion.button>
-
-                <motion.button
-                  whileHover={{ x: 3 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className={`flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300 ${
-                    currentPage === totalPages
-                      ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                      : "bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 shadow-sm hover:shadow-md"
-                  }`}
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </motion.button>
-              </>
-            )}
-          </motion.div>
-        )}
+            <ChevronDown className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-1" />
+          </motion.button>
+        </motion.div>
       </div>
     </section>
   );

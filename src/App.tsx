@@ -15,7 +15,8 @@ import { Education } from './components/Education';
 import { Gallery } from './components/Gallery';
 import { CubingContent } from './components/CubingContent';
 import { Blog } from './components/Blog';
-import { BlogDetail } from './components/BlogDetail';
+import { BlogDetailPage } from './pages/BlogDetailPage';
+import { AllBlogs } from './pages/AllBlogs';
 import { FutureGoals } from './components/FutureGoals';
 import { FunFacts } from './components/FunFacts';
 import { Gaming } from './components/Gaming';
@@ -31,6 +32,8 @@ import { GameDetail } from './pages/GameDetail';
 import { GalleryDetail } from './pages/GalleryDetail';
 import { CubeDetails } from './pages/CubeDetails';
 import { AllCubingContent } from './pages/AllCubingContent';
+import { AllProjects } from './pages/AllProjects';
+import { Games } from './pages/Games';
 import { useGlobalBack } from './hooks/useGlobalBack';
 
 type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
@@ -203,21 +206,21 @@ function AppContent() {
                 <>
                   <Hero />
                   <ContentBoxes refs={sectionRefs} />
-                  <div ref={sectionRefs.about}><About /></div>
-                  <div ref={sectionRefs.journey}><Journey /></div>
-                  <div ref={sectionRefs.qualifications}><Qualifications /></div>
-                  <div ref={sectionRefs.certifications}><Certifications /></div>
-                  <div ref={sectionRefs.skills}><Skills /></div>
-                  <div ref={sectionRefs.education}><Education /></div>
-                  <div ref={sectionRefs.gallery}><Gallery /></div>
-                  <div ref={sectionRefs.cubing}><CubingContent /></div>
-                  <div ref={sectionRefs.blog}><Blog /></div>
-                  <div ref={sectionRefs.Gaming}><Gaming /></div>
-                  <div ref={sectionRefs.funFacts}><FunFacts /></div>
-                  <div ref={sectionRefs.projects}><Projects /></div>
-                  <div ref={sectionRefs.futureGoals}><FutureGoals /></div>
-                  <div ref={sectionRefs.testimonials}><Testimonials /></div>
-                  <div ref={sectionRefs.contact}><Contact /></div>
+                  <div id="about" ref={sectionRefs.about}><About /></div>
+                  <div id="journey" ref={sectionRefs.journey}><Journey /></div>
+                  <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
+                  <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
+                  <div id="skills" ref={sectionRefs.skills}><Skills /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
+                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
+                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
+                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
+                  <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
+                  <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
+                  <div id="contact" ref={sectionRefs.contact}><Contact /></div>
                   <Footer />
                 </>
               } />
@@ -225,26 +228,29 @@ function AppContent() {
                 <>
                   <Hero />
                   <ContentBoxes refs={sectionRefs} />
-                  <div ref={sectionRefs.about}><About /></div>
-                  <div ref={sectionRefs.journey}><Journey /></div>
-                  <div ref={sectionRefs.qualifications}><Qualifications /></div>
-                  <div ref={sectionRefs.certifications}><Certifications /></div>
-                  <div ref={sectionRefs.skills}><Skills /></div>
-                  <div ref={sectionRefs.education}><Education /></div>
-                  <div ref={sectionRefs.gallery}><Gallery /></div>
-                  <div ref={sectionRefs.cubing}><CubingContent /></div>
-                  <div ref={sectionRefs.blog}><Blog /></div>
-                  <div ref={sectionRefs.Gaming}><Gaming /></div>
-                  <div ref={sectionRefs.funFacts}><FunFacts /></div>
-                  <div ref={sectionRefs.projects}><Projects /></div>
-                  <div ref={sectionRefs.futureGoals}><FutureGoals /></div>
-                  <div ref={sectionRefs.testimonials}><Testimonials /></div>
-                  <div ref={sectionRefs.contact}><Contact /></div>
+                  <div id="about" ref={sectionRefs.about}><About /></div>
+                  <div id="journey" ref={sectionRefs.journey}><Journey /></div>
+                  <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
+                  <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
+                  <div id="skills" ref={sectionRefs.skills}><Skills /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
+                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
+                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
+                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
+                  <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
+                  <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
+                  <div id="contact" ref={sectionRefs.contact}><Contact /></div>
                   <Footer />
                 </>
               } />
-              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/blog/:id" element={<BlogDetailPage />} />
+              <Route path="/blogs/all" element={<AllBlogs />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
+              <Route path="/projects/all" element={<AllProjects />} />
+              <Route path="/games" element={<Games />} />
               <Route path="/games/:gameId" element={<GameDetail />} />
               <Route path="/gallery/:id" element={<GalleryDetail />} />
               <Route path="/cube/:id" element={<CubeDetails />} />

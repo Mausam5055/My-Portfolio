@@ -83,7 +83,7 @@ What's next in the world of web development? We're seeing a shift towards more i
   }
 ];
 
-export const BlogDetail: React.FC = () => {
+export const BlogDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
@@ -293,4 +293,4 @@ export const BlogDetail: React.FC = () => {
       </div>
     </motion.div>
   );
-};
+}; 

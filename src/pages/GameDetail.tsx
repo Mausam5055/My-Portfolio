@@ -218,6 +218,7 @@ export const GameDetail: React.FC = () => {
   const isNavigating = useRef(false);
   const videoRef = useRef<HTMLDivElement>(null);
   const isDetailsPage = location.pathname.startsWith('/projects/') || location.pathname.startsWith('/games/') || location.pathname.startsWith('/blog/');
+  const [heroHeight, setHeroHeight] = useState("h-32");
 
   const handleVideoClick = (videoId: string) => {
     setPlayingVideoId(videoId);
@@ -329,30 +330,58 @@ export const GameDetail: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <motion.button
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setActiveSection(0)}
-                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setActiveSection(0);
+                        setHeroHeight("h-32");
+                        setTimeout(() => {
+                          window.scrollTo({
+                            top: window.innerHeight - 128,
+                            behavior: 'smooth'
+                          });
+                        }, 100);
+                      }}
+                      className={`px-5 py-2 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
                         activeSection === 0
-                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                          : "bg-white/10 hover:bg-white/20 text-white"
+                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/50"
+                          : "bg-white/10 hover:bg-white/20 text-white hover:shadow-lg hover:shadow-white/10"
                       }`}
                     >
-                      <Play size={20} className={activeSection === 0 ? "animate-pulse" : ""} />
-                      <span className="font-medium tracking-wide">Watch Gameplay</span>
+                      <motion.div
+                        animate={activeSection === 0 ? { scale: [1, 1.2, 1] } : {}}
+                        transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <Play size={16} className={activeSection === 0 ? "text-blue-100" : ""} />
+                      </motion.div>
+                      <span className="font-medium tracking-wide text-sm uppercase">Watch Gameplay</span>
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setActiveSection(1)}
-                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setActiveSection(1);
+                        setHeroHeight("h-32");
+                        setTimeout(() => {
+                          window.scrollTo({
+                            top: window.innerHeight - 128,
+                            behavior: 'smooth'
+                          });
+                        }, 100);
+                      }}
+                      className={`px-5 py-2 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
                         activeSection === 1
-                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                          : "bg-white/10 hover:bg-white/20 text-white"
+                          ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/50"
+                          : "bg-white/10 hover:bg-white/20 text-white hover:shadow-lg hover:shadow-white/10"
                       }`}
                     >
-                      <BookOpen size={20} className={activeSection === 1 ? "animate-pulse" : ""} />
-                      <span className="font-medium tracking-wide">Read More</span>
+                      <motion.div
+                        animate={activeSection === 1 ? { scale: [1, 1.2, 1] } : {}}
+                        transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <BookOpen size={16} className={activeSection === 1 ? "text-purple-100" : ""} />
+                      </motion.div>
+                      <span className="font-medium tracking-wide text-sm uppercase">Read More</span>
                     </motion.button>
                   </div>
                 </div>

@@ -24,23 +24,36 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // Update navigation stack
     setNavigationStack(prev => [...prev, currentSection]);
 
-    // Ensure we're at the top before navigation
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
-
-    // Direct navigation without scroll
+    // Update URL without triggering a scroll
     navigate(`/${section}`, { 
       state: { 
         scrollToSection: section,
-        directNavigation: true
+        directNavigation: true,
+        from: currentSection
       },
       replace: false
     });
     
     // Update section immediately
     setCurrentSection(section);
+    
+    // Find and scroll to the section element
+    const sectionElement = document.getElementById(section);
+    console.log('Looking for section:', section);
+    console.log('Found element:', sectionElement);
+    
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If element not found, try with lowercase
+      const lowerSectionElement = document.getElementById(section.toLowerCase());
+      console.log('Trying lowercase:', section.toLowerCase());
+      console.log('Found element:', lowerSectionElement);
+      
+      if (lowerSectionElement) {
+        lowerSectionElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   const handleBack = () => {
@@ -116,20 +129,40 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       directNavigation?: boolean;
     } | null;
     
-    if (state?.scrollToSection) {
-      setCurrentSection(state.scrollToSection);
-      // If it's a direct navigation, scroll to the section immediately
-      if (state.directNavigation && sectionRefs[state.scrollToSection]?.current) {
-        // Ensure we're at the top before scrolling to section
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
-        // Then scroll to the section
-        sectionRefs[state.scrollToSection].current?.scrollIntoView({ behavior: 'instant' });
-      }
+    // Skip if state is null or no scrollToSection
+    if (!state?.scrollToSection) return;
+    
+    // Skip if we're already in the target section
+    if (currentSection === state.scrollToSection) return;
+    
+    setCurrentSection(state.scrollToSection);
+    
+    // Map section names to their correct IDs
+    const sectionIdMap: Record<SectionType, string> = {
+      home: 'home',
+      about: 'about',
+      journey: 'journey',
+      qualifications: 'qualifications',
+      certifications: 'certifications',
+      skills: 'skills',
+      education: 'education',
+      gallery: 'gallery',
+      cubing: 'cubing',
+      blog: 'blog',
+      futureGoals: 'future-goals',
+      funFacts: 'fun-facts',
+      Gaming: 'gaming',
+      projects: 'projects',
+      testimonials: 'testimonials',
+      contact: 'contact'
+    };
+
+    // Find and scroll to the section element using the mapped ID
+    const sectionElement = document.getElementById(sectionIdMap[state.scrollToSection]);
+    if (sectionElement) {
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [location.state, setCurrentSection, sectionRefs]);
+  }, [location.state, setCurrentSection, currentSection]);
 
   // Handle back button
   useEffect(() => {
