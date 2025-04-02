@@ -146,8 +146,8 @@ export const Projects: React.FC = () => {
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="bg-black/60 backdrop-blur-sm px-4 py-2 md:px-6 md:py-2.5 rounded-full">
-                        <span className="text-white text-sm md:text-base font-medium">View Details</span>
+                      <div className="bg-gradient-to-r from-white/80 to-white/60 dark:from-black/70 dark:to-black/50 backdrop-blur-[2px] px-3 py-1.5 md:px-4 md:py-1.5 rounded-full border border-white/20 dark:border-white/10 shadow-[0_4px_12px_rgba(0,0,0,0.1)] dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_16px_rgba(0,0,0,0.15)] dark:hover:shadow-[0_6px_16px_rgba(0,0,0,0.4)] transition-all duration-300 opacity-100 md:opacity-0 md:group-hover:opacity-100">
+                        <span className="text-gray-900 dark:text-white text-xs md:text-sm font-medium tracking-wide">View Details</span>
                       </div>
                     </div>
                   </div>
