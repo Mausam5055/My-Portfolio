@@ -104,7 +104,11 @@ export default function ContentBoxes({ refs }: { refs: any }) {
   const handleBoxClick = (id: number) => {
     const sectionKeys = Object.keys(refs);
     if (sectionKeys[id - 1] && refs[sectionKeys[id - 1]].current) {
-      refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'smooth' });
+      if (isTouchDevice) {
+        refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'instant' });
+      } else {
+        refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
