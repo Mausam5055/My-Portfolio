@@ -144,16 +144,10 @@ export const Certifications: React.FC = () => {
     // First collapse the content
     setShowAllMobile(false);
     
-    // Calculate scroll position immediately
+    // Instantly scroll to the certifications section
     const certificationsSection = document.getElementById('certifications');
     if (certificationsSection) {
-      const targetPosition = certificationsSection.offsetTop - 100;
-      
-      // Start scrolling immediately but with smooth behavior
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
+      certificationsSection.scrollIntoView({ behavior: 'instant' });
     }
   };
 
