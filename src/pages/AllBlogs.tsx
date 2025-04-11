@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useMemo, useCallback, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -158,6 +158,16 @@ export const AllBlogs: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [bgImageLoaded, setBgImageLoaded] = useState(false);
+
+  // Preload background image
+  useEffect(() => {
+    const img = new Image();
+    img.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
+    img.onload = () => {
+      setBgImageLoaded(true);
+    };
+  }, []);
 
   // Memoize filtered posts
   const filteredPosts = useMemo(() => {
@@ -230,17 +240,29 @@ export const AllBlogs: React.FC = () => {
   const categories = ['all', 'technology', 'web development', 'programming', 'design'];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 overflow-x-hidden">
       {/* Background Image - Desktop Only */}
       <div className="fixed inset-0 z-0 hidden lg:block">
-        <img
-          src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
-          alt="Background"
-          className="w-full h-full object-cover"
-          loading="eager"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
+        <AnimatePresence>
+          {bgImageLoaded && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+              className="absolute inset-0"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+                alt="Background"
+                className="w-full h-full object-cover transform-gpu"
+                loading="eager"
+              />
+              <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
+              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Mobile Background */}
@@ -329,12 +351,12 @@ export const AllBlogs: React.FC = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transform-gpu">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPosts.map((post) => (
             <article
               key={post.id}
               onClick={() => handlePostClick(post.id)}
-              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer transform-gpu will-change-transform"
+              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer transform-gpu will-change-transform"
             >
               <div className="relative h-48">
                 {!loadedImages[post.id] ? (
