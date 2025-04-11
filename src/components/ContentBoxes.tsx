@@ -102,12 +102,31 @@ export default function ContentBoxes({ refs }: { refs: any }) {
   const isTouchDevice = 'ontouchstart' in window;
 
   const handleBoxClick = (id: number) => {
-    const sectionKeys = Object.keys(refs);
-    if (sectionKeys[id - 1] && refs[sectionKeys[id - 1]].current) {
+    // Map box IDs to correct section keys
+    const sectionMap: Record<number, string> = {
+      1: 'about',
+      2: 'journey',
+      3: 'qualifications',
+      4: 'certifications',
+      5: 'skills',
+      6: 'education',
+      7: 'gallery',
+      8: 'cubing',
+      9: 'projects',
+      10: 'Gaming',
+      11: 'funFacts',
+      12: 'blog',
+      13: 'futureGoals',
+      14: 'testimonials',
+      15: 'contact'
+    };
+
+    const sectionKey = sectionMap[id];
+    if (sectionKey && refs[sectionKey]?.current) {
       if (isTouchDevice) {
-        refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'instant' });
+        refs[sectionKey].current.scrollIntoView({ behavior: 'instant' });
       } else {
-        refs[sectionKeys[id - 1]].current.scrollIntoView({ behavior: 'smooth' });
+        refs[sectionKey].current.scrollIntoView({ behavior: 'smooth' });
       }
     }
   };
