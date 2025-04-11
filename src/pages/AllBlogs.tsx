@@ -160,12 +160,23 @@ export const AllBlogs: React.FC = () => {
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [bgImageLoaded, setBgImageLoaded] = useState(false);
 
-  // Preload background image
+  // Preload background image with error handling
   useEffect(() => {
-    const img = new Image();
-    img.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
-    img.onload = () => {
-      setBgImageLoaded(true);
+    // First load a tiny version of the image
+    const tinyImg = new Image();
+    tinyImg.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=20&q=10";
+    tinyImg.onload = () => {
+      // Then load the full image
+      const img = new Image();
+      img.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
+      img.onload = () => {
+        requestAnimationFrame(() => {
+          setBgImageLoaded(true);
+        });
+      };
+      img.onerror = () => {
+        setBgImageLoaded(false);
+      };
     };
   }, []);
 
@@ -243,26 +254,33 @@ export const AllBlogs: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-gray-900 overflow-x-hidden">
       {/* Background Image - Desktop Only */}
       <div className="fixed inset-0 z-0 hidden lg:block">
-        <AnimatePresence>
-          {bgImageLoaded && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-              className="absolute inset-0"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
-                alt="Background"
-                className="w-full h-full object-cover transform-gpu"
-                loading="eager"
-              />
-              <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
-              <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: bgImageLoaded ? 1 : 0 }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+          className="absolute inset-0"
+        >
+          {/* Low quality placeholder */}
+          <div 
+            className="absolute inset-0 bg-gray-200 dark:bg-gray-800"
+            style={{
+              backgroundImage: `url(https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=20&q=10)`,
+              backgroundSize: 'cover',
+              filter: 'blur(20px)',
+              transform: 'scale(1.1)'
+            }}
+          />
+          {/* Full quality image */}
+          <img
+            src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+            alt="Background"
+            className="w-full h-full object-cover"
+            loading="eager"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/40 to-white/50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
+        </motion.div>
       </div>
 
       {/* Mobile Background */}
