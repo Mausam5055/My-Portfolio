@@ -109,20 +109,16 @@ export default function Navbar({
     
     // Find the section element
     const sectionElement = document.getElementById(section);
-    console.log('Looking for section:', section);
-    console.log('Found element:', sectionElement);
     
     if (sectionElement) {
-      // Scroll to the section
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
+      // Scroll to the section instantly
+      sectionElement.scrollIntoView({ behavior: 'instant' });
     } else {
       // If element not found, try with lowercase
       const lowerSectionElement = document.getElementById(section.toLowerCase());
-      console.log('Trying lowercase:', section.toLowerCase());
-      console.log('Found element:', lowerSectionElement);
       
       if (lowerSectionElement) {
-        lowerSectionElement.scrollIntoView({ behavior: 'smooth' });
+        lowerSectionElement.scrollIntoView({ behavior: 'instant' });
       }
     }
     
