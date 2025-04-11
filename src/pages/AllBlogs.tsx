@@ -231,51 +231,90 @@ export const AllBlogs: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Header Section */}
-      <header className="relative bg-gradient-to-b from-purple-900 to-gray-900 text-white">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between mb-6">
-            <button
+      {/* Enhanced Hero Section */}
+      <header className="relative">
+        {/* Background with gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-gray-50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
+        </div>
+
+        {/* Content */}
+        <div className="relative container mx-auto px-4 py-12 md:py-16">
+          {/* Back button and title */}
+          <div className="flex items-center justify-between mb-8">
+            <motion.button
               onClick={handleBack}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 transition-colors backdrop-blur-sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={20} className="text-gray-700 dark:text-white" />
               <span className="sr-only">Back to Home</span>
-            </button>
-            <h1 className="text-2xl md:text-3xl font-bold">All Blog Posts</h1>
-            <div className="w-10" /> {/* Spacer for alignment */}
-          </div>
-          
-          {/* Search Bar */}
-          <div className="relative mb-6">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search blogs..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+            </motion.button>
+            
+            <motion.h1 
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              All Blog Posts
+            </motion.h1>
+            
+            <div className="w-10" />
           </div>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-sm font-medium",
-                  "transition-colors duration-200",
-                  selectedCategory === category
-                    ? "bg-purple-500 text-white"
-                    : "bg-white/10 text-white hover:bg-white/20"
-                )}
-              >
-                {category.charAt(0).toUpperCase() + category.slice(1)}
-              </button>
-            ))}
-          </div>
+          {/* Description */}
+          <motion.p 
+            className="text-gray-600 dark:text-white/80 text-center max-w-2xl mx-auto mb-8 text-lg md:text-xl"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Explore our collection of articles about web development, design, and technology.
+          </motion.p>
+
+          {/* Search and Filter Section */}
+          <motion.div
+            className="max-w-3xl mx-auto space-y-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            {/* Search Bar */}
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-white/60" size={20} />
+              <input
+                type="text"
+                placeholder="Search blogs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3.5 rounded-full bg-gray-100 text-gray-900 placeholder-gray-400 dark:bg-white/10 dark:text-white dark:placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-purple-500/50 backdrop-blur-sm"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {categories.map((category) => (
+                <motion.button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={cn(
+                    "px-4 py-2 rounded-full text-sm font-medium",
+                    "transition-all duration-200",
+                    "backdrop-blur-sm",
+                    selectedCategory === category
+                      ? "bg-gray-900 text-white dark:bg-purple-500 shadow-lg"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20"
+                  )}
+                >
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </header>
 
@@ -325,7 +364,7 @@ export const AllBlogs: React.FC = () => {
                   {post.excerpt}
                 </p>
 
-                <div className="mt-4 flex items-center text-purple-600 dark:text-purple-400 font-medium text-sm">
+                <div className="mt-4 flex items-center text-gray-900 dark:text-purple-400 font-medium text-sm">
                   <span>Read More</span>
                   <ArrowLeft size={16} className="ml-1" />
                 </div>
