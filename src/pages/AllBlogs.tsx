@@ -135,10 +135,29 @@ Optimize your JavaScript code for better performance...
   }
 ];
 
+const BlogPostSkeleton: React.FC = () => (
+  <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md animate-pulse">
+    <div className="relative h-48 bg-gray-200 dark:bg-gray-700" />
+    <div className="p-4">
+      <div className="flex items-center gap-4 mb-2">
+        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded" />
+      </div>
+      <div className="h-6 w-3/4 bg-gray-200 dark:bg-gray-700 rounded mb-2" />
+      <div className="space-y-2">
+        <div className="h-4 w-full bg-gray-200 dark:bg-gray-700 rounded" />
+        <div className="h-4 w-5/6 bg-gray-200 dark:bg-gray-700 rounded" />
+      </div>
+      <div className="mt-4 h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded" />
+    </div>
+  </div>
+);
+
 export const AllBlogs: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
 
   // Memoize filtered posts
   const filteredPosts = useMemo(() => {
@@ -150,6 +169,23 @@ export const AllBlogs: React.FC = () => {
       return matchesSearch && matchesCategory;
     });
   }, [searchQuery, selectedCategory]);
+
+  // Handle image loading
+  const handleImageLoad = useCallback((postId: string) => {
+    setLoadedImages(prev => ({
+      ...prev,
+      [postId]: true
+    }));
+  }, []);
+
+  // Preload images
+  useEffect(() => {
+    filteredPosts.forEach(post => {
+      const img = new Image();
+      img.src = post.image;
+      img.onload = () => handleImageLoad(post.id);
+    });
+  }, [filteredPosts, handleImageLoad]);
 
   // Memoize handlers
   const handleBack = useCallback(() => {
@@ -253,11 +289,18 @@ export const AllBlogs: React.FC = () => {
               className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
             >
               <div className="relative h-48">
+                {!loadedImages[post.id] ? (
+                  <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
+                ) : null}
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-full h-full object-cover"
+                  className={cn(
+                    "w-full h-full object-cover",
+                    !loadedImages[post.id] && "opacity-0"
+                  )}
                   loading="lazy"
+                  onLoad={() => handleImageLoad(post.id)}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
