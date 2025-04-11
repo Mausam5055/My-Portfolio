@@ -101,6 +101,23 @@ function AppContent() {
     }
   }, [location.pathname, location.state, isDetailsPage]);
 
+  // Add global scroll behavior control
+  useEffect(() => {
+    const handleNavigation = () => {
+      // Temporarily disable smooth scrolling
+      const scrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Restore scroll behavior after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = scrollBehavior;
+      }, 0);
+    };
+
+    window.addEventListener('popstate', handleNavigation);
+    return () => window.removeEventListener('popstate', handleNavigation);
+  }, []);
+
   // Add section-specific SEO data
   const seoData = {
     home: {

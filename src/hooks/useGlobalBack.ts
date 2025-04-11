@@ -39,31 +39,26 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     
     // Find and scroll to the section element
     const sectionElement = document.getElementById(section);
-    console.log('Looking for section:', section);
-    console.log('Found element:', sectionElement);
-    
     if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // If element not found, try with lowercase
-      const lowerSectionElement = document.getElementById(section.toLowerCase());
-      console.log('Trying lowercase:', section.toLowerCase());
-      console.log('Found element:', lowerSectionElement);
+      // Temporarily disable smooth scrolling
+      const scrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
       
-      if (lowerSectionElement) {
-        lowerSectionElement.scrollIntoView({ behavior: 'smooth' });
-      }
+      sectionElement.scrollIntoView({ behavior: 'instant' });
+      
+      // Restore scroll behavior
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = scrollBehavior;
+      }, 0);
     }
   };
 
   const handleBack = () => {
     // Special handling for AllCubingContent
     if (location.pathname === '/all-cubing-content') {
-      // Ensure we're at the top before navigation
-      window.scrollTo({
-        top: 0,
-        behavior: 'instant'
-      });
+      // Temporarily disable smooth scrolling
+      const scrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
 
       navigate('/cubing', { 
         state: { 
@@ -73,6 +68,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         replace: true
       });
       setCurrentSection('cubing');
+
+      // Restore scroll behavior
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = scrollBehavior;
+      }, 0);
       return;
     }
 
@@ -80,11 +80,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       // For detail pages, check if we have a specific "from" state
       const state = location.state as { from?: string } | null;
       if (state?.from) {
-        // Ensure we're at the top before navigation
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
+        // Temporarily disable smooth scrolling
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
 
         // Direct navigation to the previous section
         navigate(`/${state.from}`, { 
@@ -95,6 +93,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           replace: true
         });
         setCurrentSection(state.from as SectionType);
+
+        // Restore scroll behavior
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 0);
       } else {
         // Fallback to browser back
         window.history.back();
@@ -103,11 +106,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       const previousSection = navigationStack[navigationStack.length - 1];
       setNavigationStack(prev => prev.slice(0, -1));
       
-      // Ensure we're at the top before navigation
-      window.scrollTo({
-        top: 0,
-        behavior: 'instant'
-      });
+      // Temporarily disable smooth scrolling
+      const scrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
 
       // Direct navigation to previous section
       navigate(`/${previousSection}`, { 
@@ -118,6 +119,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         replace: true
       });
       setCurrentSection(previousSection);
+
+      // Restore scroll behavior
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = scrollBehavior;
+      }, 0);
     }
   };
 
@@ -160,7 +166,16 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // Find and scroll to the section element using the mapped ID
     const sectionElement = document.getElementById(sectionIdMap[state.scrollToSection]);
     if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
+      // Temporarily disable smooth scrolling
+      const scrollBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      sectionElement.scrollIntoView({ behavior: 'instant' });
+      
+      // Restore scroll behavior
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = scrollBehavior;
+      }, 0);
     }
   }, [location.state, setCurrentSection, currentSection]);
 
@@ -169,11 +184,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     const handlePopState = () => {
       // Special handling for AllCubingContent
       if (location.pathname === '/all-cubing-content') {
-        // Ensure we're at the top before navigation
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
+        // Temporarily disable smooth scrolling
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
 
         navigate('/cubing', { 
           state: { 
@@ -183,6 +196,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           replace: true
         });
         setCurrentSection('cubing');
+
+        // Restore scroll behavior
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 0);
         return;
       }
 
@@ -190,11 +208,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // For detail pages, check if we have a specific "from" state
         const state = location.state as { from?: string } | null;
         if (state?.from) {
-          // Ensure we're at the top before navigation
-          window.scrollTo({
-            top: 0,
-            behavior: 'instant'
-          });
+          // Temporarily disable smooth scrolling
+          const scrollBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = 'auto';
 
           // Direct navigation to the previous section
           navigate(`/${state.from}`, { 
@@ -205,6 +221,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
             replace: true
           });
           setCurrentSection(state.from as SectionType);
+
+          // Restore scroll behavior
+          setTimeout(() => {
+            document.documentElement.style.scrollBehavior = scrollBehavior;
+          }, 0);
         } else {
           // Fallback to browser back
           window.history.back();
@@ -216,11 +237,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
-        // Ensure we're at the top before navigation
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
+        // Temporarily disable smooth scrolling
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
 
         // Direct navigation to previous section
         navigate(`/${previousSection}`, { 
@@ -231,6 +250,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           replace: true
         });
         setCurrentSection(previousSection);
+
+        // Restore scroll behavior
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 0);
       }
     };
 
