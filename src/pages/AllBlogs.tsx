@@ -329,12 +329,12 @@ export const AllBlogs: React.FC = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 transform-gpu">
           {filteredPosts.map((post) => (
             <article
               key={post.id}
               onClick={() => handlePostClick(post.id)}
-              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer transform-gpu will-change-transform"
             >
               <div className="relative h-48">
                 {!loadedImages[post.id] ? (
@@ -344,7 +344,7 @@ export const AllBlogs: React.FC = () => {
                   src={post.image}
                   alt={post.title}
                   className={cn(
-                    "w-full h-full object-cover",
+                    "w-full h-full object-cover transform-gpu",
                     !loadedImages[post.id] && "opacity-0"
                   )}
                   loading="lazy"
@@ -353,7 +353,7 @@ export const AllBlogs: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               </div>
               
-              <div className="p-4">
+              <div className="p-4 bg-white dark:bg-gray-800">
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-2">
                   <div className="flex items-center gap-1">
                     <Calendar size={16} />
