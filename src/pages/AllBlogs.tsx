@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useCallback, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Calendar, User, Clock, Tag, Search } from 'lucide-react';
+import { ArrowLeft, Calendar, User, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
 
@@ -139,16 +139,6 @@ export const AllBlogs: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(0);
-
-  // Debounced search query
-  const debouncedSearchQuery = useMemo(() => {
-    const timeout = setTimeout(() => {
-      return searchQuery;
-    }, 300);
-    return () => clearTimeout(timeout);
-  }, [searchQuery]);
 
   // Memoize filtered posts
   const filteredPosts = useMemo(() => {
@@ -175,39 +165,6 @@ export const AllBlogs: React.FC = () => {
       replace: true
     });
   }, [navigate]);
-
-  // Optimize background image loading
-  useEffect(() => {
-    const preloadImage = new Image();
-    preloadImage.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
-  }, []);
-
-  // Handle scroll performance
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-    let rafId: number;
-    
-    const handleScroll = () => {
-      setIsScrolling(true);
-      clearTimeout(scrollTimeout);
-      
-      // Use requestAnimationFrame for smoother updates
-      rafId = requestAnimationFrame(() => {
-        setScrollPosition(window.scrollY);
-      });
-
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 100);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearTimeout(scrollTimeout);
-      cancelAnimationFrame(rafId);
-    };
-  }, []);
 
   // Hide navbar when component mounts and show it when unmounts
   useEffect(() => {
@@ -237,248 +194,103 @@ export const AllBlogs: React.FC = () => {
   const categories = ['all', 'technology', 'web development', 'programming', 'design'];
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative"
-    >
-      {/* Optimized Hero Background */}
-      <div 
-        className="fixed inset-0 z-0 pointer-events-none"
-        style={{
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden',
-          WebkitBackfaceVisibility: 'hidden',
-          WebkitTransform: 'translateZ(0)',
-          WebkitPerspective: 1000,
-          willChange: 'transform',
-        }}
-      >
-        <div 
-          className="absolute inset-0"
-          style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1499750310107-5fef28a66643)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden',
-            WebkitTransform: 'translateZ(0)',
-            WebkitPerspective: 1000,
-            willChange: 'transform',
-          }}
-        >
-          <div 
-            className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"
-            style={{
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              WebkitTransform: 'translateZ(0)',
-              WebkitPerspective: 1000,
-              willChange: 'transform',
-            }}
-          />
-          <div 
-            className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111827] via-white/90 dark:via-[#111827]/90 to-transparent"
-            style={{
-              transform: 'translateZ(0)',
-              backfaceVisibility: 'hidden',
-              WebkitBackfaceVisibility: 'hidden',
-              WebkitTransform: 'translateZ(0)',
-              WebkitPerspective: 1000,
-              willChange: 'transform',
-            }}
-          />
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 relative z-30 pt-20">
-        {/* Back Button and Title Section */}
-        <div className="mb-16 text-center relative">
-          <div className="flex items-center justify-center relative">
-            <motion.button
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Header Section */}
+      <header className="relative bg-gradient-to-b from-purple-900 to-gray-900 text-white">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex items-center justify-between mb-6">
+            <button
               onClick={handleBack}
-              className="absolute left-0 p-2 rounded-full bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-200 group"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
-              <ArrowLeft 
-                size={20} 
-                className="text-gray-700 dark:text-gray-300 group-hover:text-[#8B31FF] dark:group-hover:text-[#8B31FF] transition-colors"
-              />
+              <ArrowLeft size={20} />
               <span className="sr-only">Back to Home</span>
-            </motion.button>
-
-            <motion.h2
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-              className="text-4xl md:text-6xl font-bold text-white px-12"
-            >
-              All Blog Posts
-            </motion.h2>
+            </button>
+            <h1 className="text-2xl md:text-3xl font-bold">All Blog Posts</h1>
+            <div className="w-10" /> {/* Spacer for alignment */}
           </div>
-
-          <div className="space-y-6 mt-6">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: "100px" }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="h-1 bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 mx-auto rounded-full"
+          
+          {/* Search Bar */}
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search blogs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 rounded-full bg-white/10 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
             />
-            <p className="text-gray-200 max-w-2xl mx-auto text-lg">
-              Explore our collection of articles about web development, design, and technology.
-            </p>
           </div>
-        </div>
 
-        {/* Search and Filter Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-12 space-y-6 relative z-30"
-        >
           {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap gap-2">
             {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium",
-                  "transition-all duration-200 ease-out",
-                  "relative overflow-hidden",
-                  "active:scale-[0.98]",
-                  "focus:outline-none focus:ring-2 focus:ring-purple-600 focus:ring-offset-2",
-                  "hover:shadow-md",
+                  "transition-colors duration-200",
                   selectedCategory === category
-                    ? "bg-[#8B31FF] text-white shadow-lg transform scale-105"
-                    : "bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-[#8B31FF]/30 dark:hover:border-[#8B31FF]/30 hover:bg-[#8B31FF]/5"
+                    ? "bg-purple-500 text-white"
+                    : "bg-white/10 text-white hover:bg-white/20"
                 )}
               >
-                <span className="relative z-10">
-                  {category.charAt(0).toUpperCase() + category.slice(1)}
-                </span>
+                {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
             ))}
           </div>
-
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 pointer-events-none" size={20} />
-              <input
-                type="text"
-                placeholder="Search blogs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className={cn(
-                  "w-full pl-12 pr-4 py-3.5",
-                  "rounded-full",
-                  "bg-white dark:bg-gray-800",
-                  "border-2 border-gray-200 dark:border-gray-700",
-                  "text-gray-900 dark:text-gray-100",
-                  "placeholder:text-gray-500 dark:placeholder:text-gray-400",
-                  "shadow-sm",
-                  "transition-all duration-200 ease-out",
-                  "focus:outline-none focus:border-[#8B31FF] dark:focus:border-[#8B31FF]",
-                  "focus:ring-2 focus:ring-[#8B31FF]/20 dark:focus:ring-[#8B31FF]/20",
-                  "hover:border-gray-300 dark:hover:border-gray-600",
-                  "hover:shadow-md"
-                )}
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-20">
-          <AnimatePresence mode="wait">
-            {filteredPosts.map((post, index) => (
-              <motion.article
-                key={post.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ 
-                  duration: 0.2,
-                  delay: index * 0.05,
-                  ease: [0.4, 0, 0.2, 1]
-                }}
-                layout
-                style={{
-                  transform: isScrolling ? 'translateZ(0)' : 'none',
-                  backfaceVisibility: 'hidden',
-                  WebkitBackfaceVisibility: 'hidden',
-                  WebkitTransform: 'translateZ(0)',
-                  WebkitPerspective: 1000,
-                }}
-                className={cn(
-                  "bg-white dark:bg-gray-800",
-                  "rounded-xl overflow-hidden",
-                  "shadow-md hover:shadow-lg",
-                  "transform transition-all duration-200",
-                  "border border-gray-100 dark:border-gray-700",
-                  "group relative cursor-pointer",
-                  "will-change-transform",
-                  isScrolling && "pointer-events-none"
-                )}
-                onClick={() => handlePostClick(post.id)}
-              >
-                <div className="overflow-hidden">
-                  <div className="relative h-48">
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                      loading="lazy"
-                      decoding="async"
-                      style={{
-                        transform: isScrolling ? 'translateZ(0)' : 'none',
-                        backfaceVisibility: 'hidden',
-                        WebkitBackfaceVisibility: 'hidden',
-                        WebkitTransform: 'translateZ(0)',
-                        WebkitPerspective: 1000,
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </div>
-                </div>
-                
-                <div className="p-5 md:p-6">
-                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                    <div className="flex items-center gap-1">
-                      <Calendar size={16} />
-                      <span>{post.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <User size={16} />
-                      <span>{post.author}</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2 md:mb-3 line-clamp-2">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm md:text-base">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium text-sm md:text-base">
-                    <span>Read More</span>
-                    <ArrowLeft size={16} className="transform transition-transform duration-200 group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </AnimatePresence>
         </div>
-      </div>
-    </motion.div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPosts.map((post) => (
+            <article
+              key={post.id}
+              onClick={() => handlePostClick(post.id)}
+              className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow cursor-pointer"
+            >
+              <div className="relative h-48">
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              </div>
+              
+              <div className="p-4">
+                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                  <div className="flex items-center gap-1">
+                    <Calendar size={16} />
+                    <span>{post.date}</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <User size={16} />
+                    <span>{post.author}</span>
+                  </div>
+                </div>
+
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
+                  {post.title}
+                </h2>
+                
+                <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
+                  {post.excerpt}
+                </p>
+
+                <div className="mt-4 flex items-center text-purple-600 dark:text-purple-400 font-medium text-sm">
+                  <span>Read More</span>
+                  <ArrowLeft size={16} className="ml-1" />
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </main>
+    </div>
   );
 }; 
