@@ -231,15 +231,22 @@ export const AllBlogs: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Enhanced Hero Section */}
+      {/* Enhanced Hero Section with Background Image */}
       <header className="relative">
-        {/* Background with gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-gray-50 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90">
+        {/* Background Image */}
+        <div className="fixed inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
+            alt="Background"
+            className="w-full h-full object-cover"
+            loading="eager"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/80 to-white/90 dark:from-gray-900/90 dark:via-gray-800/80 dark:to-gray-900/90" />
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-10" />
         </div>
 
         {/* Content */}
-        <div className="relative container mx-auto px-4 py-12 md:py-16">
+        <div className="relative container mx-auto px-4 py-12 md:py-16 z-10">
           {/* Back button and title */}
           <div className="flex items-center justify-between mb-8">
             <motion.button
@@ -319,7 +326,7 @@ export const AllBlogs: React.FC = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8 relative z-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPosts.map((post) => (
             <article
