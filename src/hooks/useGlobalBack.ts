@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
+import { SectionType } from '../types';
 
 interface UseGlobalBackProps {
   currentSection: SectionType;
@@ -49,82 +48,80 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       // Restore scroll behavior
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 0);
+      }, 100); // Increased timeout to ensure scroll completes
     }
   };
 
   const handleBack = () => {
-    // Special handling for AllCubingContent
-    if (location.pathname === '/all-cubing-content') {
-      // Temporarily disable smooth scrolling
+    const path = location.pathname.slice(1); // Remove leading slash
+    const state = location.state as { 
+      directNavigation?: boolean;
+      from?: string;
+      forceSection?: string;
+      scrollToSection?: string;
+    } | null;
+
+    // Special handling for all-cubing-content
+    if (path === 'all-cubing-content') {
+      // Store current scroll behavior
       const scrollBehavior = document.documentElement.style.scrollBehavior;
       document.documentElement.style.scrollBehavior = 'auto';
-
-      navigate('/cubing', { 
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Navigate to cubing section
+      navigate('/', { 
         state: { 
-          scrollToSection: 'cubing',
-          directNavigation: true
+          directNavigation: true,
+          forceSection: 'cubing',
+          scrollToSection: 'cubing'
         },
         replace: true
       });
+      
+      // Update section immediately
       setCurrentSection('cubing');
-
-      // Restore scroll behavior
+      
+      // Find and scroll to cubing section
+      const cubingSection = document.getElementById('cubing');
+      if (cubingSection) {
+        cubingSection.scrollIntoView({ behavior: 'instant' });
+      }
+      
+      // Restore scroll behavior with a delay
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 0);
+      }, 100); // Increased timeout to ensure scroll completes
+      
       return;
     }
 
-    if (isDetailsPage) {
-      // For detail pages, check if we have a specific "from" state
-      const state = location.state as { from?: string } | null;
-      if (state?.from) {
-        // Temporarily disable smooth scrolling
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-
-        // Direct navigation to the previous section
-        navigate(`/${state.from}`, { 
-          state: { 
-            scrollToSection: state.from as SectionType,
-            directNavigation: true
-          },
-          replace: true
-        });
-        setCurrentSection(state.from as SectionType);
-
-        // Restore scroll behavior
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
-        }, 0);
-      } else {
-        // Fallback to browser back
-        window.history.back();
-      }
-    } else if (navigationStack.length > 0) {
-      const previousSection = navigationStack[navigationStack.length - 1];
-      setNavigationStack(prev => prev.slice(0, -1));
-      
-      // Temporarily disable smooth scrolling
+    // Handle detail pages
+    if (path.includes('/')) {
+      const [section] = path.split('/');
       const scrollBehavior = document.documentElement.style.scrollBehavior;
       document.documentElement.style.scrollBehavior = 'auto';
-
-      // Direct navigation to previous section
-      navigate(`/${previousSection}`, { 
+      
+      navigate(`/${section}`, { 
         state: { 
-          scrollToSection: previousSection,
-          directNavigation: true
+          directNavigation: true,
+          forceSection: section,
+          scrollToSection: section
         },
         replace: true
       });
-      setCurrentSection(previousSection);
-
-      // Restore scroll behavior
+      
+      setCurrentSection(section as SectionType);
+      
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 0);
+      }, 100);
+      return;
     }
+
+    // Default back navigation
+    navigate(-1);
   };
 
   // Handle navigation state updates
@@ -133,7 +130,33 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       scrollToSection?: SectionType;
       from?: string;
       directNavigation?: boolean;
+      forceSection?: string;
     } | null;
+    
+    // Special handling for all-cubing-content
+    if (location.pathname === '/all-cubing-content') {
+      setCurrentSection('cubing');
+      return;
+    }
+    
+    // If we have a forceSection in the state, use that
+    if (state?.forceSection) {
+      setCurrentSection(state.forceSection as SectionType);
+      
+      // Find and scroll to the section
+      const sectionElement = document.getElementById(state.forceSection);
+      if (sectionElement) {
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        sectionElement.scrollIntoView({ behavior: 'instant' });
+        
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 100);
+      }
+      return;
+    }
     
     // Skip if state is null or no scrollToSection
     if (!state?.scrollToSection) return;
@@ -160,7 +183,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       Gaming: 'gaming',
       projects: 'projects',
       testimonials: 'testimonials',
-      contact: 'contact'
+      contact: 'contact',
+      profile: 'profile',
+      'all-cubing-content': 'cubing'
     };
 
     // Find and scroll to the section element using the mapped ID
@@ -177,30 +202,25 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         document.documentElement.style.scrollBehavior = scrollBehavior;
       }, 0);
     }
-  }, [location.state, setCurrentSection, currentSection]);
+  }, [location.state, setCurrentSection, currentSection, location.pathname]);
 
   // Handle back button
   useEffect(() => {
     const handlePopState = () => {
       // Special handling for AllCubingContent
       if (location.pathname === '/all-cubing-content') {
-        // Temporarily disable smooth scrolling
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-
+        // Direct navigation to cubing section
         navigate('/cubing', { 
           state: { 
-            scrollToSection: 'cubing',
-            directNavigation: true
+            from: 'all-cubing-content',
+            directNavigation: true,
+            forceSection: 'cubing',
+            scrollToSection: 'cubing'
           },
           replace: true
         });
+        // Force set the current section to cubing
         setCurrentSection('cubing');
-
-        // Restore scroll behavior
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
-        }, 0);
         return;
       }
 
@@ -208,24 +228,16 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // For detail pages, check if we have a specific "from" state
         const state = location.state as { from?: string } | null;
         if (state?.from) {
-          // Temporarily disable smooth scrolling
-          const scrollBehavior = document.documentElement.style.scrollBehavior;
-          document.documentElement.style.scrollBehavior = 'auto';
-
           // Direct navigation to the previous section
           navigate(`/${state.from}`, { 
             state: { 
-              scrollToSection: state.from as SectionType,
-              directNavigation: true
+              directNavigation: true,
+              forceSection: state.from,
+              scrollToSection: state.from
             },
             replace: true
           });
           setCurrentSection(state.from as SectionType);
-
-          // Restore scroll behavior
-          setTimeout(() => {
-            document.documentElement.style.scrollBehavior = scrollBehavior;
-          }, 0);
         } else {
           // Fallback to browser back
           window.history.back();
@@ -237,24 +249,16 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
-        // Temporarily disable smooth scrolling
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-
         // Direct navigation to previous section
         navigate(`/${previousSection}`, { 
           state: { 
-            scrollToSection: previousSection,
-            directNavigation: true
+            directNavigation: true,
+            forceSection: previousSection,
+            scrollToSection: previousSection
           },
           replace: true
         });
         setCurrentSection(previousSection);
-
-        // Restore scroll behavior
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
-        }, 0);
       }
     };
 

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Clock, Award, Box, Brain, Star, Zap, ArrowLeft } from "lucide-react";
 import { cubingContent } from "../data/cubingContent";
 
@@ -19,49 +19,65 @@ const methodIcons = {
 
 export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  useEffect(() => {
-    // Handle browser back button
-    const handlePopState = () => {
-      // Direct navigation to cubing section with instant scroll
-      navigate('/cubing', { 
-        state: { 
-          directNavigation: true,
-          scrollToSection: 'cubing'
-        },
-        replace: true
-      });
-    };
+  const handleBackNavigation = () => {
+    // Temporarily disable smooth scrolling
+    const scrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
+    // Force scroll to top first
+    window.scrollTo(0, 0);
 
-  const handleBack = () => {
-    // Direct navigation to cubing section with instant scroll
+    // Navigate to cubing section
     navigate('/cubing', { 
       state: { 
+        from: 'all-cubing-content',
         directNavigation: true,
+        forceSection: 'cubing',
         scrollToSection: 'cubing'
       },
       replace: true
     });
+
+    // Restore scroll behavior
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = scrollBehavior;
+    }, 0);
+  };
+
+  useEffect(() => {
+    // Handle browser back button
+    const handlePopState = () => {
+      handleBackNavigation();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleBackNavigation();
   };
 
   const handleCubeClick = (id: string) => {
-    // Ensure we're at the top before navigation
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
+    // Temporarily disable smooth scrolling
+    const scrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
     
     navigate(`/cube/${id}`, {
       state: { 
-        from: 'cubing',
+        from: 'all-cubing-content',
         directNavigation: true
       },
       replace: false
     });
+
+    // Restore scroll behavior
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = scrollBehavior;
+    }, 0);
   };
 
   return (

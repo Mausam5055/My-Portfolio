@@ -35,8 +35,7 @@ import { AllCubingContent } from './pages/AllCubingContent';
 import { AllProjects } from './pages/AllProjects';
 import { Games } from './pages/Games';
 import { useGlobalBack } from './hooks/useGlobalBack';
-
-type SectionType = 'home' | 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
+import { SectionType } from './types';
 
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
@@ -66,6 +65,8 @@ function AppContent() {
     projects: useRef<HTMLDivElement>(null),
     testimonials: useRef<HTMLDivElement>(null),
     contact: useRef<HTMLDivElement>(null),
+    profile: useRef<HTMLDivElement>(null),
+    'all-cubing-content': useRef<HTMLDivElement>(null)
   };
 
   const { scrollToSection, handleBack } = useGlobalBack({
@@ -94,9 +95,60 @@ function AppContent() {
   // Handle section updates from URL
   useEffect(() => {
     const path = location.pathname.slice(1); // Remove leading slash
-    const state = location.state as { directNavigation?: boolean } | null;
+    const state = location.state as { 
+      directNavigation?: boolean;
+      from?: string;
+      forceSection?: string;
+      scrollToSection?: string;
+      scrollPosition?: number;
+    } | null;
     
-    if (path && path !== 'all-cubing-content' && !isDetailsPage) {
+    // If we have a forceSection in the state, use that
+    if (state?.forceSection) {
+      setCurrentSection(state.forceSection as SectionType);
+      
+      // If we have a scroll position, restore it
+      if (state.scrollPosition !== undefined) {
+        window.scrollTo({
+          top: state.scrollPosition,
+          behavior: 'instant'
+        });
+      }
+      return;
+    }
+    
+    // Special handling for all-cubing-content
+    if (path === 'all-cubing-content') {
+      setCurrentSection('cubing');
+      return;
+    }
+    
+    // Handle navigation from all-cubing-content
+    if (state?.from === 'all-cubing-content') {
+      setCurrentSection('cubing');
+      return;
+    }
+    
+    // Handle direct navigation to cubing
+    if (path === 'cubing') {
+      setCurrentSection('cubing');
+      return;
+    }
+    
+    // Handle navigation to profile
+    if (path === 'profile') {
+      setCurrentSection('profile');
+      return;
+    }
+    
+    // Handle detail pages
+    if (isDetailsPage) {
+      const [section] = path.split('/');
+      setCurrentSection(section as SectionType);
+      return;
+    }
+    
+    if (path) {
       setCurrentSection(path as SectionType);
     }
   }, [location.pathname, location.state, isDetailsPage]);

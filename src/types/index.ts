@@ -191,3 +191,23 @@ export interface CubingContent {
     tips: string[];
   };
 }
+
+export type SectionType = 
+  | 'home'
+  | 'about'
+  | 'journey'
+  | 'qualifications'
+  | 'certifications'
+  | 'skills'
+  | 'education'
+  | 'gallery'
+  | 'cubing'
+  | 'blog'
+  | 'futureGoals'
+  | 'funFacts'
+  | 'Gaming'
+  | 'projects'
+  | 'testimonials'
+  | 'contact'
+  | 'profile'
+  | 'all-cubing-content';

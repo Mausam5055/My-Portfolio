@@ -53,19 +53,26 @@ export const CubingContent: React.FC = () => {
   };
 
   const handleShowMore = () => {
-    // Scroll to top instantly before navigation
-    window.scrollTo({
-      top: 0,
-      behavior: 'instant'
-    });
-    // Navigate to the new page with instant scroll
+    // Temporarily disable smooth scrolling
+    const scrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+
+    // Store the current scroll position
+    const currentScroll = window.scrollY;
+
+    // Navigate to all-cubing-content
     navigate('/all-cubing-content', { 
       state: { 
-        directNavigation: true,
-        scrollToTop: true
-      },
-      replace: false
+        from: 'cubing',
+        returnTo: 'cubing',
+        scrollPosition: currentScroll
+      }
     });
+
+    // Restore scroll behavior
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = scrollBehavior;
+    }, 0);
   };
 
   return (
