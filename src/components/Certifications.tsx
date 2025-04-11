@@ -118,7 +118,9 @@ export const Certifications: React.FC = () => {
       window.history.pushState({ modalOpen: true }, '', window.location.href);
 
       // Handle browser back button
-      const handlePopState = () => {
+      const handlePopState = (event: PopStateEvent) => {
+        // Prevent default navigation
+        event.preventDefault();
         // Close the modal when back button is pressed
         handleCloseModal();
       };
