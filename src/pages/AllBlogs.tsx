@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Clock, Tag, Search } from 'lucide-react';
@@ -137,10 +137,21 @@ Optimize your JavaScript code for better performance...
 
 export const AllBlogs: React.FC = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Memoize filtered posts to prevent unnecessary recalculations
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Memoize filtered posts
   const filteredPosts = useMemo(() => {
     return blogPosts.filter(post => {
       const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -151,7 +162,7 @@ export const AllBlogs: React.FC = () => {
     });
   }, [searchQuery, selectedCategory]);
 
-  // Memoize handlers to prevent unnecessary re-renders
+  // Memoize handlers
   const handleBack = useCallback(() => {
     navigate('/', { 
       state: { scrollToBlog: true },
@@ -214,6 +225,7 @@ export const AllBlogs: React.FC = () => {
             alt="Hero Background"
             className="w-full h-full object-cover"
             loading="eager"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111827] via-white/90 dark:via-[#111827]/90 to-transparent" />
@@ -326,15 +338,15 @@ export const AllBlogs: React.FC = () => {
             {filteredPosts.map((post, index) => (
               <motion.article
                 key={post.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
+                initial={isMobile ? undefined : { opacity: 0, y: 10 }}
+                animate={isMobile ? undefined : { opacity: 1, y: 0 }}
+                exit={isMobile ? undefined : { opacity: 0, y: -10 }}
                 transition={{ 
                   duration: 0.2,
-                  delay: index * 0.05,
+                  delay: isMobile ? 0 : index * 0.05,
                   ease: [0.4, 0, 0.2, 1]
                 }}
-                layout
+                layout={!isMobile}
                 className={cn(
                   "bg-white dark:bg-gray-800",
                   "rounded-xl overflow-hidden",
@@ -342,7 +354,7 @@ export const AllBlogs: React.FC = () => {
                   "transform transition-all duration-200",
                   "border border-gray-100 dark:border-gray-700",
                   "group relative cursor-pointer",
-                  "will-change-transform"
+                  isMobile ? "opacity-100" : "will-change-transform"
                 )}
                 onClick={() => handlePostClick(post.id)}
               >
@@ -353,6 +365,7 @@ export const AllBlogs: React.FC = () => {
                       alt={post.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </div>
