@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useMemo, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Clock, Tag, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
@@ -140,18 +140,45 @@ export const AllBlogs: React.FC = () => {
   const [searchQuery, setSearchQuery] = React.useState('');
   const [selectedCategory, setSelectedCategory] = React.useState<string>('all');
 
+  // Memoize filtered posts to prevent unnecessary recalculations
+  const filteredPosts = useMemo(() => {
+    return blogPosts.filter(post => {
+      const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesCategory = selectedCategory === 'all' || 
+                            post.content.toLowerCase().includes(selectedCategory.toLowerCase());
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
+
+  // Memoize handlers to prevent unnecessary re-renders
+  const handleBack = useCallback(() => {
+    navigate('/', { 
+      state: { scrollToBlog: true },
+      replace: true
+    });
+  }, [navigate]);
+
+  const handlePostClick = useCallback((postId: string) => {
+    navigate(`/blog/${postId}`, { 
+      state: { fromBlogDetail: true },
+      replace: true
+    });
+  }, [navigate]);
+
+  // Optimize background image loading
+  useEffect(() => {
+    const preloadImage = new Image();
+    preloadImage.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
+  }, []);
+
   // Hide navbar when component mounts and show it when unmounts
   useEffect(() => {
-    // Hide navbar
     const navbar = document.querySelector('nav');
     if (navbar) {
       navbar.style.display = 'none';
     }
-
-    // Ensure page starts from top
     window.scrollTo({ top: 0, behavior: 'instant' });
-
-    // Cleanup function to show navbar when component unmounts
     return () => {
       if (navbar) {
         navbar.style.display = 'block';
@@ -160,41 +187,17 @@ export const AllBlogs: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Handle browser back button
     const handlePopState = () => {
       navigate('/', { 
         state: { scrollToBlog: true },
         replace: true
       });
     };
-
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
   }, [navigate]);
 
-  const handleBack = () => {
-    navigate('/', { 
-      state: { scrollToBlog: true },
-      replace: true
-    });
-  };
-
-  const handlePostClick = (postId: string) => {
-    navigate(`/blog/${postId}`, { 
-      state: { fromBlogDetail: true },
-      replace: true
-    });
-  };
-
   const categories = ['all', 'technology', 'web development', 'programming', 'design'];
-
-  const filteredPosts = blogPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || 
-                           post.content.toLowerCase().includes(selectedCategory.toLowerCase());
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <motion.div
@@ -203,18 +206,18 @@ export const AllBlogs: React.FC = () => {
       exit={{ opacity: 0 }}
       className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative"
     >
-      {/* Hero Background */}
-      <div className="fixed inset-0 z-0">
+      {/* Optimized Hero Background */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
             alt="Hero Background"
             className="w-full h-full object-cover"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111827] via-white/90 dark:via-[#111827]/90 to-transparent" />
         </div>
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzYuMjUgMzUuMjVhMS4yNSAxLjI1IDAgMTAwLTIuNSAxLjI1IDEuMjUgMCAwMDAgMi41eiIgZmlsbD0iI2U1ZTdmZiIgZmlsbC1vcGFjaXR5PSIuMDUiLz48L2c+PC9zdmc+')] opacity-20" />
       </div>
 
       <div className="container mx-auto px-4 relative z-30 pt-20">
@@ -319,66 +322,70 @@ export const AllBlogs: React.FC = () => {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-20">
-          {filteredPosts.map((post, index) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.2,
-                delay: index * 0.05,
-                ease: [0.4, 0, 0.2, 1]
-              }}
-              layout
-              className={cn(
-                "bg-white dark:bg-gray-800",
-                "rounded-xl overflow-hidden",
-                "shadow-md hover:shadow-lg",
-                "transform transition-all duration-200",
-                "border border-gray-100 dark:border-gray-700",
-                "group relative cursor-pointer",
-                "will-change-transform"
-              )}
-              onClick={() => handlePostClick(post.id)}
-            >
-              <div className="overflow-hidden">
-                <div className="relative h-48">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </div>
-              </div>
-              
-              <div className="p-5 md:p-6">
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    <span>{post.date}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <User size={16} />
-                    <span>{post.author}</span>
+          <AnimatePresence mode="wait">
+            {filteredPosts.map((post, index) => (
+              <motion.article
+                key={post.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ 
+                  duration: 0.2,
+                  delay: index * 0.05,
+                  ease: [0.4, 0, 0.2, 1]
+                }}
+                layout
+                className={cn(
+                  "bg-white dark:bg-gray-800",
+                  "rounded-xl overflow-hidden",
+                  "shadow-md hover:shadow-lg",
+                  "transform transition-all duration-200",
+                  "border border-gray-100 dark:border-gray-700",
+                  "group relative cursor-pointer",
+                  "will-change-transform"
+                )}
+                onClick={() => handlePostClick(post.id)}
+              >
+                <div className="overflow-hidden">
+                  <div className="relative h-48">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </div>
                 </div>
-
-                <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2 md:mb-3 line-clamp-2">
-                  {post.title}
-                </h3>
                 
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm md:text-base">
-                  {post.excerpt}
-                </p>
+                <div className="p-5 md:p-6">
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <User size={16} />
+                      <span>{post.author}</span>
+                    </div>
+                  </div>
 
-                <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium text-sm md:text-base">
-                  <span>Read More</span>
-                  <ArrowLeft size={16} className="transform transition-transform duration-200 group-hover:translate-x-1" />
+                  <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2 md:mb-3 line-clamp-2">
+                    {post.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 text-sm md:text-base">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium text-sm md:text-base">
+                    <span>Read More</span>
+                    <ArrowLeft size={16} className="transform transition-transform duration-200 group-hover:translate-x-1" />
+                  </div>
                 </div>
-              </div>
-            </motion.article>
-          ))}
+              </motion.article>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </motion.div>
