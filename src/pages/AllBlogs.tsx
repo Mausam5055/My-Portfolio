@@ -139,17 +139,16 @@ export const AllBlogs: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [isMobile, setIsMobile] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-  // Check if device is mobile
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  // Debounced search query
+  const debouncedSearchQuery = useMemo(() => {
+    const timeout = setTimeout(() => {
+      return searchQuery;
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [searchQuery]);
 
   // Memoize filtered posts
   const filteredPosts = useMemo(() => {
@@ -181,6 +180,33 @@ export const AllBlogs: React.FC = () => {
   useEffect(() => {
     const preloadImage = new Image();
     preloadImage.src = "https://images.unsplash.com/photo-1499750310107-5fef28a66643";
+  }, []);
+
+  // Handle scroll performance
+  useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    let rafId: number;
+    
+    const handleScroll = () => {
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      
+      // Use requestAnimationFrame for smoother updates
+      rafId = requestAnimationFrame(() => {
+        setScrollPosition(window.scrollY);
+      });
+
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 100);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(scrollTimeout);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Hide navbar when component mounts and show it when unmounts
@@ -218,17 +244,54 @@ export const AllBlogs: React.FC = () => {
       className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative"
     >
       {/* Optimized Hero Background */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1499750310107-5fef28a66643"
-            alt="Hero Background"
-            className="w-full h-full object-cover"
-            loading="eager"
-            decoding="async"
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none"
+        style={{
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden',
+          WebkitBackfaceVisibility: 'hidden',
+          WebkitTransform: 'translateZ(0)',
+          WebkitPerspective: 1000,
+          willChange: 'transform',
+        }}
+      >
+        <div 
+          className="absolute inset-0"
+          style={{
+            backgroundImage: 'url(https://images.unsplash.com/photo-1499750310107-5fef28a66643)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden',
+            WebkitTransform: 'translateZ(0)',
+            WebkitPerspective: 1000,
+            willChange: 'transform',
+          }}
+        >
+          <div 
+            className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"
+            style={{
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              WebkitTransform: 'translateZ(0)',
+              WebkitPerspective: 1000,
+              willChange: 'transform',
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111827] via-white/90 dark:via-[#111827]/90 to-transparent" />
+          <div 
+            className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#111827] via-white/90 dark:via-[#111827]/90 to-transparent"
+            style={{
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden',
+              WebkitBackfaceVisibility: 'hidden',
+              WebkitTransform: 'translateZ(0)',
+              WebkitPerspective: 1000,
+              willChange: 'transform',
+            }}
+          />
         </div>
       </div>
 
@@ -338,15 +401,22 @@ export const AllBlogs: React.FC = () => {
             {filteredPosts.map((post, index) => (
               <motion.article
                 key={post.id}
-                initial={isMobile ? undefined : { opacity: 0, y: 10 }}
-                animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-                exit={isMobile ? undefined : { opacity: 0, y: -10 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
                 transition={{ 
                   duration: 0.2,
-                  delay: isMobile ? 0 : index * 0.05,
+                  delay: index * 0.05,
                   ease: [0.4, 0, 0.2, 1]
                 }}
-                layout={!isMobile}
+                layout
+                style={{
+                  transform: isScrolling ? 'translateZ(0)' : 'none',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden',
+                  WebkitTransform: 'translateZ(0)',
+                  WebkitPerspective: 1000,
+                }}
                 className={cn(
                   "bg-white dark:bg-gray-800",
                   "rounded-xl overflow-hidden",
@@ -354,7 +424,8 @@ export const AllBlogs: React.FC = () => {
                   "transform transition-all duration-200",
                   "border border-gray-100 dark:border-gray-700",
                   "group relative cursor-pointer",
-                  isMobile ? "opacity-100" : "will-change-transform"
+                  "will-change-transform",
+                  isScrolling && "pointer-events-none"
                 )}
                 onClick={() => handlePostClick(post.id)}
               >
@@ -366,6 +437,13 @@ export const AllBlogs: React.FC = () => {
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       loading="lazy"
                       decoding="async"
+                      style={{
+                        transform: isScrolling ? 'translateZ(0)' : 'none',
+                        backfaceVisibility: 'hidden',
+                        WebkitBackfaceVisibility: 'hidden',
+                        WebkitTransform: 'translateZ(0)',
+                        WebkitPerspective: 1000,
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </div>
