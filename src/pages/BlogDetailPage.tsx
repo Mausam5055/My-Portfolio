@@ -287,17 +287,6 @@ export const BlogDetailPage: React.FC = () => {
       className="min-h-screen bg-white dark:bg-gray-900 py-20"
     >
       <div className="container mx-auto px-4">
-        {/* Back Button */}
-        <motion.button
-          onClick={handleBack}
-          className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 mb-8"
-          whileHover={{ x: -5 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <ArrowLeft size={20} />
-          <span>Back to Blogs</span>
-        </motion.button>
-
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
