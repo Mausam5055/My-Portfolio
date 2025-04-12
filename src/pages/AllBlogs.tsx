@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useCallback, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, Calendar, User, Search } from 'lucide-react';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
@@ -155,6 +155,7 @@ const BlogPostSkeleton: React.FC = () => (
 
 export const AllBlogs: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
@@ -208,14 +209,96 @@ export const AllBlogs: React.FC = () => {
     });
   }, [filteredPosts, handleImageLoad]);
 
-  // Memoize handlers
-  const handleBack = useCallback(() => {
-    navigate('/', { 
-      state: { scrollToBlog: true },
-      replace: true
-    });
-  }, [navigate]);
+  // Handle back button navigation
+  useEffect(() => {
+    const handleBack = () => {
+      const state = location.state as { from?: string; scrollPosition?: number } | null;
+      
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
+      navigate('/', { 
+        state: { 
+          directNavigation: true,
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog',
+          scrollPosition: state?.scrollPosition || 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          if (state?.scrollPosition) {
+            window.scrollTo(0, state.scrollPosition);
+          }
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    };
 
+    // Add event listener for popstate (browser back button)
+    window.addEventListener('popstate', handleBack);
+    
+    return () => {
+      window.removeEventListener('popstate', handleBack);
+    };
+  }, [navigate, location.state]);
+
+  // Handle custom back button click
+  const handleBackClick = () => {
+    const state = location.state as { from?: string; scrollPosition?: number } | null;
+    
+    // Temporarily disable smooth scrolling
+    document.documentElement.style.scrollBehavior = 'auto';
+    
+    // Navigate back to blog section
+    navigate('/', { 
+      state: { 
+        directNavigation: true,
+        forceSection: 'blog',
+        scrollToSection: 'blog',
+        from: 'blog',
+        scrollPosition: state?.scrollPosition || 0
+      },
+      replace: false
+    });
+    
+    // Force scroll to top first
+    window.scrollTo(0, 0);
+    
+    // Then scroll to blog section
+    requestAnimationFrame(() => {
+      const blogSection = document.getElementById('blog');
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'instant' });
+        // Restore the scroll position if available
+        if (state?.scrollPosition) {
+          window.scrollTo(0, state.scrollPosition);
+        }
+      }
+    });
+    
+    // Restore smooth scrolling after navigation
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = 'smooth';
+    }, 100);
+  };
+
+  // Memoize handlers
   const handlePostClick = useCallback((postId: string) => {
     navigate(`/blog/${postId}`, { 
       state: { fromBlogDetail: true },
@@ -236,17 +319,6 @@ export const AllBlogs: React.FC = () => {
       }
     };
   }, []);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      navigate('/', { 
-        state: { scrollToBlog: true },
-        replace: true
-      });
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
 
   const categories = ['all', 'technology', 'web development', 'programming', 'design'];
 
@@ -292,7 +364,7 @@ export const AllBlogs: React.FC = () => {
           {/* Back button and title */}
           <div className="flex items-center justify-between mb-8">
             <motion.button
-              onClick={handleBack}
+              onClick={handleBackClick}
               className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 dark:bg-white/10 dark:hover:bg-white/20 transition-colors backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
