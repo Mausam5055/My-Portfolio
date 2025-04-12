@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCode, FaUsers, FaTools, FaRocket, FaCheckCircle, FaExpand, FaImage, FaPlay, FaTimes, FaChartBar, FaCalendar, FaClock } from 'react-icons/fa';
+import { motion, useMotionValue, useTransform, useAnimation } from 'framer-motion';
+import { FaGithub, FaExternalLinkAlt, FaArrowLeft, FaCode, FaUsers, FaTools, FaRocket, FaCheckCircle, FaExpand, FaImage, FaPlay, FaTimes, FaChartBar, FaCalendar, FaClock, FaArrowRight } from 'react-icons/fa';
 import { projects } from '../data/projects';
 
 export const ProjectDetails: React.FC = () => {
@@ -10,6 +10,8 @@ export const ProjectDetails: React.FC = () => {
   const project = projects.find(p => p.id === parseInt(id || ''));
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   useEffect(() => {
     // Ensure scroll to top with instant behavior
@@ -79,6 +81,45 @@ export const ProjectDetails: React.FC = () => {
       default:
         return [project.outerPreviewImage];
     }
+  };
+
+  const handleSwipe = (direction: 'left' | 'right') => {
+    if (!selectedImage) return;
+    const currentIndex = getGalleryImages().indexOf(selectedImage);
+    let newIndex: number;
+
+    if (direction === 'left') {
+      newIndex = currentIndex < getGalleryImages().length - 1 ? currentIndex + 1 : 0;
+    } else {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : getGalleryImages().length - 1;
+    }
+
+    setSelectedImage(getGalleryImages()[newIndex]);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      handleSwipe('left');
+    } else if (isRightSwipe) {
+      handleSwipe('right');
+    }
+
+    setTouchStart(null);
+    setTouchEnd(null);
   };
 
   return (
@@ -690,27 +731,99 @@ export const ProjectDetails: React.FC = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
           onClick={() => setSelectedImage(null)}
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
-            className="relative max-w-5xl max-h-[90vh] rounded-2xl overflow-hidden"
+            className="relative w-full max-w-6xl aspect-[16/9] rounded-2xl overflow-hidden"
             onClick={e => e.stopPropagation()}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
           >
+            {/* Close Button */}
             <button
-              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
+              className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors"
               onClick={() => setSelectedImage(null)}
             >
               <FaTimes className="text-xl" />
             </button>
-            <img
+
+            {/* Navigation Arrows - Hidden on Mobile */}
+            <button
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 dark:bg-black/50 text-gray-800 dark:text-white hidden md:flex items-center justify-center backdrop-blur-sm border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/70 hover:border-white/30 dark:hover:border-white/20 transition-all duration-300 group"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSwipe('right');
+              }}
+            >
+              <FaArrowLeft className="text-2xl transform group-hover:scale-110 transition-transform duration-300" />
+            </button>
+            <button
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-white/10 dark:bg-black/50 text-gray-800 dark:text-white hidden md:flex items-center justify-center backdrop-blur-sm border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-black/70 hover:border-white/30 dark:hover:border-white/20 transition-all duration-300 group"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSwipe('left');
+              }}
+            >
+              <FaArrowRight className="text-2xl transform group-hover:scale-110 transition-transform duration-300" />
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-4 py-2 rounded-full bg-black/50 text-white text-sm">
+              {getGalleryImages().indexOf(selectedImage) + 1} / {getGalleryImages().length}
+            </div>
+
+            {/* Main Image */}
+            <motion.img
+              key={selectedImage}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.2 }}
               src={selectedImage}
               alt="Full size preview"
               className="w-full h-full object-contain"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(e, info) => {
+                if (info.offset.x > 100) {
+                  handleSwipe('right');
+                } else if (info.offset.x < -100) {
+                  handleSwipe('left');
+                }
+              }}
             />
+
+            {/* Thumbnail Strip - Hidden on Mobile */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/80 to-transparent p-4 hidden md:block">
+              <div className="flex gap-2 overflow-x-auto scrollbar-hide">
+                {getGalleryImages().map((image, index) => (
+                  <motion.button
+                    key={image}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className={`relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden ${
+                      image === selectedImage ? 'ring-2 ring-blue-500' : 'opacity-50 hover:opacity-100'
+                    }`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedImage(image);
+                    }}
+                  >
+                    <img
+                      src={image}
+                      alt={`Thumbnail ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.button>
+                ))}
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       )}
