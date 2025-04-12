@@ -226,6 +226,14 @@ export const Blog: React.FC = () => {
     // Instantly collapse content and show first 3 posts
     setShowAllPosts(false);
     
+    // Instantly scroll to the bottom of the blog section
+    requestAnimationFrame(() => {
+      const blogSection = document.getElementById('blog');
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'instant', block: 'end' });
+      }
+    });
+    
     // Reset animation state immediately
     setTimeout(() => setIsAnimating(false), 100);
   };
