@@ -211,25 +211,25 @@ export const FutureGoals: React.FC = () => {
         onClick={() => isMobile && openModal(goal)}
         className={cn(
           "group bg-white dark:bg-gray-900",
-          "rounded-xl p-6 shadow-sm hover:shadow-md",
+          "rounded-xl p-5 shadow-sm hover:shadow-md",
           "transform-gpu transition-all duration-200",
           "border border-gray-100 dark:border-gray-800",
           isMobile && "active:scale-[0.99] cursor-pointer"
         )}
       >
-        <div className="flex items-start gap-4 mb-4">
+        <div className="flex items-start gap-3 mb-4">
           <div className={cn(
-            "p-3 rounded-lg bg-purple-100 dark:bg-purple-900/50",
+            "p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50",
             "text-purple-700 dark:text-purple-300"
           )}>
-            <Icon strokeWidth={1.5} className="w-6 h-6" />
+            <Icon strokeWidth={1.5} className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-xl md:text-2xl font-medium text-gray-900 dark:text-white mb-2">
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
               {goal.title}
             </h3>
             {!isMobile && (
-              <p className="text-base md:text-lg text-gray-600 dark:text-gray-400">
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
                 {goal.description}
               </p>
             )}
@@ -239,7 +239,7 @@ export const FutureGoals: React.FC = () => {
         {!isMobile && (
           <>
             <div className="mb-4">
-              <div className="flex justify-between text-base mb-1.5">
+              <div className="flex justify-between text-sm mb-1.5">
                 <span className="text-gray-600 dark:text-gray-400">
                   Progress
                 </span>
@@ -256,24 +256,24 @@ export const FutureGoals: React.FC = () => {
             </div>
 
             <div className="mb-4">
-              <p className="text-base text-gray-600 dark:text-gray-400">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Timeline: <span className="font-medium text-purple-600 dark:text-purple-400">{goal.timeline}</span>
               </p>
             </div>
 
-            <div className="space-y-2">
-              <h4 className="text-lg font-medium text-gray-900 dark:text-white">
+            <div className="space-y-1.5">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                 Milestones
               </h4>
               {goal.milestones.map((milestone, i) => (
                 <div
                   key={i}
-                  className="flex items-center gap-2 text-base text-gray-600 dark:text-gray-400"
+                  className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
                 >
                   {milestone.completed ? (
-                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-5 h-5" />
+                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-4 h-4" />
                   ) : (
-                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-5 h-5" />
+                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-4 h-4" />
                   )}
                   <span>{milestone.title}</span>
                 </div>
@@ -289,7 +289,7 @@ export const FutureGoals: React.FC = () => {
     <section className="py-16 bg-gray-50 dark:bg-gray-950">
       <div className="container mx-auto px-4 sm:px-6">
         <div className="mb-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Future Goals
           </h2>
           <div className="h-1 w-24 bg-blue-500 mx-auto rounded-full" />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Clock, Tag, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -145,8 +145,6 @@ export const Blog: React.FC = () => {
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  const sectionRef = useRef<HTMLDivElement>(null);
 
   // Initialize AOS
   useEffect(() => {
@@ -155,24 +153,6 @@ export const Blog: React.FC = () => {
       once: true,
       offset: 100,
       easing: 'ease-out-cubic'
-    });
-  }, []);
-
-  // Preload images
-  useEffect(() => {
-    const loadImage = (src: string, id: string) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () => {
-        setLoadedImages(prev => ({ ...prev, [id]: true }));
-      };
-      img.onerror = () => {
-        setLoadedImages(prev => ({ ...prev, [id]: true })); // Mark as loaded even if error
-      };
-    };
-
-    blogPosts.forEach(post => {
-      loadImage(post.image, post.id);
     });
   }, []);
 
@@ -191,29 +171,21 @@ export const Blog: React.FC = () => {
     setShowAllPosts(false);
   }, [selectedCategory, searchQuery]);
 
-  // Handle section visibility
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('aos-animate');
-            }
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          const rect = blogSection.getBoundingClientRect();
+          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
+          window.scrollTo({
+            top: targetScroll,
+            behavior: 'instant'
           });
-        },
-        { threshold: 0.1 }
-      );
-
-      if (sectionRef.current) {
-        observer.observe(sectionRef.current);
-      }
-
-      return () => {
-        if (sectionRef.current) {
-          observer.unobserve(sectionRef.current);
         }
-      };
+      });
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
@@ -281,11 +253,7 @@ export const Blog: React.FC = () => {
   };
 
   return (
-    <section 
-      ref={sectionRef}
-      id="blog" 
-      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden"
-    >
+    <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div 
           className="mb-16 text-center space-y-4"
@@ -350,8 +318,7 @@ export const Blog: React.FC = () => {
                 "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
                 "transform transition-all duration-200",
                 "border border-white/20 dark:border-gray-700/50",
-                "group relative cursor-pointer",
-                "min-h-[400px]" // Ensure consistent height
+                "group relative cursor-pointer"
               )}
               onClick={() => handlePostClick(post.id)}
               data-aos="fade-up"
@@ -361,16 +328,11 @@ export const Blog: React.FC = () => {
               
               <div className="overflow-hidden relative">
                 <div className="h-48">
-                  {!loadedImages[post.id] ? (
-                    <div className="w-full h-full bg-gray-200 dark:bg-gray-800 animate-pulse rounded-t-xl" />
-                  ) : (
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  )}
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </div>
               </div>
@@ -461,11 +423,6 @@ export const Blog: React.FC = () => {
         }
         .animate-pulse-slow {
           animation: pulse-slow 6s ease-in-out infinite;
-        }
-        .blog-post {
-          will-change: transform;
-          backface-visibility: hidden;
-          transform: translateZ(0);
         }
       `}</style>
     </section>
