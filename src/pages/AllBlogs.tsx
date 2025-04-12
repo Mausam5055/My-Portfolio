@@ -309,7 +309,7 @@ export const AllBlogs: React.FC = () => {
         directNavigation: true,
         scrollPosition: currentScrollPosition
       },
-      replace: false
+      replace: true
     });
   };
 

@@ -109,7 +109,7 @@ export const BlogDetailPage: React.FC = () => {
           from: 'blog-detail',
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: false
+        replace: true
       });
       
       // Force scroll to top first
@@ -139,7 +139,7 @@ export const BlogDetailPage: React.FC = () => {
           from: 'blog',
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: false
+        replace: true
       });
       
       // Force scroll to top first

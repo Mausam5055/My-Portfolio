@@ -124,6 +124,12 @@ function AppContent() {
       return;
     }
     
+    // Special handling for AllBlogs page
+    if (path === 'blogs/all') {
+      setCurrentSection('blog');
+      return;
+    }
+    
     // Special handling for blog detail pages
     if (path.startsWith('blog/')) {
       setCurrentSection('blog');
