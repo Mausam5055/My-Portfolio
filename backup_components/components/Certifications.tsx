@@ -103,6 +103,28 @@ const certificates: Certificate[] = [
     skills: ["Simulink", "System Modeling", "Simulation", "Control Systems"],
     link: "https://drive.google.com/file/d/1V1naGyCuS8hYMXr8pRywZoMR7gjuoMOp/view?usp=drive_link",
     description: "Advanced system modeling and simulation. Dynamic system analysis and design. Integration with MATLAB for comprehensive solutions"
+  },
+  {
+    id: "8",
+    title: "Solvit Hackathon",
+    organization: "Solvit",
+    date: "Mar 2024",
+    credentialId: "SOLVIT-HACK-2024",
+    image: "/assets/certificates/solvit.jpg",
+    skills: ["Problem Solving", "Team Collaboration", "Innovation", "Project Management"],
+    link: "https://drive.google.com/file/d/16p0e8LtSnzqr60nBFyQQAF7dkwbLauD1/view?usp=drive_link",
+    description: "Participated in Solvit Hackathon showcasing innovative problem-solving skills. Collaborated in team-based environment to develop creative solutions. Demonstrated project management and technical implementation capabilities"
+  },
+  {
+    id: "9",
+    title: "Python Essentials",
+    organization: "VIT Bhopal",
+    date: "Jan 2024",
+    credentialId: "PYTHON-ESS-2024",
+    image: "/assets/certificates/python.jpg",
+    skills: ["Python Programming", "Data Structures", "Algorithms", "Object-Oriented Programming"],
+    link: "https://drive.google.com/file/d/16psgIUrzbJQxS0XbqtALmHQBpbtP8bcK/view?usp=drive_link",
+    description: "Comprehensive Python programming fundamentals. Mastery of core Python concepts and best practices. Practical implementation of data structures and algorithms. Object-oriented programming principles and design patterns"
   }
 ];
 
@@ -118,7 +140,9 @@ export const Certifications: React.FC = () => {
       window.history.pushState({ modalOpen: true }, '', window.location.href);
 
       // Handle browser back button
-      const handlePopState = () => {
+      const handlePopState = (event: PopStateEvent) => {
+        // Prevent default navigation
+        event.preventDefault();
         // Close the modal when back button is pressed
         handleCloseModal();
       };
@@ -142,16 +166,10 @@ export const Certifications: React.FC = () => {
     // First collapse the content
     setShowAllMobile(false);
     
-    // Calculate scroll position immediately
+    // Instantly scroll to the certifications section
     const certificationsSection = document.getElementById('certifications');
     if (certificationsSection) {
-      const targetPosition = certificationsSection.offsetTop - 100;
-      
-      // Start scrolling immediately but with smooth behavior
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
+      certificationsSection.scrollIntoView({ behavior: 'instant' });
     }
   };
 
@@ -428,7 +446,7 @@ export const Certifications: React.FC = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.4 }}
-                className="text-lg text-gray-600 dark:text-gray-400 font-medium"
+                className="text-lg text-gray-600 dark:text-gray-400 font-medium hidden md:block"
               >
                 Professional Development & Technical Expertise
               </motion.p>
@@ -532,29 +550,31 @@ export const Certifications: React.FC = () => {
                 onClick={() => showAllMobile ? handleShowLess() : setShowAllMobile(true)}
                 className={cn(
                   "group relative overflow-hidden",
-                  "px-6 py-3 rounded-full",
-                  "bg-gradient-to-r from-blue-600 to-purple-600",
-                  "hover:from-blue-700 hover:to-purple-700",
-                  "text-white font-semibold",
-                  "shadow-lg hover:shadow-xl",
+                  "w-12 h-12 rounded-full",
+                  "bg-gradient-to-r from-blue-500/20 to-purple-500/20",
+                  "dark:from-purple-900/40 dark:to-violet-900/40",
+                  "hover:from-blue-500/30 hover:to-purple-500/30",
+                  "dark:hover:from-purple-900/50 dark:hover:to-violet-900/50",
+                  "text-blue-600 dark:text-purple-400",
+                  "backdrop-blur-sm",
+                  "border border-blue-200/30 dark:border-purple-800/50",
+                  "shadow-[0_8px_16px_-6px_rgba(0,0,0,0.1)]",
+                  "dark:shadow-[0_8px_16px_-6px_rgba(168,85,247,0.15)]",
                   "transition-all duration-300",
-                  "flex items-center gap-2"
+                  "flex items-center justify-center"
                 )}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <span className="relative z-10">
-                  {showAllMobile ? 'Show Less' : `View All`}
-                </span>
                 <motion.div
                   animate={{ rotate: showAllMobile ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
                   className="relative z-10"
                 >
-                  <ChevronDown className="w-5 h-5" />
+                  <ChevronDown className="w-6 h-6" />
                 </motion.div>
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-700 to-purple-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 dark:from-purple-900/20 dark:to-violet-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 />
               </motion.button>
             </motion.div>

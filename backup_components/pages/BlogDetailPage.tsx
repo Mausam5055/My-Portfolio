@@ -83,38 +83,97 @@ What's next in the world of web development? We're seeing a shift towards more i
   }
 ];
 
-export const BlogDetail: React.FC = () => {
+export const BlogDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const post = blogPosts.find(p => p.id === id);
 
   useEffect(() => {
-    // Smooth scroll to top on mount
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Direct scroll to top on mount without animation
+    window.scrollTo(0, 0);
   }, [id]);
 
-  // Handle browser back button
-  useEffect(() => {
-    const handlePopState = () => {
-      // Navigate to home with state
-      navigate('/', { 
-        state: { scrollToBlog: true, fromBlogDetail: true },
-        replace: true
+  const handleBack = () => {
+    const state = location.state as { from?: string; scrollPosition?: number } | null;
+    
+    // If coming from AllBlogs page
+    if (state?.from === 'all-blogs') {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to AllBlogs page
+      navigate('/blogs/all', { 
+        state: { 
+          directNavigation: true,
+          from: 'blog-detail',
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
       });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then restore the scroll position if available
+      const scrollPosition = state?.scrollPosition ?? 0;
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPosition);
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    } else {
+      // Default back navigation to blog section
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
+      navigate('/', { 
+        state: { 
+          directNavigation: true,
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog',
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    }
+  };
+
+  // Add browser back button handler
+  useEffect(() => {
+    const handleBrowserBack = () => {
+      handleBack();
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
-
-  const handleBack = () => {
-    // Navigate to home with state
-    navigate('/', { 
-      state: { scrollToBlog: true, fromBlogDetail: true },
-      replace: true
-    });
-  };
+    window.addEventListener('popstate', handleBrowserBack);
+    return () => {
+      window.removeEventListener('popstate', handleBrowserBack);
+    };
+  }, [handleBack]);
 
   if (!post) {
     return (
@@ -123,12 +182,43 @@ export const BlogDetail: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
           <motion.button
-            onClick={handleBack}
+            onClick={() => {
+              // Temporarily disable smooth scrolling
+              document.documentElement.style.scrollBehavior = 'auto';
+              
+              // Navigate back to blog section
+              navigate('/', { 
+                state: { 
+                  directNavigation: true,
+                  forceSection: 'blog',
+                  scrollToSection: 'blog',
+                  from: 'blog',
+                  scrollPosition: 0
+                },
+                replace: false
+              });
+              
+              // Force scroll to top first
+              window.scrollTo(0, 0);
+              
+              // Then scroll to blog section
+              requestAnimationFrame(() => {
+                const blogSection = document.getElementById('blog');
+                if (blogSection) {
+                  blogSection.scrollIntoView({ behavior: 'instant' });
+                }
+              });
+              
+              // Restore smooth scrolling after navigation
+              setTimeout(() => {
+                document.documentElement.style.scrollBehavior = 'smooth';
+              }, 100);
+            }}
             className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Back to Home
+            Back to Blog Section
           </motion.button>
         </div>
       </div>
@@ -293,4 +383,4 @@ export const BlogDetail: React.FC = () => {
       </div>
     </motion.div>
   );
-};
+}; 

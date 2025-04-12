@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { Clock, Target, Award, Box, Brain, Star, Zap, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
-import type { CubingContent as CubingContentType } from "../types";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Clock, Award, Box, Brain, Star, Zap, ArrowLeft } from "lucide-react";
 import { cubingContent } from "../data/cubingContent";
 
 const difficultyColors = {
@@ -18,55 +17,61 @@ const methodIcons = {
   Reduction: <Box className="w-5 h-5 text-green-500" />,
 };
 
-const ITEMS_PER_PAGE = 3;
-
-export const CubingContent: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+export const AllCubingContent: React.FC = () => {
   const navigate = useNavigate();
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const location = useLocation();
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const totalPages = Math.ceil(cubingContent.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const displayedContent = cubingContent.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const handleCubeClick = (id: string) => {
-    navigate(`/cube/${id}`, {
-      state: { 
-        from: '/all-cubing-content',
-        directNavigation: true
-      },
-      replace: false
-    });
-  };
-
-  const handleShowMore = () => {
+  const handleBackNavigation = () => {
     // Temporarily disable smooth scrolling
     const scrollBehavior = document.documentElement.style.scrollBehavior;
     document.documentElement.style.scrollBehavior = 'auto';
 
-    // Store the current scroll position
-    const currentScroll = window.scrollY;
+    // Force scroll to top first
+    window.scrollTo(0, 0);
 
-    // Navigate to all-cubing-content
-    navigate('/all-cubing-content', { 
+    // Navigate to cubing section
+    navigate('/cubing', { 
       state: { 
-        from: 'cubing',
-        returnTo: 'cubing',
-        scrollPosition: currentScroll
-      }
+        from: 'all-cubing-content',
+        directNavigation: true,
+        forceSection: 'cubing',
+        scrollToSection: 'cubing'
+      },
+      replace: true
+    });
+
+    // Restore scroll behavior
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = scrollBehavior;
+    }, 0);
+  };
+
+  useEffect(() => {
+    // Handle browser back button
+    const handlePopState = () => {
+      handleBackNavigation();
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleBack = (e: React.MouseEvent) => {
+    e.preventDefault();
+    handleBackNavigation();
+  };
+
+  const handleCubeClick = (id: string) => {
+    // Temporarily disable smooth scrolling
+    const scrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    
+    navigate(`/cube/${id}`, {
+      state: { 
+        from: 'all-cubing-content',
+        directNavigation: true
+      },
+      replace: false
     });
 
     // Restore scroll behavior
@@ -82,28 +87,22 @@ export const CubingContent: React.FC = () => {
       <div className="container mx-auto px-4 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          className="mb-16 text-center space-y-4"
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8 flex items-center gap-4"
         >
-          <motion.h2
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white"
+          <motion.button
+            whileHover={{ x: -3 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={handleBack}
+            className="flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm hover:shadow-md"
           >
-            Cubing Skills
-          </motion.h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "120px" }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full"
-          />
+            <ArrowLeft className="w-5 h-5" />
+          </motion.button>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">All Cubing Skills</h1>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {displayedContent.map((cube, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {cubingContent.map((cube, index) => (
             <motion.div
               key={cube.id}
               initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -194,25 +193,9 @@ export const CubingContent: React.FC = () => {
             </motion.div>
           ))}
         </div>
-
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="mt-12 flex items-center justify-center"
-        >
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleShowMore}
-            className="group flex items-center justify-center w-10 h-10 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80 border border-gray-200/50 dark:border-gray-700/50 transition-all duration-300 shadow-sm hover:shadow-md"
-          >
-            <ChevronDown className="w-5 h-5 transition-transform duration-300 group-hover:translate-y-1" />
-          </motion.button>
-        </motion.div>
       </div>
     </section>
   );
 };
 
-export default CubingContent;
+export default AllCubingContent; 

@@ -15,7 +15,7 @@ import { Education } from './components/Education';
 import { Gallery } from './components/Gallery';
 import { CubingContent } from './components/CubingContent';
 import { Blog } from './components/Blog';
-import { BlogDetail } from './components/BlogDetail';
+import { BlogDetailPage } from './pages/BlogDetailPage';
 import { FutureGoals } from './components/FutureGoals';
 import { FunFacts } from './components/FunFacts';
 import { Gaming } from './components/Gaming';
@@ -30,11 +30,16 @@ import { ProjectDetails } from './pages/ProjectDetails';
 import { GameDetail } from './pages/GameDetail';
 import { GalleryDetail } from './pages/GalleryDetail';
 import { CubeDetails } from './pages/CubeDetails';
+import { AllCubingContent } from './pages/AllCubingContent';
+import { AllProjects } from './pages/AllProjects';
+import { Games } from './pages/Games';
+import { useGlobalBack } from './hooks/useGlobalBack';
+import { SectionType } from './types';
 
 function AppContent() {
   const { isDark, isChanging, toggleTheme } = useThemeStore();
   const [showIntro, setShowIntro] = useState(true);
-  const [currentSection, setCurrentSection] = useState('home');
+  const [currentSection, setCurrentSection] = useState<SectionType>('home');
   const location = useLocation();
   const isDetailsPage = location.pathname.startsWith('/projects/') || 
                        location.pathname.startsWith('/games/') || 
@@ -43,6 +48,7 @@ function AppContent() {
                        location.pathname.startsWith('/cube/');
 
   const sectionRefs = {
+    home: useRef<HTMLDivElement>(null),
     about: useRef<HTMLDivElement>(null),
     journey: useRef<HTMLDivElement>(null),
     qualifications: useRef<HTMLDivElement>(null),
@@ -58,8 +64,18 @@ function AppContent() {
     projects: useRef<HTMLDivElement>(null),
     testimonials: useRef<HTMLDivElement>(null),
     contact: useRef<HTMLDivElement>(null),
+    profile: useRef<HTMLDivElement>(null),
+    'all-cubing-content': useRef<HTMLDivElement>(null)
   };
 
+  const { scrollToSection, handleBack } = useGlobalBack({
+    currentSection,
+    setCurrentSection,
+    sectionRefs,
+    isDetailsPage
+  });
+
+  // Initialize AOS
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -75,200 +91,70 @@ function AppContent() {
     }
   }, [isDark]);
 
-  // Handle browser back button and device back button
+  // Handle section updates from URL
   useEffect(() => {
-    const handlePopState = (event: PopStateEvent) => {
-      const currentState = event.state;
+    const path = location.pathname.slice(1); // Remove leading slash
+    const state = location.state as { 
+      directNavigation?: boolean;
+      from?: string;
+      forceSection?: string;
+      scrollToSection?: string;
+    } | null;
+    
+    // If we have a forceSection in the state, use that
+    if (state?.forceSection) {
+      setCurrentSection(state.forceSection as SectionType);
       
-      if (currentState?.scrollToGaming || currentState?.scrollToGallery || 
-          currentState?.scrollToProjects || currentState?.scrollToBlog ||
-          currentState?.scrollToCubing) {
-        requestAnimationFrame(() => {
-          let targetSection: keyof typeof sectionRefs | null = null;
-          
-          if (currentState.scrollToGaming) targetSection = 'Gaming';
-          else if (currentState.scrollToGallery) targetSection = 'gallery';
-          else if (currentState.scrollToProjects) targetSection = 'projects';
-          else if (currentState.scrollToBlog) targetSection = 'blog';
-          else if (currentState.scrollToCubing) targetSection = 'cubing';
-
-          if (targetSection && sectionRefs[targetSection]?.current) {
-            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-            window.scrollTo({
-              top: targetScroll,
-              behavior: 'instant'
-            });
-          }
-        });
+      // Find and scroll to the section
+      const sectionElement = document.getElementById(state.forceSection);
+      if (sectionElement) {
+        // Use instant scroll on mobile, smooth on desktop
+        const isMobile = window.innerWidth <= 768;
+        sectionElement.scrollIntoView({ behavior: isMobile ? 'instant' : 'smooth' });
       }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-
-    if (location.state) {
-      handlePopState({ state: location.state } as PopStateEvent);
+      return;
     }
-
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [location.state]);
-
-  // Add a new effect to handle navigation state changes
-  useEffect(() => {
-    const handleLocationChange = () => {
-      const state = location.state || {};
-      if (state?.scrollToGaming || state?.scrollToGallery || 
-          state?.scrollToProjects || state?.scrollToBlog ||
-          state?.scrollToCubing) {
-        requestAnimationFrame(() => {
-          let targetSection: keyof typeof sectionRefs | null = null;
-          
-          if (state.scrollToGaming) targetSection = 'Gaming';
-          else if (state.scrollToGallery) targetSection = 'gallery';
-          else if (state.scrollToProjects) targetSection = 'projects';
-          else if (state.scrollToBlog) targetSection = 'blog';
-          else if (state.scrollToCubing) targetSection = 'cubing';
-
-          if (targetSection && sectionRefs[targetSection]?.current) {
-            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-            window.scrollTo({
-              top: targetScroll,
-              behavior: 'instant'
-            });
-          }
-        });
-      }
-    };
-
-    handleLocationChange();
-  }, [location.pathname, location.state]);
-
-  // Add a new effect to handle initial navigation
-  useEffect(() => {
-    // If we're on a detail page, add a history entry
+    
+    // Special handling for blog detail pages
+    if (path.startsWith('blog/')) {
+      setCurrentSection('blog');
+      return;
+    }
+    
+    // Handle detail pages
     if (isDetailsPage) {
-      const path = location.pathname;
-      let scrollState = {};
-      
-      if (path.startsWith('/games/')) {
-        scrollState = { scrollToGaming: true };
-      } else if (path.startsWith('/gallery/')) {
-        scrollState = { scrollToGallery: true };
-      } else if (path.startsWith('/projects/')) {
-        scrollState = { scrollToProjects: true };
-      } else if (path.startsWith('/blog/')) {
-        scrollState = { scrollToBlog: true };
-      }
-
-      window.history.pushState(scrollState, '', window.location.href);
+      const [section] = path.split('/');
+      setCurrentSection(section as SectionType);
+      return;
     }
-  }, [isDetailsPage, location.pathname]);
+    
+    if (path) {
+      setCurrentSection(path as SectionType);
+    }
+  }, [location.pathname, location.state, isDetailsPage]);
 
-  // Add a new effect to handle section navigation
+  // Add global scroll behavior control
   useEffect(() => {
-    const handleSectionNavigation = () => {
-      const state = location.state || {};
-      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
-        requestAnimationFrame(() => {
-          let targetSection: keyof typeof sectionRefs | null = null;
-          
-          if (state.scrollToGaming) targetSection = 'Gaming';
-          else if (state.scrollToGallery) targetSection = 'gallery';
-          else if (state.scrollToProjects) targetSection = 'projects';
-          else if (state.scrollToBlog) targetSection = 'blog';
-
-          if (targetSection && sectionRefs[targetSection]?.current) {
-            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-            window.scrollTo({
-              top: targetScroll,
-              behavior: 'instant'
-            });
-          }
-        });
-      }
-    };
-
-    handleSectionNavigation();
-  }, [location.pathname, location.state]);
-
-  // Add a new effect to handle back button navigation
-  useEffect(() => {
-    const handleBackButton = () => {
-      // If we're on a detail page, add a history entry with the correct scroll state
-      if (isDetailsPage) {
-        const path = location.pathname;
-        let scrollState = {};
-        
-        if (path.startsWith('/games/')) {
-          scrollState = { scrollToGaming: true };
-        } else if (path.startsWith('/gallery/')) {
-          scrollState = { scrollToGallery: true };
-        } else if (path.startsWith('/projects/')) {
-          scrollState = { scrollToProjects: true };
-        } else if (path.startsWith('/blog/')) {
-          scrollState = { scrollToBlog: true };
+    const handleNavigation = () => {
+      const state = location.state as { 
+        forceSection?: string;
+        scrollToSection?: string;
+      } | null;
+      
+      // If we have a section to scroll to, handle it
+      if (state?.scrollToSection) {
+        const sectionElement = document.getElementById(state.scrollToSection);
+        if (sectionElement) {
+          // Use instant scroll on mobile, smooth on desktop
+          const isMobile = window.innerWidth <= 768;
+          sectionElement.scrollIntoView({ behavior: isMobile ? 'instant' : 'smooth' });
         }
-
-        window.history.pushState(scrollState, '', window.location.href);
       }
     };
 
-    handleBackButton();
-  }, [isDetailsPage, location.pathname]);
-
-  // Add a new effect to handle initial page load
-  useEffect(() => {
-    // If we're on a detail page, add a history entry with the correct scroll state
-    if (isDetailsPage) {
-      const path = location.pathname;
-      let scrollState = {};
-      
-      if (path.startsWith('/games/')) {
-        scrollState = { scrollToGaming: true };
-      } else if (path.startsWith('/gallery/')) {
-        scrollState = { scrollToGallery: true };
-      } else if (path.startsWith('/projects/')) {
-        scrollState = { scrollToProjects: true };
-      } else if (path.startsWith('/blog/')) {
-        scrollState = { scrollToBlog: true };
-      }
-
-      window.history.pushState(scrollState, '', window.location.href);
-    }
-  }, []);
-
-  // Add a new effect to handle navigation state changes
-  useEffect(() => {
-    const handleNavigationState = () => {
-      const state = location.state || {};
-      if (state?.scrollToGaming || state?.scrollToGallery || state?.scrollToProjects || state?.scrollToBlog) {
-        requestAnimationFrame(() => {
-          let targetSection: keyof typeof sectionRefs | null = null;
-          
-          if (state.scrollToGaming) targetSection = 'Gaming';
-          else if (state.scrollToGallery) targetSection = 'gallery';
-          else if (state.scrollToProjects) targetSection = 'projects';
-          else if (state.scrollToBlog) targetSection = 'blog';
-
-          if (targetSection && sectionRefs[targetSection]?.current) {
-            const targetScroll = sectionRefs[targetSection].current!.getBoundingClientRect().top + window.pageYOffset - 100;
-            window.scrollTo({
-              top: targetScroll,
-              behavior: 'instant'
-            });
-          }
-        });
-      }
-    };
-
-    handleNavigationState();
-  }, [location.pathname, location.state]);
-
-  const scrollToSection = (section: keyof typeof sectionRefs) => {
-    sectionRefs[section].current?.scrollIntoView({ 
-      behavior: 'instant',
-      block: 'start'
-    });
-  };
+    window.addEventListener('popstate', handleNavigation);
+    return () => window.removeEventListener('popstate', handleNavigation);
+  }, [location.state]);
 
   // Add section-specific SEO data
   const seoData = {
@@ -354,25 +240,6 @@ function AppContent() {
     }
   };
 
-  // Update current section based on scroll position
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = Object.keys(sectionRefs) as Array<keyof typeof sectionRefs>;
-      const scrollPosition = window.scrollY + 100;
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sectionRefs[sections[i]].current;
-        if (section && section.offsetTop <= scrollPosition) {
-          setCurrentSection(sections[i]);
-          break;
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <>
       <SEO 
@@ -388,35 +255,60 @@ function AppContent() {
         <>
           <ThemeTransition isChanging={isChanging} isDark={isDark} />
           <div className={`min-h-screen bg-white dark:bg-black transition-colors duration-500 ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
-            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />}
+            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} onBack={handleBack} />}
             <Routes>
               <Route path="/" element={
                 <>
                   <Hero />
                   <ContentBoxes refs={sectionRefs} />
-                  <div ref={sectionRefs.about}><About /></div>
-                  <div ref={sectionRefs.journey}><Journey /></div>
-                  <div ref={sectionRefs.qualifications}><Qualifications /></div>
-                  <div ref={sectionRefs.certifications}><Certifications /></div>
-                  <div ref={sectionRefs.skills}><Skills /></div>
-                  <div ref={sectionRefs.education}><Education /></div>
-                  <div ref={sectionRefs.gallery}><Gallery /></div>
-                  <div ref={sectionRefs.cubing}><CubingContent /></div>
-                  <div ref={sectionRefs.blog}><Blog /></div>
-                  <div ref={sectionRefs.Gaming}><Gaming /></div>
-                  <div ref={sectionRefs.funFacts}><FunFacts /></div>
-                  <div ref={sectionRefs.projects}><Projects /></div>
-                  <div ref={sectionRefs.futureGoals}><FutureGoals /></div>
-                  <div ref={sectionRefs.testimonials}><Testimonials /></div>
-                  <div ref={sectionRefs.contact}><Contact /></div>
+                  <div id="about" ref={sectionRefs.about}><About /></div>
+                  <div id="journey" ref={sectionRefs.journey}><Journey /></div>
+                  <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
+                  <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
+                  <div id="skills" ref={sectionRefs.skills}><Skills /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
+                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
+                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
+                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
+                  <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
+                  <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
+                  <div id="contact" ref={sectionRefs.contact}><Contact /></div>
                   <Footer />
                 </>
               } />
-              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/:section" element={
+                <>
+                  <Hero />
+                  <ContentBoxes refs={sectionRefs} />
+                  <div id="about" ref={sectionRefs.about}><About /></div>
+                  <div id="journey" ref={sectionRefs.journey}><Journey /></div>
+                  <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
+                  <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
+                  <div id="skills" ref={sectionRefs.skills}><Skills /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
+                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
+                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
+                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
+                  <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
+                  <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
+                  <div id="contact" ref={sectionRefs.contact}><Contact /></div>
+                  <Footer />
+                </>
+              } />
+              <Route path="/blog/:id" element={<BlogDetailPage />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
+              <Route path="/projects/all" element={<AllProjects />} />
+              <Route path="/games" element={<Games />} />
               <Route path="/games/:gameId" element={<GameDetail />} />
               <Route path="/gallery/:id" element={<GalleryDetail />} />
               <Route path="/cube/:id" element={<CubeDetails />} />
+              <Route path="/all-cubing-content" element={<AllCubingContent />} />
             </Routes>
           </div>
         </>

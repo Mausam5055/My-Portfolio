@@ -14,7 +14,7 @@ const testimonials: Testimonial[] = [
     company: "Design Studio Co.",
     image: "/assets/testimonials/mangal.jpg",
     content:
-      "✔️Working with Mausam was an absolute pleasure. his attention to detail and creative approach brought our vision to life in ways we couldn't have imagined.",
+      "Working with Mausam was a pleasure. His creativity and attention to detail brought our vision to life beautifully.",
     rating: 5,
   },
   {
@@ -24,7 +24,7 @@ const testimonials: Testimonial[] = [
     company: "Innovation Labs",
     image: "/assets/testimonials/sauvik.jpg",
     content:
-      "✔️Mausam's technical expertise combined with his artistic flair produced exceptional results. He's a true professional who delivers beyond expectations.",
+      "Mausam’s skill and creativity delivered outstanding results. A true professional who exceeds expectations.",
     rating: 4.2,
   },
   {
@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
     company: "Tech Innovations",
     image: "/assets/testimonials/priyanka.jpg",
     content:
-      "✔️The level of creativity and technical skill Mausam brings to projects is remarkable. He has a unique ability to transform complex ideas into beautiful, functional solutions.",
+      "Mausam’s creativity and technical skill are outstanding. He turns complex ideas into elegant, functional solutions.",
     rating: 3.8,
   },
   {
@@ -264,10 +264,10 @@ export const Testimonials: React.FC = () => {
                             "{testimonial.content}"
                           </p>
                           <div className="space-y-1">
-                            <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white">
+                            <h3 className="text-lg md:text-lg font-bold text-gray-900 dark:text-white">
                               {testimonial.name}
                             </h3>
-                            <p className="text-sm md:text-base text-gray-500 dark:text-gray-400">
+                            <p className="text-sm md:text-sm text-gray-500 dark:text-gray-400">
                               {testimonial.role} at {testimonial.company}
                             </p>
                           </div>

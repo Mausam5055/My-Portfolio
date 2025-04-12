@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight, Grid } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -8,9 +8,6 @@ type GamingPost = {
   id: string;
   title: string;
   image: string;
-  videoUrl: string;
-  excerpt: string;
-  content: string;
   date: string;
   author: string;
   slug: string;
@@ -22,40 +19,6 @@ const gamingPosts: GamingPost[] = [
     title: "Spider-Man: Miles Morales – Ultimate Web-Swinging Experience",
     image:
       "https://images.unsplash.com/photo-1608889175123-8ee362201f81?auto=format&fit=crop&q=80&w=800",
-    videoUrl: "https://www.youtube.com/embed/26QPeXoWzLM",
-    excerpt:
-      "Watch my thrilling gameplay of Spider-Man: Miles Morales with epic web-swinging and combat!",
-    content: `
-# Spider-Man: Miles Morales
-
-Experience the ultimate web-swinging adventure as we dive into the streets of New York City in *Spider-Man: Miles Morales*! 
-
-## Gameplay Highlights
-
-* **Fluid Web-Swinging**
-  * Master the art of traversal across Manhattan
-  * Experience smooth, physics-based movement
-  * Chain together impressive web-swinging combos
-
-* **Electrifying Combat**
-  * Unleash Miles' unique Venom powers
-  * Execute stylish takedowns and finishers
-  * Master stealth and combat mechanics
-
-* **Stunning Visuals**
-  * Marvel at the detailed city environment
-  * Experience dynamic weather effects
-  * Witness breathtaking sunset and night scenes
-
-* **Open World Exploration**
-  * Discover hidden collectibles
-  * Complete side missions
-  * Help citizens in need
-
-## Watch the Action
-
-Join me as I showcase the most exciting moments from my playthrough, including epic boss battles, stealth missions, and heart-pounding chase sequences. Get ready for an unforgettable Spider-Man experience! 🕷️🔥
-    `,
     date: "2024-03-20",
     author: "Mausam Kar",
     slug: "spider-man"
@@ -65,40 +28,6 @@ Join me as I showcase the most exciting moments from my playthrough, including e
     title: "BGMI – Intense Battle Royale Action",
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=80&w=800",
-    videoUrl: "https://www.youtube.com/embed/W5ueSz1I9cY",
-    excerpt:
-      "Epic BGMI gameplay showcasing intense gunfights and survival tactics!",
-    content: `
-# BGMI – Battlegrounds Mobile India
-
-Get ready for intense battle royale action as we dive into the world of BGMI! 
-
-## Gameplay Features
-
-* **Tactical Combat**
-  * Master different weapon types
-  * Execute precise headshots
-  * Perfect your recoil control
-
-* **Survival Strategies**
-  * Smart zone rotation tactics
-  * Efficient looting routes
-  * Team coordination essentials
-
-* **Combat Styles**
-  * Aggressive rushing techniques
-  * Patient sniping gameplay
-  * Close-quarter combat mastery
-
-* **Match Highlights**
-  * Epic squad wipeouts
-  * Clutch moments
-  * Victory celebrations
-
-## Watch the Action
-
-Experience the thrill of intense firefights, strategic gameplay, and those heart-stopping moments that make BGMI so addictive. From early game drops to final circle battles, this gameplay has it all! 🎯🔥
-    `,
     date: "2024-03-18",
     author: "Mausam Kar",
     slug: "bgmi"
@@ -108,85 +37,44 @@ Experience the thrill of intense firefights, strategic gameplay, and those heart
     title: "Asphalt 9: Legends – High-Speed Racing Action",
     image:
       "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800",
-    videoUrl: "https://www.youtube.com/embed/diznkP7_iEo",
-    excerpt:
-      "Experience the adrenaline rush of Asphalt 9: Legends with breathtaking races and stunning visuals!",
-    content: `
-# Asphalt 9: Legends
-
-Buckle up for an adrenaline-fueled racing experience in *Asphalt 9: Legends*! 
-
-## Racing Experience
-
-* **Exotic Cars**
-  * Drive the latest supercars
-  * Customize your vehicles
-  * Master different car classes
-
-* **Racing Mechanics**
-  * Perfect nitro management
-  * Master drift techniques
-  * Execute perfect jumps
-
-* **Visual Spectacle**
-  * Stunning track environments
-  * Dynamic weather effects
-  * Realistic car damage
-
-* **Game Modes**
-  * Career mode challenges
-  * Multiplayer races
-  * Special events
-
-## Watch the Action
-
-Join me as I push these incredible machines to their limits, pulling off insane drifts, perfect nitro boosts, and securing victory in the most intense races! 🏎️🔥
-    `,
     date: "2024-03-15",
     author: "Mausam Kar",
     slug: "asphalt-9"
   },
-  
+  {
+    id: "4",
+    title: "Asphalt 9: Legends – High-Speed Racing Action",
+    image:
+      "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800",
+    date: "2024-03-15",
+    author: "Mausam Kar",
+    slug: "asphalt-9"
+  },
 ];
 
-const ITEMS_PER_PAGE = 3;
+const ITEMS_TO_SHOW = 3;
 
 export const Gaming: React.FC = () => {
-  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location.state?.scrollToGaming) {
-      // Use requestAnimationFrame to ensure the DOM is ready
       requestAnimationFrame(() => {
         const gamingSection = document.getElementById('gaming');
         if (gamingSection) {
-          // Calculate the target scroll position
           const targetScroll = gamingSection.getBoundingClientRect().top + window.pageYOffset - 100;
-          
-          // Always use instant scroll behavior
           window.scrollTo({
             top: targetScroll,
             behavior: 'instant'
           });
         }
       });
-      // Clear the state
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  const totalPages = Math.ceil(gamingPosts.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const displayedPosts = gamingPosts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   const handlePostClick = (slug: string) => {
-    // Ensure smooth scroll to top before navigation
     window.scrollTo({
       top: 0,
       behavior: 'instant'
@@ -194,9 +82,15 @@ export const Gaming: React.FC = () => {
     navigate(`/games/${slug}`, { state: { fromGameDetail: true } });
   };
 
-  // Add scroll restoration effect
+  const handleViewAll = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
+    });
+    navigate('/games', { state: { fromGaming: true } });
+  };
+
   useEffect(() => {
-    // Reset scroll position when component mounts
     window.scrollTo({
       top: 0,
       behavior: 'instant'
@@ -235,11 +129,11 @@ export const Gaming: React.FC = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {displayedPosts.map((post) => (
+          {gamingPosts.slice(0, ITEMS_TO_SHOW).map((post) => (
             <motion.article
               key={post.id}
-              initial={{ opacity: 0, y: 20, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 100 }}
               className={cn(
@@ -301,41 +195,30 @@ export const Gaming: React.FC = () => {
           ))}
         </div>
 
-        {totalPages > 1 && (
+        {gamingPosts.length > ITEMS_TO_SHOW && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mt-12 flex items-center justify-center gap-4"
+            className="mt-12 flex items-center justify-center"
           >
             <motion.button
-              whileHover={{ x: -3 }}
+              whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
-                currentPage === 1
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
-              }`}
+              onClick={handleViewAll}
+              className={cn(
+                "flex items-center gap-2 px-6 py-3 rounded-full",
+                "bg-white dark:bg-gray-800",
+                "border border-gray-200 dark:border-gray-700",
+                "hover:bg-blue-50 dark:hover:bg-gray-700",
+                "transition-all duration-300",
+                "group"
+              )}
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Previous</span>
-            </motion.button>
-
-            <motion.button
-              whileHover={{ x: 3 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-lg transition-all duration-300 ${
-                currentPage === totalPages
-                  ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-                  : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
-              }`}
-            >
-              <span className="text-sm font-medium">Next</span>
-              <ChevronRight className="w-4 h-4" />
+              <Grid className="w-5 h-5 text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400" />
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                View All Games
+              </span>
             </motion.button>
           </motion.div>
         )}
@@ -346,13 +229,8 @@ export const Gaming: React.FC = () => {
 
       <style>{`
         @keyframes pulse-slow {
-          0%,
-          100% {
-            opacity: 0.1;
-          }
-          50% {
-            opacity: 0.2;
-          }
+          0%, 100% { opacity: 0.1; }
+          50% { opacity: 0.2; }
         }
         .animate-pulse-slow {
           animation: pulse-slow 6s ease-in-out infinite;

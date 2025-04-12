@@ -31,7 +31,8 @@ export const CubeDetails: React.FC = () => {
     // Store the current state in history
     const currentState = {
       from: location.state?.from || '/',
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      scrollPosition: window.scrollY
     };
 
     // Replace the current history state
@@ -54,14 +55,24 @@ export const CubeDetails: React.FC = () => {
     const handlePopState = (event: PopStateEvent) => {
       const state = event.state;
       if (state?.from) {
-        // Direct navigation to the previous section without scroll
+        // Prevent any scroll animation
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Direct navigation to the previous section
         navigate(`/${state.from}`, { 
           state: { 
             scrollToSection: state.from as SectionType,
-            directNavigation: true
+            directNavigation: true,
+            scrollPosition: state.scrollPosition
           },
           replace: true
         });
+
+        // Restore scroll behavior after navigation
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 0);
       } else {
         // Fallback to browser back
         window.history.back();
@@ -74,10 +85,15 @@ export const CubeDetails: React.FC = () => {
 
   const handleBackClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    // Prevent any scroll animation
+    const scrollBehavior = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = 'auto';
+    
     // Store current state before going back
     const currentState = {
       from: location.state?.from || '/',
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      scrollPosition: window.scrollY
     };
     
     // Replace current state before going back
@@ -85,6 +101,11 @@ export const CubeDetails: React.FC = () => {
     
     // Use browser's history to go back
     window.history.back();
+
+    // Restore scroll behavior after navigation
+    setTimeout(() => {
+      document.documentElement.style.scrollBehavior = scrollBehavior;
+    }, 0);
   };
 
   const handleVideoClick = () => {

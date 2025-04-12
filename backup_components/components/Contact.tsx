@@ -155,7 +155,7 @@ export const Contact: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl md:text-5xl font-bold text-purple-600 dark:text-purple-400"
+              className="text-4xl md:text-5xl font-bold text-black dark:text-white"
             >
               {contactInfo.title}
             </motion.h2>
@@ -171,7 +171,7 @@ export const Contact: React.FC = () => {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed"
+              className="hidden md:block text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed"
             >
               {contactInfo.description}
             </motion.p>

@@ -218,6 +218,7 @@ export const GameDetail: React.FC = () => {
   const isNavigating = useRef(false);
   const videoRef = useRef<HTMLDivElement>(null);
   const isDetailsPage = location.pathname.startsWith('/projects/') || location.pathname.startsWith('/games/') || location.pathname.startsWith('/blog/');
+  const [heroHeight, setHeroHeight] = useState("h-32");
 
   const handleVideoClick = (videoId: string) => {
     setPlayingVideoId(videoId);
@@ -267,14 +268,6 @@ export const GameDetail: React.FC = () => {
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Game not found</h1>
-          <motion.button
-            whileHover={{ x: -5 }}
-            onClick={handleBackClick}
-            className="flex items-center gap-2 text-blue-500 hover:text-blue-600 mx-auto"
-          >
-            <ArrowLeft size={20} />
-            <span>Back to Games</span>
-          </motion.button>
         </div>
       </div>
     );
@@ -298,6 +291,17 @@ export const GameDetail: React.FC = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/40 to-black/80" />
         </motion.div>
 
+        {/* Back button at top left - only visible on mobile */}
+        <motion.button
+          whileHover={{ x: -5 }}
+          onClick={handleBackClick}
+          className="absolute top-4 left-4 flex items-center gap-2 text-white/80 hover:text-white group z-10 lg:hidden"
+        >
+          <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center hover:bg-white/20 transition-colors duration-300">
+            <ArrowLeft size={20} className="transform group-hover:-translate-x-1 transition-transform duration-300" />
+          </div>
+        </motion.button>
+
         <div className="absolute inset-0 flex flex-col justify-end pb-12">
           <div className="container mx-auto px-4">
             {/* Mobile Layout */}
@@ -308,15 +312,6 @@ export const GameDetail: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="max-w-4xl mx-auto"
               >
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleBackClick}
-                  className="absolute top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors duration-300"
-                >
-                  <ArrowLeft size={20} />
-                </motion.button>
-
                 <div className="space-y-6 pt-16">
                   <div className="flex items-center gap-6 text-white/80">
                     <div className="flex items-center gap-2">
@@ -335,30 +330,58 @@ export const GameDetail: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <motion.button
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setActiveSection(0)}
-                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setActiveSection(0);
+                        setHeroHeight("h-32");
+                        setTimeout(() => {
+                          window.scrollTo({
+                            top: window.innerHeight - 128,
+                            behavior: 'smooth'
+                          });
+                        }, 100);
+                      }}
+                      className={`px-5 py-2 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
                         activeSection === 0
-                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                          : "bg-white/10 hover:bg-white/20 text-white"
+                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/50"
+                          : "bg-white/10 hover:bg-white/20 text-white hover:shadow-lg hover:shadow-white/10"
                       }`}
                     >
-                      <Play size={20} className={activeSection === 0 ? "animate-pulse" : ""} />
-                      <span className="font-medium tracking-wide">Watch Gameplay</span>
+                      <motion.div
+                        animate={activeSection === 0 ? { scale: [1, 1.2, 1] } : {}}
+                        transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <Play size={16} className={activeSection === 0 ? "text-blue-100" : ""} />
+                      </motion.div>
+                      <span className="font-medium tracking-wide text-sm uppercase">Watch Gameplay</span>
                     </motion.button>
                     <motion.button
-                      whileHover={{ scale: 1.05, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => setActiveSection(1)}
-                      className={`px-8 py-3 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
+                      whileHover={{ scale: 1.02, y: -1 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => {
+                        setActiveSection(1);
+                        setHeroHeight("h-32");
+                        setTimeout(() => {
+                          window.scrollTo({
+                            top: window.innerHeight - 128,
+                            behavior: 'smooth'
+                          });
+                        }, 100);
+                      }}
+                      className={`px-5 py-2 rounded-full backdrop-blur-sm transition-all duration-300 flex items-center gap-2 ${
                         activeSection === 1
-                          ? "bg-blue-500 text-white shadow-lg shadow-blue-500/30"
-                          : "bg-white/10 hover:bg-white/20 text-white"
+                          ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30 ring-2 ring-purple-400/50"
+                          : "bg-white/10 hover:bg-white/20 text-white hover:shadow-lg hover:shadow-white/10"
                       }`}
                     >
-                      <BookOpen size={20} className={activeSection === 1 ? "animate-pulse" : ""} />
-                      <span className="font-medium tracking-wide">Read More</span>
+                      <motion.div
+                        animate={activeSection === 1 ? { scale: [1, 1.2, 1] } : {}}
+                        transition={{ duration: 0.3, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <BookOpen size={16} className={activeSection === 1 ? "text-purple-100" : ""} />
+                      </motion.div>
+                      <span className="font-medium tracking-wide text-sm uppercase">Read More</span>
                     </motion.button>
                   </div>
                 </div>

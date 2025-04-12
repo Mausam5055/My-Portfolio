@@ -1,23 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Sun, Moon, User, ChevronDown } from "lucide-react";
 
-type SectionType = "about" | "journey" | "qualifications" | "certifications" | "skills" | "education" | "gallery" | "cubing" | "blog" | "futureGoals" | "funFacts" | "Gaming" | "projects" | "testimonials" | "contact";
+type SectionType = 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
 
 interface NavbarProps {
   isDark: boolean;
   toggleTheme: () => void;
   scrollToSection: (section: SectionType) => void;
+  onBack: () => void;
 }
 
 export default function Navbar({
   isDark,
   toggleTheme,
   scrollToSection,
+  onBack,
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
+  const [isScrolling, setIsScrolling] = useState(false);
 
   // Updated to match sectionRefs keys from App.tsx
   const navItems: SectionType[] = [
@@ -29,29 +32,51 @@ export default function Navbar({
     "projects",
     "Gaming",
     "testimonials",
-    "contact",
+    "contact"
   ];
 
   useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+    let isThemeChanging = false;
+    
     const handleScroll = () => {
+      if (isThemeChanging) return; // Skip scroll handling during theme change
+      
+      setIsScrolling(true);
       const isScrolled = window.scrollY > 20;
       setScrolled(isScrolled);
 
-      // Update active section based on scroll position
+      // Improved scroll position detection
       const sections = navItems.map((item) => document.getElementById(item));
-      const scrollPosition = window.scrollY + 100;
+      const scrollPosition = window.scrollY + window.innerHeight / 3;
 
       for (let i = sections.length - 1; i >= 0; i--) {
         const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveSection(navItems[i]);
-          break;
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionBottom = sectionTop + section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+            setActiveSection(navItems[i]);
+            break;
+          }
         }
       }
+
+      // Clear the timeout
+      clearTimeout(scrollTimeout);
+      
+      // Set a new timeout
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
   }, [navItems]);
 
   const getDisplayName = (section: SectionType) => {
@@ -75,19 +100,62 @@ export default function Navbar({
     return names[section] || section;
   };
 
-  const handleLinkClick = (section: SectionType) => {
-    scrollToSection(section);
+  const handleLinkClick = useCallback((section: SectionType) => {
+    // Close mobile menu if open
     setIsOpen(false);
+    
+    // Update active section
     setActiveSection(section);
-  };
+    
+    // Find the section element
+    const sectionElement = document.getElementById(section);
+    
+    if (sectionElement) {
+      // Scroll to the section instantly
+      sectionElement.scrollIntoView({ behavior: 'instant' });
+    } else {
+      // If element not found, try with lowercase
+      const lowerSectionElement = document.getElementById(section.toLowerCase());
+      
+      if (lowerSectionElement) {
+        lowerSectionElement.scrollIntoView({ behavior: 'instant' });
+      }
+    }
+    
+    // Update URL and navigation state
+    scrollToSection(section);
+  }, [scrollToSection]);
+
+  const handleThemeToggle = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Store current scroll position and path
+    const currentScroll = window.scrollY;
+    const currentPath = window.location.pathname;
+    
+    // Toggle theme
+    toggleTheme();
+    
+    // Restore state after theme change
+    setTimeout(() => {
+      // Restore scroll position
+      window.scrollTo(0, currentScroll);
+      
+      // Ensure we're on the same path
+      if (window.location.pathname !== currentPath) {
+        window.history.replaceState(null, '', currentPath);
+      }
+    }, 0);
+  }, [toggleTheme]);
 
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled 
           ? isDark 
-            ? "bg-black/80 backdrop-blur-lg shadow-lg" 
-            : "bg-white/80 backdrop-blur-lg shadow-md"
+            ? "bg-black/90 backdrop-blur-xl shadow-lg" 
+            : "bg-white/90 backdrop-blur-xl shadow-md"
           : "bg-transparent"
       }`}
       role="navigation"
@@ -98,13 +166,13 @@ export default function Navbar({
           {/* Logo Section */}
           <motion.div
             className="flex-shrink-0 flex items-center space-x-3"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
           >
             <motion.div
-              whileHover={{ scale: 1.1, rotate: 360 }}
-              transition={{ duration: 0.5 }}
+              whileHover={{ opacity: 0.8 }}
+              transition={{ duration: 0.2 }}
               className={`p-2 rounded-xl ${
                 isDark 
                   ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30" 
@@ -120,7 +188,7 @@ export default function Navbar({
                   : "from-purple-600 via-pink-600 to-purple-600"
               } bg-clip-text text-transparent`}
               style={{ fontFamily: "'Dancing Script', cursive" }}
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ opacity: 0.8 }}
             >
               mausam
             </motion.h1>
@@ -132,7 +200,7 @@ export default function Navbar({
               isDark 
                 ? "bg-white/5" 
                 : "bg-white/80"
-              } backdrop-blur-sm rounded-full p-1.5`} role="menubar">
+              } backdrop-blur-sm rounded-full p-1.5 shadow-lg`} role="menubar">
               {navItems.map((item, index) => (
                 <motion.button
                   key={item}
@@ -140,16 +208,15 @@ export default function Navbar({
                   className={`relative px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 ${
                     activeSection === item
                       ? isDark 
-                        ? "text-white bg-purple-500/20"
+                        ? "text-white bg-purple-500/30"
                         : "text-purple-900 bg-purple-100 shadow-sm"
                       : isDark
                         ? "text-white/70 hover:text-white"
                         : "text-gray-700 hover:text-purple-900"
                   }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ opacity: 0.8 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   transition={{ delay: index * 0.1 }}
                   role="menuitem"
                   aria-current={activeSection === item ? "page" : undefined}
@@ -159,14 +226,13 @@ export default function Navbar({
                     <motion.div
                       className={`absolute bottom-0 left-0 right-0 h-full rounded-full ${
                         isDark 
-                          ? "bg-purple-400/10" 
+                          ? "bg-purple-400/20" 
                           : "bg-purple-100/80"
                       }`}
                       layoutId="activeSection"
                       transition={{
-                        type: "spring",
-                        bounce: 0.2,
-                        duration: 0.6,
+                        duration: 0.2,
+                        ease: "easeOut"
                       }}
                       aria-hidden="true"
                     />
@@ -176,16 +242,15 @@ export default function Navbar({
             </div>
 
             <motion.button
-              onClick={toggleTheme}
+              onClick={handleThemeToggle}
               className={`ml-4 p-2.5 rounded-xl ${
                 isDark 
                   ? "text-white" 
                   : "text-purple-900"
               }`}
-              whileHover={{ scale: 1.1, rotate: 180 }}
-              whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ opacity: 0.8 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -195,14 +260,13 @@ export default function Navbar({
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center space-x-3">
             <motion.button
-              onClick={toggleTheme}
+              onClick={handleThemeToggle}
               className={`p-2.5 rounded-xl ${
                 isDark 
                   ? "text-white" 
                   : "text-purple-900"
               }`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ opacity: 0.8 }}
               aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
             >
               {isDark ? <Sun size={20} /> : <Moon size={20} />}
@@ -215,17 +279,16 @@ export default function Navbar({
                   ? "text-white" 
                   : "text-purple-900"
               }`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ opacity: 0.8 }}
               aria-label="Toggle mobile menu"
               aria-expanded={isOpen}
             >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={isOpen ? "close" : "menu"}
-                  initial={{ opacity: 0, rotate: -180 }}
-                  animate={{ opacity: 1, rotate: 0 }}
-                  exit={{ opacity: 0, rotate: 180 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
                   {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -240,28 +303,15 @@ export default function Navbar({
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{
-              opacity: 1,
-              height: "auto",
-              transition: {
-                height: { duration: 0.3 },
-                opacity: { duration: 0.2 },
-              },
-            }}
-            exit={{
-              opacity: 0,
-              height: 0,
-              transition: {
-                height: { duration: 0.3 },
-                opacity: { duration: 0.2 },
-              },
-            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
             className={`md:hidden fixed top-16 left-4 right-4 overflow-hidden ${
               isDark 
                 ? "bg-black/95 backdrop-blur-xl border border-purple-500/20" 
                 : "bg-white/95 backdrop-blur-xl border border-purple-200"
-            } rounded-2xl shadow-lg`}
+            } rounded-2xl shadow-xl`}
             role="dialog"
             aria-label="Mobile navigation menu"
           >
@@ -269,7 +319,7 @@ export default function Navbar({
               className="p-4 space-y-2"
               variants={{
                 open: {
-                  transition: { staggerChildren: 0.07, delayChildren: 0.2 },
+                  transition: { staggerChildren: 0.05 },
                 },
                 closed: {
                   transition: { staggerChildren: 0.05, staggerDirection: -1 },
@@ -295,22 +345,15 @@ export default function Navbar({
                   }`}
                   variants={{
                     open: {
-                      y: 0,
                       opacity: 1,
-                      transition: {
-                        y: { stiffness: 1000, velocity: -100 },
-                      },
+                      transition: { duration: 0.2 },
                     },
                     closed: {
-                      y: 50,
                       opacity: 0,
-                      transition: {
-                        y: { stiffness: 1000 },
-                      },
+                      transition: { duration: 0.2 },
                     },
                   }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ opacity: 0.8 }}
                   role="menuitem"
                   aria-current={activeSection === item ? "page" : undefined}
                 >
