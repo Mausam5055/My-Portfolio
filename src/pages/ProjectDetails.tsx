@@ -21,22 +21,6 @@ export const ProjectDetails: React.FC = () => {
     });
   }, []);
 
-  useEffect(() => {
-    // Add a new history entry when the component mounts
-    window.history.pushState({ scrollToProjects: true }, '', window.location.href);
-
-    // Handle browser back button
-    const handlePopState = () => {
-      navigate('/', { 
-        state: { scrollToProjects: true },
-        replace: true
-      });
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
-
   if (!project) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -52,14 +36,6 @@ export const ProjectDetails: React.FC = () => {
       </div>
     );
   }
-
-  const handleBackClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate('/', { 
-      state: { scrollToProjects: true },
-      replace: true
-    });
-  };
 
   // Get gallery images based on project
   const getGalleryImages = () => {
@@ -169,14 +145,6 @@ export const ProjectDetails: React.FC = () => {
                 transition={{ delay: 0.2 }}
                 className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4"
               >
-                <motion.button
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={handleBackClick}
-                  className="fixed top-4 left-4 w-10 h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center text-white hover:bg-white/20 transition-colors duration-300 z-50"
-                >
-                  <FaArrowLeft className="text-base" />
-                </motion.button>
                 <a
                   href={project.github}
                   target="_blank"

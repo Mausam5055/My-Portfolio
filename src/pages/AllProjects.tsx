@@ -8,32 +8,12 @@ export const AllProjects: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Handle browser back button
-    const handlePopState = () => {
-      // Direct navigation to projects section with instant scroll
-      navigate('/projects', { 
-        state: { 
-          directNavigation: true,
-          scrollToSection: 'projects'
-        },
-        replace: true
-      });
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
-
-  const handleBack = () => {
-    // Direct navigation to projects section with instant scroll
-    navigate('/projects', { 
-      state: { 
-        directNavigation: true,
-        scrollToSection: 'projects'
-      },
-      replace: true
+    // Ensure scroll to top with instant behavior
+    window.scrollTo({
+      top: 0,
+      behavior: 'instant'
     });
-  };
+  }, []);
 
   const handleProjectClick = (id: number) => {
     // Ensure we're at the top before navigation
@@ -42,13 +22,7 @@ export const AllProjects: React.FC = () => {
       behavior: 'instant'
     });
     
-    navigate(`/projects/${id}`, {
-      state: { 
-        from: 'projects',
-        directNavigation: true
-      },
-      replace: false
-    });
+    navigate(`/projects/${id}`);
   };
 
   return (
@@ -67,17 +41,6 @@ export const AllProjects: React.FC = () => {
           {/* Bottom Fade */}
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white dark:to-gray-900" />
         </div>
-
-        {/* Back Button */}
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          onClick={handleBack}
-          className="absolute top-6 left-6 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all duration-300"
-        >
-          <FaArrowLeft className="w-4 h-4 text-white" />
-        </motion.button>
 
         <div className="container mx-auto px-4 py-20 relative z-10">
           <motion.div
