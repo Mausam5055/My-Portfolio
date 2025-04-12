@@ -102,78 +102,124 @@ export const BlogDetailPage: React.FC = () => {
   const handleBack = () => {
     const state = location.state as { from?: string; scrollPosition?: number } | null;
     
-    // Disable all scroll animations
-    document.documentElement.style.scrollBehavior = 'auto';
-    
     // If coming from AllBlogs page
     if (state?.from === 'all-blogs') {
-      // Navigate back to AllBlogs page
-      navigate('/blogs/all', { 
-        state: { 
-          directNavigation: true,
-          from: 'blog-detail',
-          scrollPosition: state?.scrollPosition ?? 0
-        },
-        replace: false
-      });
-      
-      // Force instant scroll to top
-      window.scrollTo({
-        top: 0,
-        behavior: 'instant'
-      });
-      
-      // Then restore the scroll position if available
-      const scrollPosition = state?.scrollPosition ?? 0;
-      requestAnimationFrame(() => {
+      // For mobile devices, handle back navigation instantly without any transitions
+      if (isMobileDevice()) {
+        // Disable all scroll animations
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Navigate back to AllBlogs page
+        navigate('/blogs/all', { 
+          state: { 
+            directNavigation: true,
+            from: 'blog-detail',
+            scrollPosition: state?.scrollPosition ?? 0
+          },
+          replace: false
+        });
+        
+        // Force instant scroll to top
         window.scrollTo({
-          top: scrollPosition,
+          top: 0,
           behavior: 'instant'
         });
-      });
-    } else {
-      // Default back navigation to blog section
-      // Navigate back to blog section
-      navigate('/', { 
-        state: { 
-          directNavigation: true,
-          forceSection: 'blog',
-          scrollToSection: 'blog',
-          from: 'blog',
-          scrollPosition: state?.scrollPosition ?? 0
-        },
-        replace: false
-      });
-      
-      // Force instant scroll to top
-      window.scrollTo({
-        top: 0,
-        behavior: 'instant'
-      });
-      
-      // Then scroll to blog section instantly
-      requestAnimationFrame(() => {
-        const blogSection = document.getElementById('blog');
-        if (blogSection) {
-          // Disable any potential scroll animations
-          blogSection.style.scrollBehavior = 'auto';
-          blogSection.scrollIntoView({ behavior: 'instant' });
-          // Restore the scroll position if available
-          const scrollPosition = state?.scrollPosition ?? 0;
+        
+        // Then restore the scroll position if available
+        const scrollPosition = state?.scrollPosition ?? 0;
+        requestAnimationFrame(() => {
           window.scrollTo({
             top: scrollPosition,
             behavior: 'instant'
           });
-        }
-      });
+        });
+      } else {
+        // Desktop behavior remains the same
+        navigate('/blogs/all', { 
+          state: { 
+            directNavigation: true,
+            from: 'blog-detail',
+            scrollPosition: state?.scrollPosition ?? 0
+          },
+          replace: false
+        });
+        
+        window.scrollTo(0, 0);
+        
+        requestAnimationFrame(() => {
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
+        });
+      }
+    } else {
+      // Default back navigation to blog section
+      if (isMobileDevice()) {
+        // Disable all scroll animations
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Navigate back to blog section
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'blog',
+            scrollToSection: 'blog',
+            from: 'blog',
+            scrollPosition: state?.scrollPosition ?? 0
+          },
+          replace: false
+        });
+        
+        // Force instant scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+        
+        // Then scroll to blog section instantly
+        requestAnimationFrame(() => {
+          const blogSection = document.getElementById('blog');
+          if (blogSection) {
+            // Disable any potential scroll animations
+            blogSection.style.scrollBehavior = 'auto';
+            blogSection.scrollIntoView({ behavior: 'instant' });
+            // Restore the scroll position if available
+            const scrollPosition = state?.scrollPosition ?? 0;
+            window.scrollTo({
+              top: scrollPosition,
+              behavior: 'instant'
+            });
+          }
+        });
+      } else {
+        // Desktop behavior remains the same
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'blog',
+            scrollToSection: 'blog',
+            from: 'blog',
+            scrollPosition: state?.scrollPosition ?? 0
+          },
+          replace: false
+        });
+        
+        window.scrollTo(0, 0);
+        
+        requestAnimationFrame(() => {
+          const blogSection = document.getElementById('blog');
+          if (blogSection) {
+            blogSection.scrollIntoView({ behavior: 'smooth' });
+            const scrollPosition = state?.scrollPosition ?? 0;
+            window.scrollTo(0, scrollPosition);
+          }
+        });
+      }
     }
   };
 
   // Add browser back button handler
   useEffect(() => {
-    const handleBrowserBack = (e: PopStateEvent) => {
-      // Prevent default behavior
-      e.preventDefault();
+    const handleBrowserBack = () => {
       handleBack();
     };
 
@@ -241,6 +287,17 @@ export const BlogDetailPage: React.FC = () => {
       className="min-h-screen bg-white dark:bg-gray-900 py-20"
     >
       <div className="container mx-auto px-4">
+        {/* Back Button */}
+        <motion.button
+          onClick={handleBack}
+          className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 mb-8"
+          whileHover={{ x: -5 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ArrowLeft size={20} />
+          <span>Back to Blogs</span>
+        </motion.button>
+
         {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
