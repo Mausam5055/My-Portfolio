@@ -61,58 +61,58 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       scrollToSection?: string;
     } | null;
 
-    // Special handling for all-cubing-content
-    if (path === 'all-cubing-content') {
-      // Store current scroll behavior
+    // Special handling for blog detail pages
+    if (path.startsWith('blog/')) {
       const scrollBehavior = document.documentElement.style.scrollBehavior;
       document.documentElement.style.scrollBehavior = 'auto';
       
-      // Force scroll to top first
-      window.scrollTo(0, 0);
-      
-      // Navigate to cubing section
+      // Navigate to blog section
       navigate('/', { 
         state: { 
           directNavigation: true,
-          forceSection: 'cubing',
-          scrollToSection: 'cubing'
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog'
         },
         replace: true
       });
       
-      // Update section immediately
-      setCurrentSection('cubing');
+      setCurrentSection('blog');
       
-      // Find and scroll to cubing section
-      const cubingSection = document.getElementById('cubing');
-      if (cubingSection) {
-        cubingSection.scrollIntoView({ behavior: 'instant' });
+      // Find and scroll to blog section
+      const blogSection = document.getElementById('blog');
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'instant' });
       }
       
-      // Restore scroll behavior with a delay
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 100); // Increased timeout to ensure scroll completes
-      
+      }, 100);
       return;
     }
 
-    // Handle detail pages
+    // Handle other detail pages
     if (path.includes('/')) {
       const [section] = path.split('/');
       const scrollBehavior = document.documentElement.style.scrollBehavior;
       document.documentElement.style.scrollBehavior = 'auto';
       
-      navigate(`/${section}`, { 
+      navigate('/', { 
         state: { 
           directNavigation: true,
           forceSection: section,
-          scrollToSection: section
+          scrollToSection: section,
+          from: section
         },
         replace: true
       });
       
       setCurrentSection(section as SectionType);
+      
+      const sectionElement = document.getElementById(section);
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'instant' });
+      }
       
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
@@ -207,58 +207,92 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
   // Handle back button
   useEffect(() => {
     const handlePopState = () => {
-      // Special handling for AllCubingContent
-      if (location.pathname === '/all-cubing-content') {
-        // Direct navigation to cubing section
-        navigate('/cubing', { 
+      // Special handling for blog detail pages
+      if (location.pathname.startsWith('/blog/')) {
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        navigate('/', { 
           state: { 
-            from: 'all-cubing-content',
             directNavigation: true,
-            forceSection: 'cubing',
-            scrollToSection: 'cubing'
+            forceSection: 'blog',
+            scrollToSection: 'blog',
+            from: 'blog'
           },
           replace: true
         });
-        // Force set the current section to cubing
-        setCurrentSection('cubing');
+        
+        setCurrentSection('blog');
+        
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+        }
+        
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 100);
         return;
       }
 
+      // Handle other detail pages
       if (isDetailsPage) {
-        // For detail pages, check if we have a specific "from" state
         const state = location.state as { from?: string } | null;
         if (state?.from) {
-          // Direct navigation to the previous section
-          navigate(`/${state.from}`, { 
+          const scrollBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = 'auto';
+          
+          navigate('/', { 
             state: { 
               directNavigation: true,
               forceSection: state.from,
-              scrollToSection: state.from
+              scrollToSection: state.from,
+              from: state.from
             },
             replace: true
           });
+          
           setCurrentSection(state.from as SectionType);
-        } else {
-          // Fallback to browser back
-          window.history.back();
+          
+          const sectionElement = document.getElementById(state.from);
+          if (sectionElement) {
+            sectionElement.scrollIntoView({ behavior: 'instant' });
+          }
+          
+          setTimeout(() => {
+            document.documentElement.style.scrollBehavior = scrollBehavior;
+          }, 100);
+          return;
         }
-        return;
       }
       
       if (navigationStack.length > 0) {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
-        // Direct navigation to previous section
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
+        
         navigate(`/${previousSection}`, { 
           state: { 
             directNavigation: true,
             forceSection: previousSection,
-            scrollToSection: previousSection
+            scrollToSection: previousSection,
+            from: previousSection
           },
           replace: true
         });
+        
         setCurrentSection(previousSection);
+        
+        const sectionElement = document.getElementById(previousSection);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+        }
+        
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 100);
       }
     };
 

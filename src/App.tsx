@@ -107,37 +107,26 @@ function AppContent() {
     if (state?.forceSection) {
       setCurrentSection(state.forceSection as SectionType);
       
-      // If we have a scroll position, restore it
-      if (state.scrollPosition !== undefined) {
-        window.scrollTo({
-          top: state.scrollPosition,
-          behavior: 'instant'
-        });
+      // Find and scroll to the section
+      const sectionElement = document.getElementById(state.forceSection);
+      if (sectionElement) {
+        // Temporarily disable smooth scrolling
+        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        sectionElement.scrollIntoView({ behavior: 'instant' });
+        
+        // Restore scroll behavior
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = scrollBehavior;
+        }, 100);
       }
       return;
     }
     
-    // Special handling for all-cubing-content
-    if (path === 'all-cubing-content') {
-      setCurrentSection('cubing');
-      return;
-    }
-    
-    // Handle navigation from all-cubing-content
-    if (state?.from === 'all-cubing-content') {
-      setCurrentSection('cubing');
-      return;
-    }
-    
-    // Handle direct navigation to cubing
-    if (path === 'cubing') {
-      setCurrentSection('cubing');
-      return;
-    }
-    
-    // Handle navigation to profile
-    if (path === 'profile') {
-      setCurrentSection('profile');
+    // Special handling for blog detail pages
+    if (path.startsWith('blog/')) {
+      setCurrentSection('blog');
       return;
     }
     
@@ -156,19 +145,32 @@ function AppContent() {
   // Add global scroll behavior control
   useEffect(() => {
     const handleNavigation = () => {
-      // Temporarily disable smooth scrolling
-      const scrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
+      const state = location.state as { 
+        forceSection?: string;
+        scrollToSection?: string;
+      } | null;
       
-      // Restore scroll behavior after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 0);
+      // If we have a section to scroll to, handle it
+      if (state?.scrollToSection) {
+        const sectionElement = document.getElementById(state.scrollToSection);
+        if (sectionElement) {
+          // Temporarily disable smooth scrolling
+          const scrollBehavior = document.documentElement.style.scrollBehavior;
+          document.documentElement.style.scrollBehavior = 'auto';
+          
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+          
+          // Restore scroll behavior
+          setTimeout(() => {
+            document.documentElement.style.scrollBehavior = scrollBehavior;
+          }, 100);
+        }
+      }
     };
 
     window.addEventListener('popstate', handleNavigation);
     return () => window.removeEventListener('popstate', handleNavigation);
-  }, []);
+  }, [location.state]);
 
   // Add section-specific SEO data
   const seoData = {

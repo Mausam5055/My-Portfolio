@@ -90,31 +90,133 @@ export const BlogDetailPage: React.FC = () => {
   const post = blogPosts.find(p => p.id === id);
 
   useEffect(() => {
-    // Smooth scroll to top on mount
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Direct scroll to top on mount without animation
+    window.scrollTo(0, 0);
   }, [id]);
 
-  // Handle browser back button
-  useEffect(() => {
-    const handlePopState = () => {
-      // Navigate to home with state
+  const handleBack = () => {
+    const state = location.state as { from?: string };
+    if (state?.from === 'blog') {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
       navigate('/', { 
-        state: { scrollToBlog: true, fromBlogDetail: true },
+        state: { 
+          directNavigation: true,
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog',
+          scrollPosition: 0
+        },
         replace: true
       });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    } else {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate to home
+      navigate('/', { 
+        state: { 
+          directNavigation: true,
+          forceSection: 'home',
+          scrollToSection: 'home',
+          from: 'home',
+          scrollPosition: 0
+        },
+        replace: true
+      });
+      
+      // Force scroll to top
+      window.scrollTo(0, 0);
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    }
+  };
+
+  useEffect(() => {
+    // Handle browser back button
+    const handlePopState = () => {
+      const state = location.state as { from?: string };
+      if (state?.from === 'blog') {
+        // Temporarily disable smooth scrolling
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Navigate back to blog section
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'blog',
+            scrollToSection: 'blog',
+            from: 'blog',
+            scrollPosition: 0
+          },
+          replace: true
+        });
+        
+        // Force scroll to top first
+        window.scrollTo(0, 0);
+        
+        // Then scroll to blog section
+        requestAnimationFrame(() => {
+          const blogSection = document.getElementById('blog');
+          if (blogSection) {
+            blogSection.scrollIntoView({ behavior: 'instant' });
+          }
+        });
+        
+        // Restore smooth scrolling after navigation
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = 'smooth';
+        }, 100);
+      } else {
+        // Temporarily disable smooth scrolling
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Navigate to home
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'home',
+            scrollToSection: 'home',
+            from: 'home',
+            scrollPosition: 0
+          },
+          replace: true
+        });
+        
+        // Force scroll to top
+        window.scrollTo(0, 0);
+        
+        // Restore smooth scrolling after navigation
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = 'smooth';
+        }, 100);
+      }
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate]);
-
-  const handleBack = () => {
-    // Navigate to home with state
-    navigate('/', { 
-      state: { scrollToBlog: true, fromBlogDetail: true },
-      replace: true
-    });
-  };
+  }, [navigate, location.state]);
 
   if (!post) {
     return (

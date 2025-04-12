@@ -176,7 +176,12 @@ export const Blog: React.FC = () => {
 
   const handlePostClick = (postId: string) => {
     navigate(`/blog/${postId}`, { 
-      state: { fromBlogDetail: true },
+      state: { 
+        from: 'blog',
+        directNavigation: true,
+        forceSection: 'blog',
+        scrollToSection: 'blog'
+      },
       replace: true
     });
   };

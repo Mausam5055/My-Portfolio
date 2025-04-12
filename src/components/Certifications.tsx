@@ -103,6 +103,28 @@ const certificates: Certificate[] = [
     skills: ["Simulink", "System Modeling", "Simulation", "Control Systems"],
     link: "https://drive.google.com/file/d/1V1naGyCuS8hYMXr8pRywZoMR7gjuoMOp/view?usp=drive_link",
     description: "Advanced system modeling and simulation. Dynamic system analysis and design. Integration with MATLAB for comprehensive solutions"
+  },
+  {
+    id: "8",
+    title: "Solvit Hackathon",
+    organization: "Solvit",
+    date: "Mar 2024",
+    credentialId: "SOLVIT-HACK-2024",
+    image: "/assets/certificates/solvit.jpg",
+    skills: ["Problem Solving", "Team Collaboration", "Innovation", "Project Management"],
+    link: "https://drive.google.com/file/d/16p0e8LtSnzqr60nBFyQQAF7dkwbLauD1/view?usp=drive_link",
+    description: "Participated in Solvit Hackathon showcasing innovative problem-solving skills. Collaborated in team-based environment to develop creative solutions. Demonstrated project management and technical implementation capabilities"
+  },
+  {
+    id: "9",
+    title: "Python Essentials",
+    organization: "VIT Bhopal",
+    date: "Jan 2024",
+    credentialId: "PYTHON-ESS-2024",
+    image: "/assets/certificates/python.jpg",
+    skills: ["Python Programming", "Data Structures", "Algorithms", "Object-Oriented Programming"],
+    link: "https://drive.google.com/file/d/16psgIUrzbJQxS0XbqtALmHQBpbtP8bcK/view?usp=drive_link",
+    description: "Comprehensive Python programming fundamentals. Mastery of core Python concepts and best practices. Practical implementation of data structures and algorithms. Object-oriented programming principles and design patterns"
   }
 ];
 
