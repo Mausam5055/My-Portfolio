@@ -223,18 +223,48 @@ export const Blog: React.FC = () => {
     setTimeout(() => setIsAnimating(false), 100);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
-    <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
+    <motion.section
+      id="blog"
+      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden"
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      variants={containerVariants}
+    >
       <div className="container mx-auto px-4">
-        <div className="mb-16 text-center space-y-4">
+        <motion.div className="mb-16 text-center space-y-4" variants={itemVariants}>
           <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white">
             Blog
           </h2>
           <div className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full w-20" />
-        </div>
+        </motion.div>
 
         {/* Search and Filter Section */}
-        <div className="mb-12 space-y-6">
+        <motion.div className="mb-12 space-y-6" variants={itemVariants}>
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -265,12 +295,15 @@ export const Blog: React.FC = () => {
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          variants={containerVariants}
+        >
           {displayedPosts.map((post, index) => (
-            <article
+            <motion.article
               key={post.id}
               className={cn(
                 "blog-post",
@@ -282,6 +315,9 @@ export const Blog: React.FC = () => {
                 "group relative cursor-pointer"
               )}
               onClick={() => handlePostClick(post.id)}
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.2 }}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               
@@ -321,13 +357,16 @@ export const Blog: React.FC = () => {
                   <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform duration-200" />
                 </div>
               </div>
-            </article>
+            </motion.article>
           ))}
-        </div>
+        </motion.div>
 
         {/* Show More/Less Buttons (Mobile Only) */}
         {isMobile && filteredPosts.length > 3 && (
-          <div className="mt-8 text-center">
+          <motion.div 
+            className="mt-8 text-center"
+            variants={itemVariants}
+          >
             {!showAllPosts ? (
               <button
                 onClick={handleShowMore}
@@ -355,12 +394,18 @@ export const Blog: React.FC = () => {
                 Show Less
               </button>
             )}
-          </div>
+          </motion.div>
         )}
 
         {/* Animated background elements */}
-        <div className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none" />
-        <div className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none" />
+        <motion.div 
+          className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none"
+          variants={itemVariants}
+        />
+        <motion.div 
+          className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none"
+          variants={itemVariants}
+        />
       </div>
 
       <style>{`
@@ -372,6 +417,6 @@ export const Blog: React.FC = () => {
           animation: pulse-slow 6s ease-in-out infinite;
         }
       `}</style>
-    </section>
+    </motion.section>
   );
 };

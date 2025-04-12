@@ -128,6 +128,22 @@ export const GalleryDetail: React.FC = () => {
   const location = useLocation();
   const [currentSubphotoIndex, setCurrentSubphotoIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Minimum swipe distance in pixels
+  const minSwipeDistance = 50;
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Scroll to top when component mounts
   useEffect(() => {
@@ -241,6 +257,30 @@ export const GalleryDetail: React.FC = () => {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [navigate]);
 
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      nextSubphoto();
+    }
+    if (isRightSwipe) {
+      prevSubphoto();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)]">
       {/* Hero Section */}
@@ -248,6 +288,9 @@ export const GalleryDetail: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="relative h-[70vh] md:h-[90vh] w-full overflow-hidden"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
         <AnimatePresence mode="wait">
           {!imageError ? (
@@ -284,8 +327,8 @@ export const GalleryDetail: React.FC = () => {
           <span className="hidden sm:inline">Back to Gallery</span>
         </motion.button>
 
-        {/* Navigation Arrows */}
-        {galleryImage.subphotos && galleryImage.subphotos.length > 1 && (
+        {/* Navigation Arrows - Only show on desktop */}
+        {!isMobile && galleryImage.subphotos && galleryImage.subphotos.length > 1 && (
           <>
             <motion.button
               initial={{ opacity: 0, x: -20 }}
