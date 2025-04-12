@@ -215,15 +215,8 @@ export const Blog: React.FC = () => {
     setIsAnimating(true);
     setShowAllPosts(true);
     
-    // Smooth scroll to the newly revealed content
-    requestAnimationFrame(() => {
-      const lastPost = document.querySelector('.blog-post:last-child');
-      if (lastPost) {
-        lastPost.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-      // Reset animation state after a short delay
-      setTimeout(() => setIsAnimating(false), 500);
-    });
+    // Reset animation state immediately
+    setTimeout(() => setIsAnimating(false), 100);
   };
 
   const handleShowLess = () => {
@@ -233,18 +226,31 @@ export const Blog: React.FC = () => {
     // Store current scroll position
     const currentScroll = window.pageYOffset;
     
-    // Scroll to the first post before collapsing
-    const firstPost = document.querySelector('.blog-post');
-    if (firstPost) {
-      firstPost.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    // Navigate back to blog section
+    navigate('/', { 
+      state: { 
+        directNavigation: true,
+        forceSection: 'blog',
+        scrollToSection: 'blog',
+        from: 'blog',
+        scrollPosition: currentScroll
+      },
+      replace: false
+    });
     
-    // Wait for scroll to complete before collapsing
-    setTimeout(() => {
-      setShowAllPosts(false);
-      // Reset animation state
-      setTimeout(() => setIsAnimating(false), 500);
-    }, 500);
+    // Force scroll to top first
+    window.scrollTo(0, 0);
+    
+    // Then scroll to blog section
+    requestAnimationFrame(() => {
+      const blogSection = document.getElementById('blog');
+      if (blogSection) {
+        blogSection.scrollIntoView({ behavior: 'instant' });
+      }
+    });
+    
+    // Reset animation state
+    setTimeout(() => setIsAnimating(false), 100);
   };
 
   return (
