@@ -83,11 +83,6 @@ What's next in the world of web development? We're seeing a shift towards more i
   }
 ];
 
-// Function to detect if the device is mobile
-const isMobileDevice = () => {
-  return window.innerWidth <= 768;
-};
-
 export const BlogDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -104,116 +99,67 @@ export const BlogDetailPage: React.FC = () => {
     
     // If coming from AllBlogs page
     if (state?.from === 'all-blogs') {
-      // For mobile devices, handle back navigation instantly without any transitions
-      if (isMobileDevice()) {
-        // Disable all scroll animations
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to AllBlogs page
-        navigate('/blogs/all', { 
-          state: { 
-            directNavigation: true,
-            from: 'blog-detail',
-            scrollPosition: state?.scrollPosition ?? 0
-          },
-          replace: false
-        });
-        
-        // Force instant scroll to top
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
-        
-        // Then restore the scroll position if available
-        const scrollPosition = state?.scrollPosition ?? 0;
-        requestAnimationFrame(() => {
-          window.scrollTo({
-            top: scrollPosition,
-            behavior: 'instant'
-          });
-        });
-      } else {
-        // Desktop behavior remains the same
-        navigate('/blogs/all', { 
-          state: { 
-            directNavigation: true,
-            from: 'blog-detail',
-            scrollPosition: state?.scrollPosition ?? 0
-          },
-          replace: false
-        });
-        
-        window.scrollTo(0, 0);
-        
-        requestAnimationFrame(() => {
-          const scrollPosition = state?.scrollPosition ?? 0;
-          window.scrollTo(0, scrollPosition);
-        });
-      }
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to AllBlogs page
+      navigate('/blogs/all', { 
+        state: { 
+          directNavigation: true,
+          from: 'blog-detail',
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then restore the scroll position if available
+      const scrollPosition = state?.scrollPosition ?? 0;
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPosition);
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
     } else {
       // Default back navigation to blog section
-      if (isMobileDevice()) {
-        // Disable all scroll animations
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to blog section
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: state?.scrollPosition ?? 0
-          },
-          replace: false
-        });
-        
-        // Force instant scroll to top
-        window.scrollTo({
-          top: 0,
-          behavior: 'instant'
-        });
-        
-        // Then scroll to blog section instantly
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            // Disable any potential scroll animations
-            blogSection.style.scrollBehavior = 'auto';
-            blogSection.scrollIntoView({ behavior: 'instant' });
-            // Restore the scroll position if available
-            const scrollPosition = state?.scrollPosition ?? 0;
-            window.scrollTo({
-              top: scrollPosition,
-              behavior: 'instant'
-            });
-          }
-        });
-      } else {
-        // Desktop behavior remains the same
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: state?.scrollPosition ?? 0
-          },
-          replace: false
-        });
-        
-        window.scrollTo(0, 0);
-        
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            blogSection.scrollIntoView({ behavior: 'smooth' });
-            const scrollPosition = state?.scrollPosition ?? 0;
-            window.scrollTo(0, scrollPosition);
-          }
-        });
-      }
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
+      navigate('/', { 
+        state: { 
+          directNavigation: true,
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog',
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
     }
   };
 
