@@ -4,6 +4,8 @@ import { ArrowRight, Calendar, User, Clock, Tag, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
 // This would typically come from an API or database
 const blogPosts: BlogPost[] = [
@@ -144,6 +146,16 @@ export const Blog: React.FC = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // Initialize AOS
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      offset: 100,
+      easing: 'ease-out-cubic'
+    });
+  }, []);
+
   // Handle window resize
   useEffect(() => {
     const handleResize = () => {
@@ -207,20 +219,14 @@ export const Blog: React.FC = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setShowAllPosts(true);
-    setTimeout(() => setIsAnimating(false), 100);
+    setIsAnimating(false);
   };
 
   const handleShowLess = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setShowAllPosts(false);
-    requestAnimationFrame(() => {
-      const blogSection = document.getElementById('blog');
-      if (blogSection) {
-        blogSection.scrollIntoView({ behavior: 'instant', block: 'end' });
-      }
-    });
-    setTimeout(() => setIsAnimating(false), 100);
+    setIsAnimating(false);
   };
 
   const containerVariants = {
@@ -247,24 +253,25 @@ export const Blog: React.FC = () => {
   };
 
   return (
-    <motion.section
-      id="blog"
-      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-100px" }}
-      variants={containerVariants}
-    >
+    <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <motion.div className="mb-16 text-center space-y-4" variants={itemVariants}>
+        <div 
+          className="mb-16 text-center space-y-4"
+          data-aos="fade-up"
+          data-aos-delay="100"
+        >
           <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white">
             Blog
           </h2>
           <div className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full w-20" />
-        </motion.div>
+        </div>
 
         {/* Search and Filter Section */}
-        <motion.div className="mb-12 space-y-6" variants={itemVariants}>
+        <div 
+          className="mb-12 space-y-6"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -279,7 +286,7 @@ export const Blog: React.FC = () => {
 
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -290,20 +297,19 @@ export const Blog: React.FC = () => {
                     ? "bg-purple-600 text-white shadow-lg"
                     : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-700/50"
                 )}
+                data-aos="fade-up"
+                data-aos-delay={300 + (index * 50)}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         {/* Blog Posts Grid */}
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          variants={containerVariants}
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {displayedPosts.map((post, index) => (
-            <motion.article
+            <article
               key={post.id}
               className={cn(
                 "blog-post",
@@ -315,9 +321,8 @@ export const Blog: React.FC = () => {
                 "group relative cursor-pointer"
               )}
               onClick={() => handlePostClick(post.id)}
-              variants={itemVariants}
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.2 }}
+              data-aos="fade-up"
+              data-aos-delay={400 + (index * 100)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               
@@ -357,15 +362,16 @@ export const Blog: React.FC = () => {
                   <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform duration-200" />
                 </div>
               </div>
-            </motion.article>
+            </article>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Show More/Less Buttons (Mobile Only) */}
+        {/* Show More/Less Buttons */}
         {isMobile && filteredPosts.length > 3 && (
-          <motion.div 
+          <div 
             className="mt-8 text-center"
-            variants={itemVariants}
+            data-aos="fade-up"
+            data-aos-delay="500"
           >
             {!showAllPosts ? (
               <button
@@ -394,17 +400,19 @@ export const Blog: React.FC = () => {
                 Show Less
               </button>
             )}
-          </motion.div>
+          </div>
         )}
 
         {/* Animated background elements */}
-        <motion.div 
+        <div 
           className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none"
-          variants={itemVariants}
+          data-aos="fade"
+          data-aos-delay="100"
         />
-        <motion.div 
+        <div 
           className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none"
-          variants={itemVariants}
+          data-aos="fade"
+          data-aos-delay="200"
         />
       </div>
 
@@ -417,6 +425,6 @@ export const Blog: React.FC = () => {
           animation: pulse-slow 6s ease-in-out infinite;
         }
       `}</style>
-    </motion.section>
+    </section>
   );
 };
