@@ -223,33 +223,10 @@ export const Blog: React.FC = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     
-    // Store current scroll position
-    const currentScroll = window.pageYOffset;
+    // Instantly collapse content and show first 3 posts
+    setShowAllPosts(false);
     
-    // Navigate back to blog section
-    navigate('/', { 
-      state: { 
-        directNavigation: true,
-        forceSection: 'blog',
-        scrollToSection: 'blog',
-        from: 'blog',
-        scrollPosition: currentScroll
-      },
-      replace: false
-    });
-    
-    // Force scroll to top first
-    window.scrollTo(0, 0);
-    
-    // Then scroll to blog section
-    requestAnimationFrame(() => {
-      const blogSection = document.getElementById('blog');
-      if (blogSection) {
-        blogSection.scrollIntoView({ behavior: 'instant' });
-      }
-    });
-    
-    // Reset animation state
+    // Reset animation state immediately
     setTimeout(() => setIsAnimating(false), 100);
   };
 
