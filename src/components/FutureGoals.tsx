@@ -101,7 +101,7 @@ export const FutureGoals: React.FC = () => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30"
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30"
         onClick={closeModal}
       >
         <motion.div
@@ -109,11 +109,12 @@ export const FutureGoals: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ 
+            type: "tween", 
             duration: 0.2,
             ease: "easeOut"
           }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg bg-white/95 dark:bg-gray-900/95 rounded-2xl p-8 shadow-2xl relative border border-white/20 will-change-transform"
+          className="w-full max-w-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl relative border border-white/20 will-change-transform"
         >
           <motion.button
             whileTap={{ scale: 0.9 }}
@@ -126,7 +127,7 @@ export const FutureGoals: React.FC = () => {
           <div className="flex items-start gap-4 mb-8">
             <div className={cn(
               "p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 dark:from-purple-500/20 dark:to-purple-800/20",
-              "text-purple-700 dark:text-purple-300"
+              "text-purple-700 dark:text-purple-300 backdrop-blur-sm"
             )}>
               <Icon strokeWidth={1.5} />
             </div>
@@ -140,51 +141,49 @@ export const FutureGoals: React.FC = () => {
             </div>
           </div>
 
-          <div className="space-y-8">
-            <div>
-              <div className="flex justify-between text-sm mb-3">
-                <span className="text-gray-600 dark:text-gray-400 font-medium">Progress</span>
-                <span className="text-blue-600 dark:text-blue-400 font-semibold">
-                  {goal.progress}%
-                </span>
-              </div>
-              <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${goal.progress}%` }}
-                  transition={{ duration: 0.3 }}
-                  className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full"
-                />
-              </div>
+          <div className="mb-8">
+            <div className="flex justify-between text-sm mb-3">
+              <span className="text-gray-600 dark:text-gray-400 font-medium">Progress</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                {goal.progress}%
+              </span>
             </div>
+            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden backdrop-blur-sm">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${goal.progress}%` }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+                className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full shadow-lg"
+              />
+            </div>
+          </div>
 
-            <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Target Timeline:{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
-                  {goal.timeline}
-                </span>
-              </p>
-            </div>
+          <div className="mb-8">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Target Timeline:{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
+                {goal.timeline}
+              </span>
+            </p>
+          </div>
 
-            <div className="space-y-2">
-              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                Milestones
-              </h4>
-              {goal.milestones.map((milestone, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                >
-                  {milestone.completed ? (
-                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400" />
-                  ) : (
-                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600" />
-                  )}
-                  <span>{milestone.title}</span>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              Milestones
+            </h4>
+            {goal.milestones.map((milestone, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+              >
+                {milestone.completed ? (
+                  <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400" />
+                ) : (
+                  <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600" />
+                )}
+                <span>{milestone.title}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
       </motion.div>
@@ -203,20 +202,16 @@ export const FutureGoals: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.3 }}
           className="mb-16 text-center space-y-4"
         >
-          <motion.h2
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-900 dark:from-white dark:via-purple-400 dark:to-blue-400"
-          >
+          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-900 dark:from-white dark:via-purple-400 dark:to-blue-400">
             Future Goals
-          </motion.h2>
+          </h2>
           <motion.div
             initial={{ width: 0 }}
             whileInView={{ width: "180px" }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            transition={{ duration: 0.3 }}
             className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full"
           />
         </motion.div>
@@ -230,16 +225,17 @@ export const FutureGoals: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.3 }}
+                whileHover={{ y: -5 }}
                 onClick={() => isMobile && openModal(goal)}
                 className={cn(
                   "group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm",
                   "rounded-2xl p-6 shadow-lg hover:shadow-2xl",
-                  "transform transition-all duration-300",
+                  "transform transition-all duration-200",
                   "border border-white/20 dark:border-gray-800",
                   "hover:border-purple-500/20 dark:hover:border-purple-500/20",
-                  isMobile && "cursor-pointer active:scale-95"
+                  "will-change-transform",
+                  isMobile && "cursor-pointer active:scale-98"
                 )}
               >
                 <div className="flex items-start gap-4 mb-6">
@@ -328,7 +324,7 @@ export const FutureGoals: React.FC = () => {
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {selectedGoal && <GoalModal goal={selectedGoal} />}
       </AnimatePresence>
     </section>
