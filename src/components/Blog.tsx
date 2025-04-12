@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -142,6 +142,7 @@ export const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const hasAnimated = useRef(false);
 
   // Handle window resize
   useEffect(() => {
