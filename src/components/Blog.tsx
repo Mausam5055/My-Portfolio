@@ -224,13 +224,13 @@ export const Blog: React.FC = () => {
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="mb-16 text-center space-y-4"
         >
           <motion.h2
             initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-bold text-black dark:text-white"
           >
@@ -238,7 +238,7 @@ export const Blog: React.FC = () => {
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}
-            whileInView={{ width: "80px" }}
+            animate={{ width: "80px" }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full"
           />
@@ -247,8 +247,8 @@ export const Blog: React.FC = () => {
         {/* Search and Filter Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
           className="mb-12 space-y-6"
         >
           {/* Search Bar */}
@@ -269,8 +269,8 @@ export const Blog: React.FC = () => {
               <motion.button
                 key={category}
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
                 onClick={() => setSelectedCategory(category)}
                 className={cn(
                   "px-4 py-2 rounded-full text-sm font-medium",
@@ -287,72 +287,74 @@ export const Blog: React.FC = () => {
         </motion.div>
 
         {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedPosts.map((post) => (
-            <motion.article
-              key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ type: "spring", stiffness: 100 }}
-              className={cn(
-                "blog-post",
-                "bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm",
-                "rounded-xl overflow-hidden",
-                "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
-                "transform transition-all duration-200",
-                "border border-white/20 dark:border-gray-700/50",
-                "group relative cursor-pointer"
-              )}
-              onClick={() => handlePostClick(post.id)}
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
-              
-              <div className="overflow-hidden relative">
-                <motion.div
-                  className="h-48"
-                  initial={{ scale: 1 }}
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 10 }}
-                >
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                </motion.div>
-              </div>
-              
-              <div className="p-6 relative z-10">
-                <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  <div className="flex items-center gap-1">
-                    <Calendar size={16} />
-                    <span>{post.date}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <User size={16} />
-                    <span>{post.author}</span>
-                  </div>
-                </div>
-
-                <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent dark:text-white mb-3">
-                  {post.title}
-                </h3>
+        <AnimatePresence mode="wait">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {displayedPosts.map((post) => (
+              <motion.article
+                key={post.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                className={cn(
+                  "blog-post",
+                  "bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm",
+                  "rounded-xl overflow-hidden",
+                  "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
+                  "transform transition-all duration-200",
+                  "border border-white/20 dark:border-gray-700/50",
+                  "group relative cursor-pointer"
+                )}
+                onClick={() => handlePostClick(post.id)}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                 
-                <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-                  {post.excerpt}
-                </p>
-
-                <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium">
-                  <span>Read More</span>
-                  <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform duration-200" />
+                <div className="overflow-hidden relative">
+                  <motion.div
+                    className="h-48"
+                    initial={{ scale: 1 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 10 }}
+                  >
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                  </motion.div>
                 </div>
-              </div>
-            </motion.article>
-          ))}
-        </div>
+                
+                <div className="p-6 relative z-10">
+                  <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                    <div className="flex items-center gap-1">
+                      <Calendar size={16} />
+                      <span>{post.date}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <User size={16} />
+                      <span>{post.author}</span>
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-semibold bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent dark:text-white mb-3">
+                    {post.title}
+                  </h3>
+                  
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
+                    {post.excerpt}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-purple-600 dark:text-purple-400 font-medium">
+                    <span>Read More</span>
+                    <ArrowRight size={18} className="transform group-hover:translate-x-1 transition-transform duration-200" />
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        </AnimatePresence>
 
         {/* Show More/Less Buttons */}
         {isMobile && filteredPosts.length > 3 && (
