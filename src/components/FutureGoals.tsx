@@ -144,10 +144,10 @@ export const FutureGoals: React.FC = () => {
               <Icon strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
+              <h3 className="text-xl sm:text-2xl font-medium text-gray-900 dark:text-white mb-1">
                 {goal.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400">
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
                 {goal.description}
               </p>
             </div>
@@ -155,8 +155,8 @@ export const FutureGoals: React.FC = () => {
 
           <div className="mb-6">
             <div className="flex justify-between text-sm mb-2">
-              <span className="text-gray-600 dark:text-gray-400">Progress</span>
-              <span className="text-blue-600 dark:text-blue-400 font-medium">
+              <span className="text-sm sm:text-base text-gray-600 dark:text-gray-400">Progress</span>
+              <span className="text-sm sm:text-base text-blue-600 dark:text-blue-400 font-medium">
                 {goal.progress}%
               </span>
             </div>
@@ -171,19 +171,19 @@ export const FutureGoals: React.FC = () => {
           </div>
 
           <div className="mb-6">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
               Timeline: <span className="font-medium text-purple-600 dark:text-purple-400">{goal.timeline}</span>
             </p>
           </div>
 
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+            <h4 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
               Milestones
             </h4>
             {goal.milestones.map((milestone, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                className="flex items-center gap-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
               >
                 {milestone.completed ? (
                   <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-4 h-4" />
@@ -204,32 +204,39 @@ export const FutureGoals: React.FC = () => {
     return (
       <motion.div
         key={goal.id}
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.2 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
         onClick={() => isMobile && openModal(goal)}
         className={cn(
-          "group bg-white dark:bg-gray-900",
-          "rounded-xl p-5 shadow-sm hover:shadow-md",
-          "transform-gpu transition-all duration-200",
+          "group relative overflow-hidden",
+          "bg-white dark:bg-gray-900",
+          "rounded-2xl p-6 shadow-lg hover:shadow-xl",
+          "transform-gpu transition-all duration-300",
           "border border-gray-100 dark:border-gray-800",
+          "hover:scale-[1.02] hover:-translate-y-1",
           isMobile && "active:scale-[0.99] cursor-pointer"
         )}
       >
-        <div className="flex items-start gap-3 mb-4">
+        {/* Background gradient effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 to-blue-50/50 dark:from-purple-900/20 dark:to-blue-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        
+        <div className="relative flex items-start gap-4 mb-6">
           <div className={cn(
-            "p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50",
-            "text-purple-700 dark:text-purple-300"
+            "p-3 rounded-xl bg-purple-100 dark:bg-purple-900/50",
+            "text-purple-700 dark:text-purple-300",
+            "transform transition-transform duration-300",
+            "group-hover:scale-110 group-hover:rotate-3"
           )}>
-            <Icon strokeWidth={1.5} className="w-5 h-5" />
+            <Icon strokeWidth={1.5} className="w-6 h-6" />
           </div>
-          <div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+          <div className="flex-1">
+            <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2">
               {goal.title}
             </h3>
             {!isMobile && (
-              <p className="text-gray-600 dark:text-gray-400 text-sm">
+              <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400">
                 {goal.description}
               </p>
             )}
@@ -238,45 +245,52 @@ export const FutureGoals: React.FC = () => {
 
         {!isMobile && (
           <>
-            <div className="mb-4">
-              <div className="flex justify-between text-sm mb-1.5">
+            <div className="relative mb-6">
+              <div className="flex justify-between text-sm sm:text-base mb-2">
                 <span className="text-gray-600 dark:text-gray-400">
                   Progress
                 </span>
-                <span className="text-blue-600 dark:text-blue-400">
+                <span className="text-blue-600 dark:text-blue-400 font-medium">
                   {goal.progress}%
                 </span>
               </div>
-              <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
-                  style={{ width: `${goal.progress}%` }}
+              <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${goal.progress}%` }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1, delay: 0.3 }}
+                  className="h-full bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 rounded-full"
                 />
               </div>
             </div>
 
-            <div className="mb-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="relative mb-6">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400">
                 Timeline: <span className="font-medium text-purple-600 dark:text-purple-400">{goal.timeline}</span>
               </p>
             </div>
 
-            <div className="space-y-1.5">
-              <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+            <div className="relative space-y-3">
+              <h4 className="text-sm sm:text-base font-medium text-gray-900 dark:text-white">
                 Milestones
               </h4>
               {goal.milestones.map((milestone, i) => (
-                <div
+                <motion.div
                   key={i}
-                  className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
+                  className="flex items-center gap-3 text-sm sm:text-base text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                 >
                   {milestone.completed ? (
-                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-4 h-4" />
+                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-5 h-5" />
                   ) : (
-                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-4 h-4" />
+                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-5 h-5" />
                   )}
                   <span>{milestone.title}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
           </>
@@ -286,16 +300,28 @@ export const FutureGoals: React.FC = () => {
   }, [isMobile, openModal]);
 
   return (
-    <section className="py-16 bg-gray-50 dark:bg-gray-950">
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
       <div className="container mx-auto px-4 sm:px-6">
-        <div className="mb-12 text-center">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12 text-center"
+        >
+          <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white mb-4">
             Future Goals
           </h2>
-          <div className="h-1 w-24 bg-blue-500 mx-auto rounded-full" />
-        </div>
+          <motion.div 
+            initial={{ width: 0 }}
+            whileInView={{ width: "6rem" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="h-1 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-400 dark:to-purple-400 mx-auto rounded-full"
+          />
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {goals.map((goal, index) => renderGoalCard(goal, index))}
         </div>
       </div>
