@@ -86,7 +86,7 @@ This app demonstrates my ability to integrate external APIs and create engaging 
   },
   {
     id: 3,
-    name: 'YouTube Downloader V2',
+    name: 'YouTube Downloader2',
     description: 'An enhanced YouTube downloader with a modern web interface, combining Python backend with HTML, CSS, and JavaScript frontend.',
     detailedDescription: `A full-stack YouTube video downloader application featuring:
 
@@ -117,7 +117,7 @@ This version provides an intuitive user experience while maintaining powerful do
   },
   {
     id: 4,
-    name: 'YouTube Downloader V1',
+    name: 'YouTube Downloader1',
     description: 'A Python-based YouTube video downloader with FFmpeg integration for high-quality video processing and format conversion.',
     detailedDescription: `A powerful YouTube video downloader built with Python, featuring:
 
