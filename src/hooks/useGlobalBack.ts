@@ -60,12 +60,22 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       scrollPosition?: number;
     } | null;
 
+    // For mobile devices, handle back navigation instantly without any transitions
+    if (isMobileDevice()) {
+      if (state?.forceSection) {
+        setCurrentSection(state.forceSection);
+        // Force scroll to top without animation
+        window.scrollTo(0, 0);
+        return;
+      }
+      return;
+    }
+
+    // Desktop handling remains the same
     // Handle back navigation from blog detail to blog section
     if (location.pathname.startsWith('/blog/')) {
-      // Temporarily disable smooth scrolling
       document.documentElement.style.scrollBehavior = 'auto';
       
-      // Navigate back to blog section
       navigate('/', { 
         state: { 
           directNavigation: true,
@@ -77,26 +87,20 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         replace: false
       });
       
-      // Force scroll to top first
       window.scrollTo(0, 0);
       
-      // Then scroll to blog section
       requestAnimationFrame(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
-          blogSection.scrollIntoView({ behavior: 'instant' });
-          // Restore the scroll position if available
+          blogSection.scrollIntoView({ behavior: 'smooth' });
           const scrollPosition = state?.scrollPosition ?? 0;
           window.scrollTo(0, scrollPosition);
         }
       });
       
-      // Restore smooth scrolling after navigation (only on desktop)
-      if (!isMobileDevice()) {
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-      }
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
       return;
     }
 
@@ -204,7 +208,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
   }, [handlePopState]);
 
   const handleBack = () => {
-    const path = location.pathname.slice(1); // Remove leading slash
+    const path = location.pathname.slice(1);
     const state = location.state as { 
       directNavigation?: boolean;
       from?: string;
@@ -213,12 +217,48 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       scrollPosition?: number;
     } | null;
 
+    // For mobile devices, handle back navigation instantly without any transitions
+    if (isMobileDevice()) {
+      if (navigationStack.length > 0) {
+        const previousSection = navigationStack[navigationStack.length - 1];
+        setNavigationStack(prev => prev.slice(0, -1));
+        
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: previousSection,
+            scrollToSection: previousSection,
+            from: currentSection
+          },
+          replace: false
+        });
+        
+        setCurrentSection(previousSection);
+        // Force scroll to top without animation
+        window.scrollTo(0, 0);
+      } else {
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'home',
+            scrollToSection: 'home',
+            from: currentSection
+          },
+          replace: false
+        });
+        
+        setCurrentSection('home');
+        // Force scroll to top without animation
+        window.scrollTo(0, 0);
+      }
+      return;
+    }
+
+    // Desktop handling remains the same
     // Special handling for blog detail pages
     if (path.startsWith('blog/')) {
-      // Temporarily disable smooth scrolling
       document.documentElement.style.scrollBehavior = 'auto';
       
-      // Navigate back to blog section
       navigate('/', { 
         state: { 
           directNavigation: true,
@@ -230,26 +270,20 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         replace: false
       });
       
-      // Force scroll to top first
       window.scrollTo(0, 0);
       
-      // Then scroll to blog section
       requestAnimationFrame(() => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
-          blogSection.scrollIntoView({ behavior: 'instant' });
-          // Restore the scroll position if available
+          blogSection.scrollIntoView({ behavior: 'smooth' });
           const scrollPosition = state?.scrollPosition ?? 0;
           window.scrollTo(0, scrollPosition);
         }
       });
       
-      // Restore smooth scrolling after navigation (only on desktop)
-      if (!isMobileDevice()) {
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-      }
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
       return;
     }
 
