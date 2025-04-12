@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Calendar, User, Clock, Tag, Search } from 'lucide-react';
+import { ArrowRight, Calendar, User, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '../lib/utils';
 import type { BlogPost } from '../types';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
 
 // This would typically come from an API or database
 const blogPosts: BlogPost[] = [
@@ -144,17 +141,6 @@ export const Blog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Initialize AOS
-  useEffect(() => {
-    AOS.init({
-      duration: 800,
-      once: true,
-      offset: 100,
-      easing: 'ease-out-cubic'
-    });
-  }, []);
 
   // Handle window resize
   useEffect(() => {
@@ -173,18 +159,15 @@ export const Blog: React.FC = () => {
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      requestAnimationFrame(() => {
-        const blogSection = document.getElementById('blog');
-        if (blogSection) {
-          const rect = blogSection.getBoundingClientRect();
-          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
-          window.scrollTo({
-            top: targetScroll,
-            behavior: 'instant'
-          });
-        }
-      });
+      const blogSection = document.getElementById('blog');
+      if (blogSection) {
+        const rect = blogSection.getBoundingClientRect();
+        const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
+        window.scrollTo({
+          top: targetScroll,
+          behavior: 'instant'
+        });
+      }
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -202,64 +185,38 @@ export const Blog: React.FC = () => {
   const displayedPosts = isMobile && !showAllPosts ? filteredPosts.slice(0, 3) : filteredPosts;
 
   const handlePostClick = (postId: string) => {
-    const currentScrollPosition = window.pageYOffset;
     navigate(`/blog/${postId}`, { 
       state: { 
         from: 'blog',
         directNavigation: true,
         forceSection: 'blog',
-        scrollToSection: 'blog',
-        scrollPosition: currentScrollPosition
+        scrollToSection: 'blog'
       },
       replace: false
     });
   };
 
   const handleShowMore = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
     setShowAllPosts(true);
-    setIsAnimating(false);
   };
 
   const handleShowLess = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
     setShowAllPosts(false);
-    setIsAnimating(false);
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: "easeOut"
-      }
+    const blogSection = document.getElementById('blog');
+    if (blogSection) {
+      const rect = blogSection.getBoundingClientRect();
+      const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
+      window.scrollTo({
+        top: targetScroll,
+        behavior: 'instant'
+      });
     }
   };
 
   return (
     <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
       <div className="container mx-auto px-4">
-        <div 
-          className="mb-16 text-center space-y-4"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
+        <div className="mb-16 text-center space-y-4">
           <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white">
             Blog
           </h2>
@@ -267,11 +224,7 @@ export const Blog: React.FC = () => {
         </div>
 
         {/* Search and Filter Section */}
-        <div 
-          className="mb-12 space-y-6"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
+        <div className="mb-12 space-y-6">
           {/* Search Bar */}
           <div className="relative max-w-2xl mx-auto">
             <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -286,7 +239,7 @@ export const Blog: React.FC = () => {
 
           {/* Category Filter */}
           <div className="flex flex-wrap justify-center gap-2">
-            {categories.map((category, index) => (
+            {categories.map((category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
@@ -297,8 +250,6 @@ export const Blog: React.FC = () => {
                     ? "bg-purple-600 text-white shadow-lg"
                     : "bg-white/80 dark:bg-gray-800/80 text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-700/50"
                 )}
-                data-aos="fade-up"
-                data-aos-delay={300 + (index * 50)}
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </button>
@@ -308,7 +259,7 @@ export const Blog: React.FC = () => {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {displayedPosts.map((post, index) => (
+          {displayedPosts.map((post) => (
             <article
               key={post.id}
               className={cn(
@@ -321,8 +272,6 @@ export const Blog: React.FC = () => {
                 "group relative cursor-pointer"
               )}
               onClick={() => handlePostClick(post.id)}
-              data-aos="fade-up"
-              data-aos-delay={400 + (index * 100)}
             >
               <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
               
@@ -332,6 +281,7 @@ export const Blog: React.FC = () => {
                     src={post.image}
                     alt={post.title}
                     className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </div>
@@ -368,16 +318,11 @@ export const Blog: React.FC = () => {
 
         {/* Show More/Less Buttons */}
         {isMobile && filteredPosts.length > 3 && (
-          <div 
-            className="mt-8 text-center"
-            data-aos="fade-up"
-            data-aos-delay="500"
-          >
+          <div className="mt-8 text-center">
             {!showAllPosts ? (
               <button
                 onClick={handleShowMore}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
-                disabled={isAnimating}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
                   <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -391,7 +336,6 @@ export const Blog: React.FC = () => {
               <button
                 onClick={handleShowLess}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
-                disabled={isAnimating}
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
                   <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -404,27 +348,9 @@ export const Blog: React.FC = () => {
         )}
 
         {/* Animated background elements */}
-        <div 
-          className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl animate-pulse-slow pointer-events-none"
-          data-aos="fade"
-          data-aos-delay="100"
-        />
-        <div 
-          className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl animate-pulse-slow delay-1000 pointer-events-none"
-          data-aos="fade"
-          data-aos-delay="200"
-        />
+        <div className="absolute -top-10 sm:-top-20 left-1/4 sm:left-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-purple-400/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-10 sm:-bottom-20 right-1/4 sm:right-1/3 w-48 sm:w-96 h-48 sm:h-96 bg-blue-400/10 rounded-full blur-3xl pointer-events-none" />
       </div>
-
-      <style>{`
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.1; }
-          50% { opacity: 0.2; }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 6s ease-in-out infinite;
-        }
-      `}</style>
     </section>
   );
 };
