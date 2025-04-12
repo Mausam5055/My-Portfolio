@@ -63,9 +63,23 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // For mobile devices, handle back navigation instantly without any transitions
     if (isMobileDevice()) {
       if (state?.forceSection) {
+        // Disable all scroll animations
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Update section immediately
         setCurrentSection(state.forceSection);
-        // Force scroll to top without animation
-        window.scrollTo(0, 0);
+        
+        // Force instant scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
+        // Find and scroll to the section element instantly
+        const sectionElement = document.getElementById(state.forceSection as string);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+        }
         return;
       }
       return;
@@ -219,6 +233,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
 
     // For mobile devices, handle back navigation instantly without any transitions
     if (isMobileDevice()) {
+      // Disable all scroll animations
+      document.documentElement.style.scrollBehavior = 'auto';
+
       if (navigationStack.length > 0) {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
@@ -233,9 +250,20 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           replace: false
         });
         
+        // Update section immediately
         setCurrentSection(previousSection);
-        // Force scroll to top without animation
-        window.scrollTo(0, 0);
+        
+        // Force instant scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
+        // Find and scroll to the section element instantly
+        const sectionElement = document.getElementById(previousSection);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+        }
       } else {
         navigate('/', { 
           state: { 
@@ -247,9 +275,20 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           replace: false
         });
         
+        // Update section immediately
         setCurrentSection('home');
-        // Force scroll to top without animation
-        window.scrollTo(0, 0);
+        
+        // Force instant scroll to top
+        window.scrollTo({
+          top: 0,
+          behavior: 'instant'
+        });
+
+        // Find and scroll to the section element instantly
+        const homeSection = document.getElementById('home');
+        if (homeSection) {
+          homeSection.scrollIntoView({ behavior: 'instant' });
+        }
       }
       return;
     }
