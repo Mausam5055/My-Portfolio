@@ -100,7 +100,6 @@ function AppContent() {
       from?: string;
       forceSection?: string;
       scrollToSection?: string;
-      scrollPosition?: number;
     } | null;
     
     // If we have a forceSection in the state, use that
@@ -110,16 +109,7 @@ function AppContent() {
       // Find and scroll to the section
       const sectionElement = document.getElementById(state.forceSection);
       if (sectionElement) {
-        // Temporarily disable smooth scrolling
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        sectionElement.scrollIntoView({ behavior: 'instant' });
-        
-        // Restore scroll behavior
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
-        }, 100);
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
       return;
     }
@@ -154,23 +144,13 @@ function AppContent() {
       const state = location.state as { 
         forceSection?: string;
         scrollToSection?: string;
-        scrollPosition?: number;
       } | null;
       
       // If we have a section to scroll to, handle it
       if (state?.scrollToSection) {
         const sectionElement = document.getElementById(state.scrollToSection);
         if (sectionElement) {
-          // Temporarily disable smooth scrolling
-          const scrollBehavior = document.documentElement.style.scrollBehavior;
-          document.documentElement.style.scrollBehavior = 'auto';
-          
-          sectionElement.scrollIntoView({ behavior: 'instant' });
-          
-          // Restore scroll behavior
-          setTimeout(() => {
-            document.documentElement.style.scrollBehavior = scrollBehavior;
-          }, 100);
+          sectionElement.scrollIntoView({ behavior: 'smooth' });
         }
       }
     };

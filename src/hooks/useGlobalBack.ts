@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { SectionType } from '../types';
 
@@ -29,8 +29,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         scrollToSection: section,
         directNavigation: true,
         from: currentSection,
-        forceSection: section,
-        scrollPosition: 0
+        forceSection: section
       },
       replace: true
     });
@@ -41,201 +40,107 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // Find and scroll to the section element
     const sectionElement = document.getElementById(section);
     if (sectionElement) {
-      // Temporarily disable smooth scrolling
-      const scrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
-      
-      sectionElement.scrollIntoView({ behavior: 'instant' });
-      
-      // Restore scroll behavior
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 100);
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
   // Handle back button
-  useEffect(() => {
-    const handlePopState = () => {
-      const state = location.state as { 
-        from?: string;
-        directNavigation?: boolean;
-        forceSection?: string;
-        scrollToSection?: string;
-        scrollPosition?: number;
-      } | null;
+  const handlePopState = useCallback((event: PopStateEvent) => {
+    const state = event.state as { 
+      directNavigation?: boolean;
+      from?: string;
+      forceSection?: SectionType;
+      scrollToSection?: string;
+      scrollPosition?: number;
+    } | null;
+
+    // Handle back navigation from blog detail to AllBlogs
+    if (location.pathname.startsWith('/blog/')) {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
       
-      // Handle back navigation from blog detail pages
-      if (location.pathname.startsWith('/blog/')) {
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to blog section
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: state?.scrollPosition || 0
-          },
-          replace: true
-        });
-        
-        // Force scroll to top first
-        window.scrollTo(0, 0);
-        
-        // Then scroll to blog section
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            blogSection.scrollIntoView({ behavior: 'instant' });
-            // Restore the scroll position if available
-            const scrollPosition = state?.scrollPosition || 0;
-            window.scrollTo(0, scrollPosition);
-          }
-        });
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-        return;
-      }
+      // Navigate back to AllBlogs
+      navigate('/blogs/all', { 
+        state: { 
+          directNavigation: true,
+          from: 'blog-detail',
+          forceSection: 'blog' as SectionType,
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then restore scroll position if available
+      const scrollPosition = state?.scrollPosition ?? 0;
+      requestAnimationFrame(() => {
+        window.scrollTo(0, scrollPosition);
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+      return;
+    }
 
-      // Handle back navigation from AllBlogs page
-      if (location.pathname === '/blogs/all') {
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to blog section
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: state?.scrollPosition || 0
-          },
-          replace: true
-        });
-        
-        // Force scroll to top first
-        window.scrollTo(0, 0);
-        
-        // Then scroll to blog section
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            blogSection.scrollIntoView({ behavior: 'instant' });
-            // Restore the scroll position if available
-            const scrollPosition = state?.scrollPosition || 0;
-            window.scrollTo(0, scrollPosition);
-          }
-        });
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-        return;
-      }
-
-      // Handle navigation from blog section
-      if (state?.from === 'blog' || state?.forceSection === 'blog') {
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to blog section
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: state?.scrollPosition || 0
-          },
-          replace: false
-        });
-        
-        // Force scroll to top first
-        window.scrollTo(0, 0);
-        
-        // Then scroll to blog section and restore position
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            blogSection.scrollIntoView({ behavior: 'instant' });
-            if (state?.scrollPosition) {
-              window.scrollTo(0, state.scrollPosition);
-            }
-          }
-        });
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-        return;
-      }
-
-      // Handle other detail pages
-      if (isDetailsPage) {
-        if (state?.from || state?.forceSection) {
-          const targetSection = state.from || state.forceSection;
-          if (!targetSection) return;
-          
-          // Temporarily disable smooth scrolling
-          document.documentElement.style.scrollBehavior = 'auto';
-          
-          navigate('/', { 
-            state: { 
-              directNavigation: true,
-              forceSection: targetSection,
-              scrollToSection: targetSection,
-              from: targetSection,
-              scrollPosition: state?.scrollPosition || 0
-            },
-            replace: false
-          });
-          
-          // Force scroll to top first
-          window.scrollTo(0, 0);
-          
-          // Then scroll to target section and restore position
-          requestAnimationFrame(() => {
-            const sectionElement = document.getElementById(targetSection);
-            if (sectionElement) {
-              sectionElement.scrollIntoView({ behavior: 'instant' });
-              if (state?.scrollPosition) {
-                window.scrollTo(0, state.scrollPosition);
-              }
-            }
-          });
-          
-          // Restore smooth scrolling after navigation
-          setTimeout(() => {
-            document.documentElement.style.scrollBehavior = 'smooth';
-          }, 100);
-          return;
+    // Handle back navigation from AllBlogs to blog section
+    if (location.pathname === '/blogs/all') {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
+      navigate('/', { 
+        state: { 
+          directNavigation: true,
+          forceSection: 'blog',
+          scrollToSection: 'blog',
+          from: 'blog',
+          scrollPosition: state?.scrollPosition ?? 0
+        },
+        replace: false
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
         }
-      }
+      });
       
-      // Default back navigation
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+      return;
+    }
+
+    // Handle back navigation from blog section to previous section
+    if (location.pathname === '/' && currentSection === 'blog') {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
       if (navigationStack.length > 0) {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        navigate(`/${previousSection}`, { 
+        // Navigate to previous section
+        navigate('/', { 
           state: { 
             directNavigation: true,
             forceSection: previousSection,
             scrollToSection: previousSection,
-            from: previousSection,
-            scrollPosition: state?.scrollPosition || 0
+            from: 'blog',
+            scrollPosition: state?.scrollPosition ?? 0
           },
           replace: false
         });
@@ -243,39 +148,80 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // Force scroll to top first
         window.scrollTo(0, 0);
         
-        // Then scroll to target section and restore position
+        // Then scroll to previous section
         requestAnimationFrame(() => {
           const sectionElement = document.getElementById(previousSection);
           if (sectionElement) {
             sectionElement.scrollIntoView({ behavior: 'instant' });
-            if (state?.scrollPosition) {
-              window.scrollTo(0, state.scrollPosition);
-            }
+            // Restore the scroll position if available
+            const scrollPosition = state?.scrollPosition ?? 0;
+            window.scrollTo(0, scrollPosition);
           }
         });
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
       } else {
-        // If no navigation stack, go back to home
+        // Navigate to home section
         navigate('/', { 
           state: { 
             directNavigation: true,
             forceSection: 'home',
             scrollToSection: 'home',
-            from: 'home',
+            from: 'blog',
             scrollPosition: 0
           },
           replace: false
         });
+        
+        // Force scroll to top first
+        window.scrollTo(0, 0);
+        
+        // Then scroll to home section
+        requestAnimationFrame(() => {
+          const homeSection = document.getElementById('home');
+          if (homeSection) {
+            homeSection.scrollIntoView({ behavior: 'instant' });
+          }
+        });
       }
-    };
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+      return;
+    }
 
+    // Handle other back navigation cases
+    if (state?.forceSection) {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      setCurrentSection(state.forceSection);
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to target section
+      requestAnimationFrame(() => {
+        const sectionElement = document.getElementById(state.forceSection as string);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    }
+  }, [location.pathname, navigate, setCurrentSection, currentSection, navigationStack]);
+
+  useEffect(() => {
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigationStack, isDetailsPage, setCurrentSection, navigate, location.pathname, location.state]);
+  }, [handlePopState]);
 
   const handleBack = () => {
     const path = location.pathname.slice(1); // Remove leading slash
@@ -284,13 +230,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       from?: string;
       forceSection?: string;
       scrollToSection?: string;
+      scrollPosition?: number;
     } | null;
 
     // Special handling for blog detail pages
     if (path.startsWith('blog/')) {
-      const scrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
-      
       // Navigate to blog section
       navigate('/', { 
         state: { 
@@ -298,9 +242,9 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           forceSection: 'blog',
           scrollToSection: 'blog',
           from: 'blog',
-          scrollPosition: 0
+          scrollPosition: state?.scrollPosition || 0
         },
-        replace: true
+        replace: false
       });
       
       setCurrentSection('blog');
@@ -308,20 +252,14 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       // Find and scroll to blog section
       const blogSection = document.getElementById('blog');
       if (blogSection) {
-        blogSection.scrollIntoView({ behavior: 'instant' });
+        blogSection.scrollIntoView({ behavior: 'smooth' });
       }
-      
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 100);
       return;
     }
 
     // Handle other detail pages
     if (path.includes('/')) {
       const [section] = path.split('/');
-      const scrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
       
       navigate('/', { 
         state: { 
@@ -329,21 +267,17 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           forceSection: section,
           scrollToSection: section,
           from: section,
-          scrollPosition: 0
+          scrollPosition: state?.scrollPosition || 0
         },
-        replace: true
+        replace: false
       });
       
       setCurrentSection(section as SectionType);
       
       const sectionElement = document.getElementById(section);
       if (sectionElement) {
-        sectionElement.scrollIntoView({ behavior: 'instant' });
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
-      
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 100);
       return;
     }
 
@@ -352,35 +286,22 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       const previousSection = navigationStack[navigationStack.length - 1];
       setNavigationStack(prev => prev.slice(0, -1));
       
-      // Temporarily disable smooth scrolling
-      document.documentElement.style.scrollBehavior = 'auto';
-      
       navigate(`/${previousSection}`, { 
         state: { 
           directNavigation: true,
           forceSection: previousSection,
           scrollToSection: previousSection,
           from: previousSection,
-          scrollPosition: 0
+          scrollPosition: state?.scrollPosition || 0
         },
-        replace: true
+        replace: false
       });
       
-      // Force scroll to top first
-      window.scrollTo(0, 0);
-      
-      // Then scroll to target section
-      requestAnimationFrame(() => {
-        const sectionElement = document.getElementById(previousSection);
-        if (sectionElement) {
-          sectionElement.scrollIntoView({ behavior: 'instant' });
-        }
-      });
-      
-      // Restore smooth scrolling after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 100);
+      // Scroll to target section
+      const sectionElement = document.getElementById(previousSection);
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
+      }
     } else {
       // If no navigation stack, go back to home
       navigate('/', { 
@@ -391,7 +312,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           from: 'home',
           scrollPosition: 0
         },
-        replace: true
+        replace: false
       });
     }
   };
@@ -418,14 +339,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       // Find and scroll to the section
       const sectionElement = document.getElementById(state.forceSection);
       if (sectionElement) {
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        sectionElement.scrollIntoView({ behavior: 'instant' });
-        
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
-        }, 100);
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
       return;
     }
@@ -463,22 +377,32 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     // Find and scroll to the section element using the mapped ID
     const sectionElement = document.getElementById(sectionIdMap[state.scrollToSection]);
     if (sectionElement) {
-      // Temporarily disable smooth scrolling
-      const scrollBehavior = document.documentElement.style.scrollBehavior;
-      document.documentElement.style.scrollBehavior = 'auto';
-      
-      sectionElement.scrollIntoView({ behavior: 'instant' });
-      
-      // Restore scroll behavior
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 0);
+      sectionElement.scrollIntoView({ behavior: 'smooth' });
     }
   }, [location.state, setCurrentSection, currentSection, location.pathname]);
+
+  const handleSectionClick = useCallback((section: SectionType) => {
+    if (section === 'blog') {
+      navigate('/blogs/all', { 
+        state: { 
+          directNavigation: true,
+          from: 'blog-section',
+          forceSection: 'blog' as SectionType
+        }
+      });
+    } else {
+      setCurrentSection(section);
+      const sectionElement = document.getElementById(section);
+      if (sectionElement) {
+        sectionElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [navigate, setCurrentSection]);
 
   return {
     navigationStack,
     scrollToSection,
-    handleBack
+    handleBack,
+    handleSectionClick
   };
 }; 

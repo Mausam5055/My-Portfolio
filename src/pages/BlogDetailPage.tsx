@@ -109,7 +109,7 @@ export const BlogDetailPage: React.FC = () => {
           from: 'blog-detail',
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: true
+        replace: false
       });
       
       // Force scroll to top first
@@ -139,7 +139,7 @@ export const BlogDetailPage: React.FC = () => {
           from: 'blog',
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: true
+        replace: false
       });
       
       // Force scroll to top first
@@ -162,6 +162,18 @@ export const BlogDetailPage: React.FC = () => {
       }, 100);
     }
   };
+
+  // Add browser back button handler
+  useEffect(() => {
+    const handleBrowserBack = () => {
+      handleBack();
+    };
+
+    window.addEventListener('popstate', handleBrowserBack);
+    return () => {
+      window.removeEventListener('popstate', handleBrowserBack);
+    };
+  }, [handleBack]);
 
   if (!post) {
     return (
