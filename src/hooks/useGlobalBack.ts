@@ -62,10 +62,10 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
 
     // For mobile devices, handle back navigation instantly without any transitions
     if (isMobileDevice()) {
+      // Disable all scroll animations
+      document.documentElement.style.scrollBehavior = 'auto';
+      
       if (state?.forceSection) {
-        // Disable all scroll animations
-        document.documentElement.style.scrollBehavior = 'auto';
-        
         // Update section immediately
         setCurrentSection(state.forceSection);
         
@@ -78,6 +78,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // Find and scroll to the section element instantly
         const sectionElement = document.getElementById(state.forceSection as string);
         if (sectionElement) {
+          // Disable any potential scroll animations
+          sectionElement.style.scrollBehavior = 'auto';
           sectionElement.scrollIntoView({ behavior: 'instant' });
         }
         return;
@@ -262,6 +264,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // Find and scroll to the section element instantly
         const sectionElement = document.getElementById(previousSection);
         if (sectionElement) {
+          // Disable any potential scroll animations
+          sectionElement.style.scrollBehavior = 'auto';
           sectionElement.scrollIntoView({ behavior: 'instant' });
         }
       } else {
@@ -287,6 +291,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
         // Find and scroll to the section element instantly
         const homeSection = document.getElementById('home');
         if (homeSection) {
+          // Disable any potential scroll animations
+          homeSection.style.scrollBehavior = 'auto';
           homeSection.scrollIntoView({ behavior: 'instant' });
         }
       }

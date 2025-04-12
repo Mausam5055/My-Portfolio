@@ -108,7 +108,9 @@ function AppContent() {
       // Find and scroll to the section
       const sectionElement = document.getElementById(state.forceSection);
       if (sectionElement) {
-        sectionElement.scrollIntoView({ behavior: 'smooth' });
+        // Use instant scroll on mobile, smooth on desktop
+        const isMobile = window.innerWidth <= 768;
+        sectionElement.scrollIntoView({ behavior: isMobile ? 'instant' : 'smooth' });
       }
       return;
     }
@@ -143,7 +145,9 @@ function AppContent() {
       if (state?.scrollToSection) {
         const sectionElement = document.getElementById(state.scrollToSection);
         if (sectionElement) {
-          sectionElement.scrollIntoView({ behavior: 'smooth' });
+          // Use instant scroll on mobile, smooth on desktop
+          const isMobile = window.innerWidth <= 768;
+          sectionElement.scrollIntoView({ behavior: isMobile ? 'instant' : 'smooth' });
         }
       }
     };
