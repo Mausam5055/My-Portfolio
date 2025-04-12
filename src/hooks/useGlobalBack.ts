@@ -67,7 +67,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           forceSection: 'blog' as SectionType,
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: true
+        replace: false
       });
       
       // Force scroll to top first
@@ -100,7 +100,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           from: 'blog',
           scrollPosition: state?.scrollPosition ?? 0
         },
-        replace: true
+        replace: false
       });
       
       // Force scroll to top first
@@ -142,7 +142,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
             from: 'blog',
             scrollPosition: state?.scrollPosition ?? 0
           },
-          replace: true
+          replace: false
         });
         
         // Force scroll to top first
@@ -168,7 +168,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
             from: 'blog',
             scrollPosition: 0
           },
-          replace: true
+          replace: false
         });
         
         // Force scroll to top first
