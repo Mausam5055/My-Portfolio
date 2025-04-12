@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Code2,
@@ -56,40 +56,58 @@ const goals: Goal[] = [
   },
 ];
 
-const getIcon = (iconName: string): LucideIcon => {
-  const icons: { [key: string]: LucideIcon } = {
-    Code2,
-    Rocket,
-    GraduationCap,
-    Globe,
-    Target,
-  };
-  return icons[iconName] || Target;
+const icons: { [key: string]: LucideIcon } = {
+  Code2,
+  Rocket,
+  GraduationCap,
+  Globe,
+  Target,
 };
+
+const getIcon = (iconName: string): LucideIcon => icons[iconName] || Target;
 
 export const FutureGoals: React.FC = () => {
   const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const handlePopState = () => {
-      setSelectedGoal(null);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const openModal = (goal: Goal) => {
+  const openModal = useCallback((goal: Goal) => {
     setSelectedGoal(goal);
     window.history.pushState({ modal: true }, '');
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setSelectedGoal(null);
     if (window.history.state?.modal) {
       window.history.back();
     }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => setSelectedGoal(null);
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const modalVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 }
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 10 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: 10 }
   };
 
   const GoalModal: React.FC<{ goal: Goal }> = ({ goal }) => {
@@ -97,89 +115,80 @@ export const FutureGoals: React.FC = () => {
     
     return (
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30"
+        variants={modalVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        transition={{ duration: 0.15 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/30"
         onClick={closeModal}
       >
         <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ 
-            type: "tween", 
-            duration: 0.2,
-            ease: "easeOut"
-          }}
+          variants={contentVariants}
+          transition={{ duration: 0.15 }}
           onClick={(e) => e.stopPropagation()}
-          className="w-full max-w-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl relative border border-white/20 will-change-transform"
+          className="w-full max-w-lg bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-2xl relative border border-white/20 transform-gpu"
         >
-          <motion.button
-            whileTap={{ scale: 0.9 }}
+          <button
             onClick={closeModal}
             className="absolute right-4 top-4 p-2 rounded-full hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
           >
             <X strokeWidth={1.5} />
-          </motion.button>
+          </button>
           
-          <div className="flex items-start gap-4 mb-8">
+          <div className="flex items-start gap-4 mb-6">
             <div className={cn(
-              "p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 dark:from-purple-500/20 dark:to-purple-800/20",
-              "text-purple-700 dark:text-purple-300 backdrop-blur-sm"
+              "p-3 rounded-xl bg-purple-100 dark:bg-purple-900/50",
+              "text-purple-700 dark:text-purple-300"
             )}>
               <Icon strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-2">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-1">
                 {goal.title}
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400">
                 {goal.description}
               </p>
             </div>
           </div>
 
-          <div className="mb-8">
-            <div className="flex justify-between text-sm mb-3">
-              <span className="text-gray-600 dark:text-gray-400 font-medium">Progress</span>
-              <span className="text-blue-600 dark:text-blue-400 font-semibold">
+          <div className="mb-6">
+            <div className="flex justify-between text-sm mb-2">
+              <span className="text-gray-600 dark:text-gray-400">Progress</span>
+              <span className="text-blue-600 dark:text-blue-400 font-medium">
                 {goal.progress}%
               </span>
             </div>
-            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden backdrop-blur-sm">
+            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${goal.progress}%` }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full shadow-lg"
+                transition={{ duration: 0.2 }}
+                className="h-full bg-blue-500 dark:bg-blue-400 rounded-full"
               />
             </div>
           </div>
 
-          <div className="mb-8">
+          <div className="mb-6">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Target Timeline:{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
-                {goal.timeline}
-              </span>
+              Timeline: <span className="font-medium text-purple-600 dark:text-purple-400">{goal.timeline}</span>
             </p>
           </div>
 
           <div className="space-y-2">
-            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+            <h4 className="text-sm font-medium text-gray-900 dark:text-white">
               Milestones
             </h4>
             {goal.milestones.map((milestone, i) => (
               <div
                 key={i}
-                className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
               >
                 {milestone.completed ? (
-                  <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400" />
+                  <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-4 h-4" />
                 ) : (
-                  <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600" />
+                  <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-4 h-4" />
                 )}
                 <span>{milestone.title}</span>
               </div>
@@ -190,137 +199,104 @@ export const FutureGoals: React.FC = () => {
     );
   };
 
+  const renderGoalCard = useCallback((goal: Goal, index: number) => {
+    const Icon = getIcon(goal.icon);
+    return (
+      <motion.div
+        key={goal.id}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 0.2 }}
+        onClick={() => isMobile && openModal(goal)}
+        className={cn(
+          "group bg-white dark:bg-gray-900",
+          "rounded-xl p-5 shadow-sm hover:shadow-md",
+          "transform-gpu transition-all duration-200",
+          "border border-gray-100 dark:border-gray-800",
+          isMobile && "active:scale-[0.99] cursor-pointer"
+        )}
+      >
+        <div className="flex items-start gap-3 mb-4">
+          <div className={cn(
+            "p-2 rounded-lg bg-purple-100 dark:bg-purple-900/50",
+            "text-purple-700 dark:text-purple-300"
+          )}>
+            <Icon strokeWidth={1.5} className="w-5 h-5" />
+          </div>
+          <div>
+            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-1">
+              {goal.title}
+            </h3>
+            {!isMobile && (
+              <p className="text-gray-600 dark:text-gray-400 text-sm">
+                {goal.description}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {!isMobile && (
+          <>
+            <div className="mb-4">
+              <div className="flex justify-between text-sm mb-1.5">
+                <span className="text-gray-600 dark:text-gray-400">
+                  Progress
+                </span>
+                <span className="text-blue-600 dark:text-blue-400">
+                  {goal.progress}%
+                </span>
+              </div>
+              <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-blue-500 dark:bg-blue-400 rounded-full transition-all duration-300"
+                  style={{ width: `${goal.progress}%` }}
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Timeline: <span className="font-medium text-purple-600 dark:text-purple-400">{goal.timeline}</span>
+              </p>
+            </div>
+
+            <div className="space-y-1.5">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-white">
+                Milestones
+              </h4>
+              {goal.milestones.map((milestone, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400"
+                >
+                  {milestone.completed ? (
+                    <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400 w-4 h-4" />
+                  ) : (
+                    <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600 w-4 h-4" />
+                  )}
+                  <span>{milestone.title}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </motion.div>
+    );
+  }, [isMobile, openModal]);
+
   return (
-    <section
-      id="Journey"
-      className="py-20 min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden transition-colors duration-300"
-    >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.8)_0%,_transparent_100%)] dark:bg-[radial-gradient(circle_at_center,_rgba(25,25,25,0.8)_0%,_transparent_100%)]" />
-      
-      <div className="container mx-auto px-6 relative">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.3 }}
-          className="mb-16 text-center space-y-4"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-900 dark:from-white dark:via-purple-400 dark:to-blue-400">
+    <section className="py-16 bg-gray-50 dark:bg-gray-950">
+      <div className="container mx-auto px-4 sm:px-6">
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Future Goals
           </h2>
-          <motion.div
-            initial={{ width: 0 }}
-            whileInView={{ width: "180px" }}
-            transition={{ duration: 0.3 }}
-            className="h-1 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 mx-auto rounded-full"
-          />
-        </motion.div>
+          <div className="h-1 w-24 bg-blue-500 mx-auto rounded-full" />
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {goals.map((goal, index) => {
-            const Icon = getIcon(goal.icon);
-            return (
-              <motion.div
-                key={goal.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ y: -5 }}
-                onClick={() => isMobile && openModal(goal)}
-                className={cn(
-                  "group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm",
-                  "rounded-2xl p-6 shadow-lg hover:shadow-2xl",
-                  "transform transition-all duration-200",
-                  "border border-white/20 dark:border-gray-800",
-                  "hover:border-purple-500/20 dark:hover:border-purple-500/20",
-                  "will-change-transform",
-                  isMobile && "cursor-pointer active:scale-98"
-                )}
-              >
-                <div className="flex items-start gap-4 mb-6">
-                  <div
-                    className={cn(
-                      "p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 dark:from-purple-500/20 dark:to-purple-800/20",
-                      "text-purple-700 dark:text-purple-300 backdrop-blur-sm",
-                      "group-hover:from-purple-400/30 group-hover:to-purple-600/30",
-                      "transition-colors duration-300"
-                    )}
-                  >
-                    <Icon strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-1">
-                      {goal.title}
-                    </h3>
-                    {!isMobile && (
-                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
-                        {goal.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                {!isMobile && (
-                  <>
-                    <div className="mb-6">
-                      <div className="flex justify-between text-sm mb-2">
-                        <span className="text-gray-600 dark:text-gray-400 font-medium">
-                          Progress
-                        </span>
-                        <span className="text-blue-600 dark:text-blue-400 font-semibold">
-                          {goal.progress}%
-                        </span>
-                      </div>
-                      <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden backdrop-blur-sm">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          whileInView={{ width: `${goal.progress}%` }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
-                          className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full shadow-lg"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="mb-6">
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Target:{" "}
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
-                          {goal.timeline}
-                        </span>
-                      </p>
-                    </div>
-
-                    <div className="space-y-3">
-                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                        Milestones
-                      </h4>
-                      {goal.milestones.map((milestone, i) => (
-                        <div
-                          key={i}
-                          className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                        >
-                          {milestone.completed ? (
-                            <CheckCircle
-                              strokeWidth={1.5}
-                              className="text-green-500 dark:text-green-400"
-                            />
-                          ) : (
-                            <Circle
-                              strokeWidth={1.5}
-                              className="text-gray-400 dark:text-gray-600"
-                            />
-                          )}
-                          <span>{milestone.title}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </motion.div>
-            );
-          })}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {goals.map((goal, index) => renderGoalCard(goal, index))}
         </div>
       </div>
 
