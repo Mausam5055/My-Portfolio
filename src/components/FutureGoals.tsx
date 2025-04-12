@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Code2,
   Rocket,
@@ -8,6 +8,8 @@ import {
   Target,
   CheckCircle,
   Circle,
+  X,
+  LucideIcon,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 import type { Goal } from "../types";
@@ -54,8 +56,8 @@ const goals: Goal[] = [
   },
 ];
 
-const getIcon = (iconName: string) => {
-  const icons: { [key: string]: React.ComponentType } = {
+const getIcon = (iconName: string): LucideIcon => {
+  const icons: { [key: string]: LucideIcon } = {
     Code2,
     Rocket,
     GraduationCap,
@@ -66,15 +68,155 @@ const getIcon = (iconName: string) => {
 };
 
 export const FutureGoals: React.FC = () => {
+  const [selectedGoal, setSelectedGoal] = useState<Goal | null>(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setSelectedGoal(null);
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const openModal = (goal: Goal) => {
+    setSelectedGoal(goal);
+    window.history.pushState({ modal: true }, '');
+  };
+
+  const closeModal = () => {
+    setSelectedGoal(null);
+    if (window.history.state?.modal) {
+      window.history.back();
+    }
+  };
+
+  const GoalModal: React.FC<{ goal: Goal }> = ({ goal }) => {
+    const Icon = getIcon(goal.icon);
+    
+    return (
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30"
+        onClick={closeModal}
+      >
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          transition={{ type: "spring", duration: 0.5 }}
+          onClick={(e) => e.stopPropagation()}
+          className="w-full max-w-lg bg-white/90 dark:bg-gray-900/90 backdrop-blur-md rounded-2xl p-8 shadow-2xl relative border border-white/20"
+        >
+          <motion.button
+            whileHover={{ scale: 1.1, rotate: 90 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={closeModal}
+            className="absolute right-4 top-4 p-2 rounded-full hover:bg-gray-100/50 dark:hover:bg-gray-800/50 transition-colors"
+          >
+            <X strokeWidth={1.5} />
+          </motion.button>
+          
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex items-start gap-4 mb-8"
+          >
+            <div className={cn(
+              "p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 dark:from-purple-500/20 dark:to-purple-800/20",
+              "text-purple-700 dark:text-purple-300 backdrop-blur-sm"
+            )}>
+              <Icon strokeWidth={1.5} />
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-2">
+                {goal.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                {goal.description}
+              </p>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="mb-8"
+          >
+            <div className="flex justify-between text-sm mb-3">
+              <span className="text-gray-600 dark:text-gray-400 font-medium">Progress</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                {goal.progress}%
+              </span>
+            </div>
+            <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden backdrop-blur-sm">
+              <motion.div
+                initial={{ width: 0 }}
+                animate={{ width: `${goal.progress}%` }}
+                transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
+                className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full shadow-lg"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="mb-8"
+          >
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Target Timeline:{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
+                {goal.timeline}
+              </span>
+            </p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-4"
+          >
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+              Milestones
+            </h4>
+            {goal.milestones.map((milestone, i) => (
+              <motion.div
+                initial={{ x: -20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                key={i}
+                className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+              >
+                {milestone.completed ? (
+                  <CheckCircle strokeWidth={1.5} className="text-green-500 dark:text-green-400" />
+                ) : (
+                  <Circle strokeWidth={1.5} className="text-gray-400 dark:text-gray-600" />
+                )}
+                <span>{milestone.title}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    );
+  };
+
   return (
     <section
       id="Journey"
-      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000000_0%,_#111827_100%)] relative overflow-hidden transition-colors duration-300"
-      style={{
-        backgroundColor: "rgba(255, 255, 204, 0.2)", // Slightly more visible light yellow accent
-      }}
+      className="py-20 min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 relative overflow-hidden transition-colors duration-300"
     >
-      <div className="container mx-auto px-6">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.8)_0%,_transparent_100%)] dark:bg-[radial-gradient(circle_at_center,_rgba(25,25,25,0.8)_0%,_transparent_100%)]" />
+      
+      <div className="container mx-auto px-6 relative">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -85,7 +227,7 @@ export const FutureGoals: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-black dark:text-white" // Set to black in light mode and white in dark mode
+            className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 via-purple-700 to-blue-900 dark:from-white dark:via-purple-400 dark:to-blue-400"
           >
             Future Goals
           </motion.h2>
@@ -97,7 +239,7 @@ export const FutureGoals: React.FC = () => {
           />
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {goals.map((goal, index) => {
             const Icon = getIcon(goal.icon);
             return (
@@ -108,92 +250,105 @@ export const FutureGoals: React.FC = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -5, scale: 1.02 }}
+                onClick={() => isMobile && openModal(goal)}
                 className={cn(
-                  "bg-blue-50 dark:bg-gray-900",
-                  "rounded-xl p-6 shadow-lg hover:shadow-2xl",
-                  "transform transition-all duration-300 border border-blue-300 dark:border-blue-600",
+                  "group bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm",
+                  "rounded-2xl p-6 shadow-lg hover:shadow-2xl",
+                  "transform transition-all duration-300",
+                  "border border-white/20 dark:border-gray-800",
+                  "hover:border-purple-500/20 dark:hover:border-purple-500/20",
+                  isMobile && "cursor-pointer active:scale-95"
                 )}
               >
                 <div className="flex items-start gap-4 mb-6">
                   <div
                     className={cn(
-                      "p-3 rounded-lg bg-purple-200 dark:bg-purple-800",
-                      "text-purple-700 dark:text-purple-300",
+                      "p-4 rounded-2xl bg-gradient-to-br from-purple-400/20 to-purple-600/20 dark:from-purple-500/20 dark:to-purple-800/20",
+                      "text-purple-700 dark:text-purple-300 backdrop-blur-sm",
+                      "group-hover:from-purple-400/30 group-hover:to-purple-600/30",
+                      "transition-colors duration-300"
                     )}
                   >
-                    <Icon size={26} />
+                    <Icon strokeWidth={1.5} />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-1">
+                    <h3 className="text-xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-1">
                       {goal.title}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm">
-                      {goal.description}
-                    </p>
+                    {!isMobile && (
+                      <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
+                        {goal.description}
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                {/* Progress Bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Progress
-                    </span>
-                    <span className="text-blue-600 dark:text-blue-400 font-semibold">
-                      {goal.progress}%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-gray-300 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <motion.div
-                      initial={{ width: 0 }}
-                      whileInView={{ width: `${goal.progress}%` }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 1, ease: "easeOut" }}
-                      className="h-full bg-blue-500 dark:bg-blue-400 rounded-full shadow-md"
-                    />
-                  </div>
-                </div>
-
-                {/* Timeline */}
-                <div className="mb-6">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Target:{" "}
-                    <span className="text-purple-600 dark:text-purple-400 font-medium">
-                      {goal.timeline}
-                    </span>
-                  </p>
-                </div>
-
-                {/* Milestones */}
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-                    Milestones
-                  </h4>
-                  {goal.milestones.map((milestone, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400"
-                    >
-                      {milestone.completed ? (
-                        <CheckCircle
-                          size={16}
-                          className="text-blue-500 dark:text-blue-400"
+                {!isMobile && (
+                  <>
+                    <div className="mb-6">
+                      <div className="flex justify-between text-sm mb-2">
+                        <span className="text-gray-600 dark:text-gray-400 font-medium">
+                          Progress
+                        </span>
+                        <span className="text-blue-600 dark:text-blue-400 font-semibold">
+                          {goal.progress}%
+                        </span>
+                      </div>
+                      <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden backdrop-blur-sm">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{ width: `${goal.progress}%` }}
+                          viewport={{ once: true }}
+                          transition={{ duration: 1, ease: [0.34, 1.56, 0.64, 1] }}
+                          className="h-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-blue-500 dark:to-purple-600 rounded-full shadow-lg"
                         />
-                      ) : (
-                        <Circle
-                          size={16}
-                          className="text-gray-400 dark:text-gray-600"
-                        />
-                      )}
-                      <span>{milestone.title}</span>
+                      </div>
                     </div>
-                  ))}
-                </div>
+
+                    <div className="mb-6">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Target:{" "}
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 dark:from-purple-400 dark:to-blue-300 font-medium">
+                          {goal.timeline}
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                        Milestones
+                      </h4>
+                      {goal.milestones.map((milestone, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                        >
+                          {milestone.completed ? (
+                            <CheckCircle
+                              strokeWidth={1.5}
+                              className="text-green-500 dark:text-green-400"
+                            />
+                          ) : (
+                            <Circle
+                              strokeWidth={1.5}
+                              className="text-gray-400 dark:text-gray-600"
+                            />
+                          )}
+                          <span>{milestone.title}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
               </motion.div>
             );
           })}
         </div>
       </div>
+
+      <AnimatePresence>
+        {selectedGoal && <GoalModal goal={selectedGoal} />}
+      </AnimatePresence>
     </section>
   );
 };
