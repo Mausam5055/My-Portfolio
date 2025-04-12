@@ -28,9 +28,11 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       state: { 
         scrollToSection: section,
         directNavigation: true,
-        from: currentSection
+        from: currentSection,
+        forceSection: section,
+        scrollPosition: 0
       },
-      replace: false
+      replace: true
     });
     
     // Update section immediately
@@ -48,7 +50,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       // Restore scroll behavior
       setTimeout(() => {
         document.documentElement.style.scrollBehavior = scrollBehavior;
-      }, 100); // Increased timeout to ensure scroll completes
+      }, 100);
     }
   };
 
@@ -72,7 +74,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           directNavigation: true,
           forceSection: 'blog',
           scrollToSection: 'blog',
-          from: 'blog'
+          from: 'blog',
+          scrollPosition: 0
         },
         replace: true
       });
@@ -102,7 +105,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           directNavigation: true,
           forceSection: section,
           scrollToSection: section,
-          from: section
+          from: section,
+          scrollPosition: 0
         },
         replace: true
       });
@@ -121,7 +125,42 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     }
 
     // Default back navigation
-    navigate(-1);
+    if (navigationStack.length > 0) {
+      const previousSection = navigationStack[navigationStack.length - 1];
+      setNavigationStack(prev => prev.slice(0, -1));
+      
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      navigate(`/${previousSection}`, { 
+        state: { 
+          directNavigation: true,
+          forceSection: previousSection,
+          scrollToSection: previousSection,
+          from: previousSection,
+          scrollPosition: 0
+        },
+        replace: true
+      });
+      
+      // Force scroll to top first
+      window.scrollTo(0, 0);
+      
+      // Then scroll to target section
+      requestAnimationFrame(() => {
+        const sectionElement = document.getElementById(previousSection);
+        if (sectionElement) {
+          sectionElement.scrollIntoView({ behavior: 'instant' });
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+    } else {
+      navigate(-1);
+    }
   };
 
   // Handle navigation state updates
@@ -207,70 +246,128 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
   // Handle back button
   useEffect(() => {
     const handlePopState = () => {
-      // Special handling for blog detail pages
+      const state = location.state as { 
+        from?: string;
+        directNavigation?: boolean;
+        forceSection?: string;
+        scrollToSection?: string;
+      } | null;
+      
+      // Handle blog detail page navigation
       if (location.pathname.startsWith('/blog/')) {
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        // Temporarily disable smooth scrolling
         document.documentElement.style.scrollBehavior = 'auto';
         
+        // Navigate back to blog section
         navigate('/', { 
           state: { 
             directNavigation: true,
             forceSection: 'blog',
             scrollToSection: 'blog',
-            from: 'blog'
+            from: 'blog',
+            scrollPosition: 0
           },
           replace: true
         });
         
-        setCurrentSection('blog');
+        // Force scroll to top first
+        window.scrollTo(0, 0);
         
-        const blogSection = document.getElementById('blog');
-        if (blogSection) {
-          blogSection.scrollIntoView({ behavior: 'instant' });
-        }
+        // Then scroll to blog section
+        requestAnimationFrame(() => {
+          const blogSection = document.getElementById('blog');
+          if (blogSection) {
+            blogSection.scrollIntoView({ behavior: 'instant' });
+          }
+        });
         
+        // Restore smooth scrolling after navigation
         setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
+          document.documentElement.style.scrollBehavior = 'smooth';
+        }, 100);
+        return;
+      }
+
+      // Handle navigation from blog section
+      if (state?.from === 'blog') {
+        // Temporarily disable smooth scrolling
+        document.documentElement.style.scrollBehavior = 'auto';
+        
+        // Navigate back to blog section
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'blog',
+            scrollToSection: 'blog',
+            from: 'blog',
+            scrollPosition: 0
+          },
+          replace: true
+        });
+        
+        // Force scroll to top first
+        window.scrollTo(0, 0);
+        
+        // Then scroll to blog section
+        requestAnimationFrame(() => {
+          const blogSection = document.getElementById('blog');
+          if (blogSection) {
+            blogSection.scrollIntoView({ behavior: 'instant' });
+          }
+        });
+        
+        // Restore smooth scrolling after navigation
+        setTimeout(() => {
+          document.documentElement.style.scrollBehavior = 'smooth';
         }, 100);
         return;
       }
 
       // Handle other detail pages
       if (isDetailsPage) {
-        const state = location.state as { from?: string } | null;
         if (state?.from) {
-          const scrollBehavior = document.documentElement.style.scrollBehavior;
+          const targetSection = state.from;
+          if (!targetSection) return;
+          
+          // Temporarily disable smooth scrolling
           document.documentElement.style.scrollBehavior = 'auto';
           
           navigate('/', { 
             state: { 
               directNavigation: true,
-              forceSection: state.from,
-              scrollToSection: state.from,
-              from: state.from
+              forceSection: targetSection,
+              scrollToSection: targetSection,
+              from: targetSection,
+              scrollPosition: 0
             },
             replace: true
           });
           
-          setCurrentSection(state.from as SectionType);
+          // Force scroll to top first
+          window.scrollTo(0, 0);
           
-          const sectionElement = document.getElementById(state.from);
-          if (sectionElement) {
-            sectionElement.scrollIntoView({ behavior: 'instant' });
-          }
+          // Then scroll to target section
+          requestAnimationFrame(() => {
+            const sectionElement = document.getElementById(targetSection);
+            if (sectionElement) {
+              sectionElement.scrollIntoView({ behavior: 'instant' });
+            }
+          });
           
+          // Restore smooth scrolling after navigation
           setTimeout(() => {
-            document.documentElement.style.scrollBehavior = scrollBehavior;
+            document.documentElement.style.scrollBehavior = 'smooth';
           }, 100);
           return;
         }
       }
       
+      // Default back navigation
       if (navigationStack.length > 0) {
         const previousSection = navigationStack[navigationStack.length - 1];
         setNavigationStack(prev => prev.slice(0, -1));
         
-        const scrollBehavior = document.documentElement.style.scrollBehavior;
+        // Temporarily disable smooth scrolling
         document.documentElement.style.scrollBehavior = 'auto';
         
         navigate(`/${previousSection}`, { 
@@ -278,20 +375,26 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
             directNavigation: true,
             forceSection: previousSection,
             scrollToSection: previousSection,
-            from: previousSection
+            from: previousSection,
+            scrollPosition: 0
           },
           replace: true
         });
         
-        setCurrentSection(previousSection);
+        // Force scroll to top first
+        window.scrollTo(0, 0);
         
-        const sectionElement = document.getElementById(previousSection);
-        if (sectionElement) {
-          sectionElement.scrollIntoView({ behavior: 'instant' });
-        }
+        // Then scroll to target section
+        requestAnimationFrame(() => {
+          const sectionElement = document.getElementById(previousSection);
+          if (sectionElement) {
+            sectionElement.scrollIntoView({ behavior: 'instant' });
+          }
+        });
         
+        // Restore smooth scrolling after navigation
         setTimeout(() => {
-          document.documentElement.style.scrollBehavior = scrollBehavior;
+          document.documentElement.style.scrollBehavior = 'smooth';
         }, 100);
       }
     };
