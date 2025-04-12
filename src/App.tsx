@@ -16,7 +16,6 @@ import { Gallery } from './components/Gallery';
 import { CubingContent } from './components/CubingContent';
 import { Blog } from './components/Blog';
 import { BlogDetailPage } from './pages/BlogDetailPage';
-import { AllBlogs } from './pages/AllBlogs';
 import { FutureGoals } from './components/FutureGoals';
 import { FunFacts } from './components/FunFacts';
 import { Gaming } from './components/Gaming';
@@ -111,12 +110,6 @@ function AppContent() {
       if (sectionElement) {
         sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
-      return;
-    }
-    
-    // Special handling for AllBlogs page
-    if (path === 'blogs/all') {
-      setCurrentSection('blog');
       return;
     }
     
@@ -305,7 +298,6 @@ function AppContent() {
                 </>
               } />
               <Route path="/blog/:id" element={<BlogDetailPage />} />
-              <Route path="/blogs/all" element={<AllBlogs />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
               <Route path="/projects/all" element={<AllProjects />} />
               <Route path="/games" element={<Games />} />
