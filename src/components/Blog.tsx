@@ -175,14 +175,18 @@ export const Blog: React.FC = () => {
   });
 
   const handlePostClick = (postId: string) => {
+    // Store the current scroll position
+    const currentScrollPosition = window.pageYOffset;
+    
     navigate(`/blog/${postId}`, { 
       state: { 
         from: 'blog',
         directNavigation: true,
         forceSection: 'blog',
-        scrollToSection: 'blog'
+        scrollToSection: 'blog',
+        scrollPosition: currentScrollPosition
       },
-      replace: true
+      replace: false // Change to false to ensure proper history stack
     });
   };
 

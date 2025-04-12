@@ -95,7 +95,7 @@ export const BlogDetailPage: React.FC = () => {
   }, [id]);
 
   const handleBack = () => {
-    const state = location.state as { from?: string };
+    const state = location.state as { from?: string; scrollPosition?: number };
     if (state?.from === 'blog') {
       // Temporarily disable smooth scrolling
       document.documentElement.style.scrollBehavior = 'auto';
@@ -107,9 +107,9 @@ export const BlogDetailPage: React.FC = () => {
           forceSection: 'blog',
           scrollToSection: 'blog',
           from: 'blog',
-          scrollPosition: 0
+          scrollPosition: state.scrollPosition || 0
         },
-        replace: true
+        replace: false // Change to false to ensure proper history stack
       });
       
       // Force scroll to top first
@@ -120,6 +120,10 @@ export const BlogDetailPage: React.FC = () => {
         const blogSection = document.getElementById('blog');
         if (blogSection) {
           blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          if (state.scrollPosition) {
+            window.scrollTo(0, state.scrollPosition);
+          }
         }
       });
       
@@ -140,7 +144,7 @@ export const BlogDetailPage: React.FC = () => {
           from: 'home',
           scrollPosition: 0
         },
-        replace: true
+        replace: false // Change to false to ensure proper history stack
       });
       
       // Force scroll to top
@@ -152,71 +156,6 @@ export const BlogDetailPage: React.FC = () => {
       }, 100);
     }
   };
-
-  useEffect(() => {
-    // Handle browser back button
-    const handlePopState = () => {
-      const state = location.state as { from?: string };
-      if (state?.from === 'blog') {
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate back to blog section
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'blog',
-            scrollToSection: 'blog',
-            from: 'blog',
-            scrollPosition: 0
-          },
-          replace: true
-        });
-        
-        // Force scroll to top first
-        window.scrollTo(0, 0);
-        
-        // Then scroll to blog section
-        requestAnimationFrame(() => {
-          const blogSection = document.getElementById('blog');
-          if (blogSection) {
-            blogSection.scrollIntoView({ behavior: 'instant' });
-          }
-        });
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-      } else {
-        // Temporarily disable smooth scrolling
-        document.documentElement.style.scrollBehavior = 'auto';
-        
-        // Navigate to home
-        navigate('/', { 
-          state: { 
-            directNavigation: true,
-            forceSection: 'home',
-            scrollToSection: 'home',
-            from: 'home',
-            scrollPosition: 0
-          },
-          replace: true
-        });
-        
-        // Force scroll to top
-        window.scrollTo(0, 0);
-        
-        // Restore smooth scrolling after navigation
-        setTimeout(() => {
-          document.documentElement.style.scrollBehavior = 'smooth';
-        }, 100);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [navigate, location.state]);
 
   if (!post) {
     return (
