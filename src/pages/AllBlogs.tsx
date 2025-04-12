@@ -299,12 +299,19 @@ export const AllBlogs: React.FC = () => {
   };
 
   // Memoize handlers
-  const handlePostClick = useCallback((postId: string) => {
+  const handlePostClick = (postId: string) => {
+    // Store the current scroll position
+    const currentScrollPosition = window.pageYOffset;
+    
     navigate(`/blog/${postId}`, { 
-      state: { fromBlogDetail: true },
-      replace: true
+      state: { 
+        from: 'all-blogs',
+        directNavigation: true,
+        scrollPosition: currentScrollPosition
+      },
+      replace: false
     });
-  }, [navigate]);
+  };
 
   // Hide navbar when component mounts and show it when unmounts
   useEffect(() => {

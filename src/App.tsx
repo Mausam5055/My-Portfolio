@@ -148,6 +148,7 @@ function AppContent() {
       const state = location.state as { 
         forceSection?: string;
         scrollToSection?: string;
+        scrollPosition?: number;
       } | null;
       
       // If we have a section to scroll to, handle it
