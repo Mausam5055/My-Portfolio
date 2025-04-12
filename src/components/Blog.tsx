@@ -140,6 +140,24 @@ export const Blog: React.FC = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [showAllPosts, setShowAllPosts] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Reset showAllPosts when category or search changes
+  useEffect(() => {
+    setShowAllPosts(false);
+  }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
     if (location.state?.scrollToBlog) {
@@ -174,6 +192,8 @@ export const Blog: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const displayedPosts = isMobile && !showAllPosts ? filteredPosts.slice(0, 3) : filteredPosts;
+
   const handlePostClick = (postId: string) => {
     // Store the current scroll position
     const currentScrollPosition = window.pageYOffset;
@@ -186,18 +206,45 @@ export const Blog: React.FC = () => {
         scrollToSection: 'blog',
         scrollPosition: currentScrollPosition
       },
-      replace: false // Change to false to ensure proper history stack
+      replace: false
     });
   };
 
-  const handleShowAll = () => {
-    // First scroll to top
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    // Then navigate
-    navigate('/blogs/all', { 
-      state: { fromBlog: true },
-      replace: true
+  const handleShowMore = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setShowAllPosts(true);
+    
+    // Smooth scroll to the newly revealed content
+    requestAnimationFrame(() => {
+      const lastPost = document.querySelector('.blog-post:last-child');
+      if (lastPost) {
+        lastPost.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      // Reset animation state after a short delay
+      setTimeout(() => setIsAnimating(false), 500);
     });
+  };
+
+  const handleShowLess = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    
+    // Store current scroll position
+    const currentScroll = window.pageYOffset;
+    
+    // Scroll to the first post before collapsing
+    const firstPost = document.querySelector('.blog-post');
+    if (firstPost) {
+      firstPost.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Wait for scroll to complete before collapsing
+    setTimeout(() => {
+      setShowAllPosts(false);
+      // Reset animation state
+      setTimeout(() => setIsAnimating(false), 500);
+    }, 500);
   };
 
   return (
@@ -268,7 +315,7 @@ export const Blog: React.FC = () => {
 
         {/* Blog Posts Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.slice(0, 3).map((post, index) => (
+          {displayedPosts.map((post, index) => (
             <motion.article
               key={post.id}
               initial={{ opacity: 0, y: 20, rotateX: -10 }}
@@ -276,6 +323,7 @@ export const Blog: React.FC = () => {
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 100, delay: index * 0.1 }}
               className={cn(
+                "blog-post",
                 "bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm",
                 "rounded-xl overflow-hidden",
                 "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
@@ -345,28 +393,45 @@ export const Blog: React.FC = () => {
           ))}
         </div>
 
-        {/* Show All Button */}
-        {filteredPosts.length > 3 && (
+        {/* Show More/Less Buttons (Mobile Only) */}
+        {isMobile && filteredPosts.length > 3 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-12 text-center"
+            className="mt-8 text-center"
           >
-            <motion.button
-              onClick={handleShowAll}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
-                <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M14 4H20V10H14V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M4 14H10V20H4V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M14 14H20V20H14V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              View All Blog Posts
-            </motion.button>
+            {!showAllPosts ? (
+              <motion.button
+                onClick={handleShowMore}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={isAnimating}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
+                  <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 4H20V10H14V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M4 14H10V20H4V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 14H20V20H14V14Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Show More Posts
+              </motion.button>
+            ) : (
+              <motion.button
+                onClick={handleShowLess}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white/80 dark:bg-[#24283b] text-gray-700 dark:text-white rounded-full font-medium border border-gray-200/50 dark:border-white/10 backdrop-blur-sm shadow-sm hover:shadow-md transform hover:-translate-y-0.5 transition-all duration-200"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={isAnimating}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-80">
+                  <path d="M4 4H10V10H4V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 4H20V10H14V4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Show Less
+              </motion.button>
+            )}
           </motion.div>
         )}
 

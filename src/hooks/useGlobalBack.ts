@@ -54,40 +54,8 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
       scrollPosition?: number;
     } | null;
 
-    // Handle back navigation from blog detail to AllBlogs
+    // Handle back navigation from blog detail to blog section
     if (location.pathname.startsWith('/blog/')) {
-      // Temporarily disable smooth scrolling
-      document.documentElement.style.scrollBehavior = 'auto';
-      
-      // Navigate back to AllBlogs
-      navigate('/blogs/all', { 
-        state: { 
-          directNavigation: true,
-          from: 'blog-detail',
-          forceSection: 'blog' as SectionType,
-          scrollPosition: state?.scrollPosition ?? 0
-        },
-        replace: false
-      });
-      
-      // Force scroll to top first
-      window.scrollTo(0, 0);
-      
-      // Then restore scroll position if available
-      const scrollPosition = state?.scrollPosition ?? 0;
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollPosition);
-      });
-      
-      // Restore smooth scrolling after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 100);
-      return;
-    }
-
-    // Handle back navigation from AllBlogs to blog section
-    if (location.pathname === '/blogs/all') {
       // Temporarily disable smooth scrolling
       document.documentElement.style.scrollBehavior = 'auto';
       
@@ -235,25 +203,105 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
 
     // Special handling for blog detail pages
     if (path.startsWith('blog/')) {
-      // Navigate to blog section
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      // Navigate back to blog section
       navigate('/', { 
         state: { 
           directNavigation: true,
           forceSection: 'blog',
           scrollToSection: 'blog',
           from: 'blog',
-          scrollPosition: state?.scrollPosition || 0
+          scrollPosition: state?.scrollPosition ?? 0
         },
         replace: false
       });
       
-      setCurrentSection('blog');
+      // Force scroll to top first
+      window.scrollTo(0, 0);
       
-      // Find and scroll to blog section
-      const blogSection = document.getElementById('blog');
-      if (blogSection) {
-        blogSection.scrollIntoView({ behavior: 'smooth' });
+      // Then scroll to blog section
+      requestAnimationFrame(() => {
+        const blogSection = document.getElementById('blog');
+        if (blogSection) {
+          blogSection.scrollIntoView({ behavior: 'instant' });
+          // Restore the scroll position if available
+          const scrollPosition = state?.scrollPosition ?? 0;
+          window.scrollTo(0, scrollPosition);
+        }
+      });
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
+      return;
+    }
+
+    // Handle blog section
+    if (path === '' && currentSection === 'blog') {
+      // Temporarily disable smooth scrolling
+      document.documentElement.style.scrollBehavior = 'auto';
+      
+      if (navigationStack.length > 0) {
+        const previousSection = navigationStack[navigationStack.length - 1];
+        setNavigationStack(prev => prev.slice(0, -1));
+        
+        // Navigate to previous section
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: previousSection,
+            scrollToSection: previousSection,
+            from: 'blog',
+            scrollPosition: state?.scrollPosition ?? 0
+          },
+          replace: false
+        });
+        
+        // Force scroll to top first
+        window.scrollTo(0, 0);
+        
+        // Then scroll to previous section
+        requestAnimationFrame(() => {
+          const sectionElement = document.getElementById(previousSection);
+          if (sectionElement) {
+            sectionElement.scrollIntoView({ behavior: 'instant' });
+            // Restore the scroll position if available
+            const scrollPosition = state?.scrollPosition ?? 0;
+            window.scrollTo(0, scrollPosition);
+          }
+        });
+      } else {
+        // Navigate to home section
+        navigate('/', { 
+          state: { 
+            directNavigation: true,
+            forceSection: 'home',
+            scrollToSection: 'home',
+            from: 'blog',
+            scrollPosition: 0
+          },
+          replace: false
+        });
+        
+        // Force scroll to top first
+        window.scrollTo(0, 0);
+        
+        // Then scroll to home section
+        requestAnimationFrame(() => {
+          const homeSection = document.getElementById('home');
+          if (homeSection) {
+            homeSection.scrollIntoView({ behavior: 'instant' });
+          }
+        });
       }
+      
+      // Restore smooth scrolling after navigation
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }, 100);
       return;
     }
 
@@ -267,7 +315,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           forceSection: section,
           scrollToSection: section,
           from: section,
-          scrollPosition: state?.scrollPosition || 0
+          scrollPosition: state?.scrollPosition ?? 0
         },
         replace: false
       });
@@ -292,7 +340,7 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
           forceSection: previousSection,
           scrollToSection: previousSection,
           from: previousSection,
-          scrollPosition: state?.scrollPosition || 0
+          scrollPosition: state?.scrollPosition ?? 0
         },
         replace: false
       });
@@ -317,92 +365,16 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     }
   };
 
-  // Handle navigation state updates
-  useEffect(() => {
-    const state = location.state as { 
-      scrollToSection?: SectionType;
-      from?: string;
-      directNavigation?: boolean;
-      forceSection?: string;
-    } | null;
-    
-    // Special handling for all-cubing-content
-    if (location.pathname === '/all-cubing-content') {
-      setCurrentSection('cubing');
-      return;
-    }
-    
-    // If we have a forceSection in the state, use that
-    if (state?.forceSection) {
-      setCurrentSection(state.forceSection as SectionType);
-      
-      // Find and scroll to the section
-      const sectionElement = document.getElementById(state.forceSection);
-      if (sectionElement) {
-        sectionElement.scrollIntoView({ behavior: 'smooth' });
-      }
-      return;
-    }
-    
-    // Skip if state is null or no scrollToSection
-    if (!state?.scrollToSection) return;
-    
-    // Skip if we're already in the target section
-    if (currentSection === state.scrollToSection) return;
-    
-    setCurrentSection(state.scrollToSection);
-    
-    // Map section names to their correct IDs
-    const sectionIdMap: Record<SectionType, string> = {
-      home: 'home',
-      about: 'about',
-      journey: 'journey',
-      qualifications: 'qualifications',
-      certifications: 'certifications',
-      skills: 'skills',
-      education: 'education',
-      gallery: 'gallery',
-      cubing: 'cubing',
-      blog: 'blog',
-      futureGoals: 'future-goals',
-      funFacts: 'fun-facts',
-      Gaming: 'gaming',
-      projects: 'projects',
-      testimonials: 'testimonials',
-      contact: 'contact',
-      profile: 'profile',
-      'all-cubing-content': 'cubing'
-    };
-
-    // Find and scroll to the section element using the mapped ID
-    const sectionElement = document.getElementById(sectionIdMap[state.scrollToSection]);
-    if (sectionElement) {
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [location.state, setCurrentSection, currentSection, location.pathname]);
-
-  const handleSectionClick = useCallback((section: SectionType) => {
-    if (section === 'blog') {
-      navigate('/blogs/all', { 
-        state: { 
-          directNavigation: true,
-          from: 'blog-section',
-          forceSection: 'blog' as SectionType
-        }
-      });
-    } else {
+  return {
+    navigationStack,
+    scrollToSection,
+    handleBack,
+    handleSectionClick: useCallback((section: SectionType) => {
       setCurrentSection(section);
       const sectionElement = document.getElementById(section);
       if (sectionElement) {
         sectionElement.scrollIntoView({ behavior: 'smooth' });
       }
-    }
-  }, [navigate, setCurrentSection]);
-
-  return {
-    navigationStack,
-    scrollToSection,
-    handleBack,
-    handleSectionClick
+    }, [setCurrentSection])
   };
 }; 

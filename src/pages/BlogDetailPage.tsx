@@ -182,12 +182,43 @@ export const BlogDetailPage: React.FC = () => {
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Blog Post Not Found</h1>
           <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
           <motion.button
-            onClick={handleBack}
+            onClick={() => {
+              // Temporarily disable smooth scrolling
+              document.documentElement.style.scrollBehavior = 'auto';
+              
+              // Navigate back to blog section
+              navigate('/', { 
+                state: { 
+                  directNavigation: true,
+                  forceSection: 'blog',
+                  scrollToSection: 'blog',
+                  from: 'blog',
+                  scrollPosition: 0
+                },
+                replace: false
+              });
+              
+              // Force scroll to top first
+              window.scrollTo(0, 0);
+              
+              // Then scroll to blog section
+              requestAnimationFrame(() => {
+                const blogSection = document.getElementById('blog');
+                if (blogSection) {
+                  blogSection.scrollIntoView({ behavior: 'instant' });
+                }
+              });
+              
+              // Restore smooth scrolling after navigation
+              setTimeout(() => {
+                document.documentElement.style.scrollBehavior = 'smooth';
+              }, 100);
+            }}
             className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Back to Home
+            Back to Blog Section
           </motion.button>
         </div>
       </div>
