@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { Clock, Target, Award, Box, Brain, Star, Zap, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
-import type { CubingContent as CubingContentType } from "../types";
-import { cubingContent } from "../data/cubingContent";
+import type { CubingContent as CubingContentType } from "../../shared/types";
+import { cubingContent } from "../../data/cubingContent";
 
 const difficultyColors = {
   beginner: "bg-green-500",

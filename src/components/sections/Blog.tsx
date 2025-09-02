@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, Calendar, User, Search } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { cn } from '../lib/utils';
+import { cn } from '../../shared/utils';
 import type { BlogPost } from '../types';
 
 // This would typically come from an API or database
@@ -143,15 +143,23 @@ export const Blog: React.FC = () => {
   const [showAllPosts, setShowAllPosts] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const hasAnimated = useRef(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
-  // Handle window resize
+  // Handle window resize with debouncing
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth <= 768);
+      }, 150);
     };
 
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   // Reset showAllPosts when category or search changes
@@ -159,20 +167,29 @@ export const Blog: React.FC = () => {
     setShowAllPosts(false);
   }, [selectedCategory, searchQuery]);
 
+  // Improved scroll handling
   useEffect(() => {
-    if (location.state?.scrollToBlog) {
-      requestAnimationFrame(() => {
-        const blogSection = document.getElementById('blog');
+    if (location.state?.scrollToBlog && sectionRef.current) {
+      const timeoutId = setTimeout(() => {
+        const blogSection = sectionRef.current;
         if (blogSection) {
-          const rect = blogSection.getBoundingClientRect();
-          const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
+          const headerOffset = window.innerWidth <= 768 ? 80 : 100;
+          const elementPosition = blogSection.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+          
           window.scrollTo({
-            top: targetScroll,
-            behavior: 'instant'
+            top: offsetPosition,
+            behavior: 'smooth'
           });
         }
-      });
-      window.history.replaceState({}, document.title);
+      }, 100);
+      
+      // Clean up navigation state
+      const newState = { ...location.state };
+      delete newState.scrollToBlog;
+      window.history.replaceState(newState, document.title);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [location.state]);
 
@@ -206,21 +223,25 @@ export const Blog: React.FC = () => {
 
   const handleShowLess = () => {
     setShowAllPosts(false);
-    requestAnimationFrame(() => {
-      const blogSection = document.getElementById('blog');
-      if (blogSection) {
-        const rect = blogSection.getBoundingClientRect();
-        const targetScroll = rect.top + window.pageYOffset - (window.innerWidth <= 768 ? 60 : 100);
-        window.scrollTo({
-          top: targetScroll,
-          behavior: 'instant'
-        });
-      }
-    });
+    // Smooth scroll back to section top
+    if (sectionRef.current) {
+      const headerOffset = window.innerWidth <= 768 ? 80 : 100;
+      const elementPosition = sectionRef.current.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
   };
 
   return (
-    <section id="blog" className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden">
+    <section 
+      id="blog" 
+      ref={sectionRef}
+      className="py-20 bg-white dark:bg-[radial-gradient(circle_at_center,_#000_0%,_#111827_100%)] relative overflow-hidden"
+    >
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -287,43 +308,57 @@ export const Blog: React.FC = () => {
         </motion.div>
 
         {/* Blog Posts Grid */}
-        <AnimatePresence mode="wait">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayedPosts.map((post) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <AnimatePresence>
+            {displayedPosts.map((post, index) => (
               <motion.article
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ type: "spring", stiffness: 100 }}
+                key={`${post.id}-${showAllPosts ? 'all' : 'limited'}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ 
+                  opacity: 1, 
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                    delay: index * 0.1,
+                    ease: "easeOut"
+                  }
+                }}
+                exit={{ 
+                  opacity: 0, 
+                  y: -30,
+                  transition: {
+                    duration: 0.3,
+                    ease: "easeIn"
+                  }
+                }}
+                layout
                 className={cn(
                   "blog-post",
                   "bg-white/90 dark:bg-gray-800/80 backdrop-blur-sm",
                   "rounded-xl overflow-hidden",
-                  "shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(79,70,229,0.3)]",
-                  "transform transition-all duration-200",
+                  "shadow-lg hover:shadow-2xl",
+                  "transition-all duration-300 ease-out",
                   "border border-white/20 dark:border-gray-700/50",
-                  "group relative cursor-pointer"
+                  "group relative cursor-pointer",
+                  "hover:scale-[1.02] hover:-translate-y-1"
                 )}
                 onClick={() => handlePostClick(post.id)}
+                whileHover={{ 
+                  y: -4,
+                  transition: { duration: 0.2, ease: "easeOut" }
+                }}
+                whileTap={{ scale: 0.98 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-100/20 to-purple-100/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
-                <div className="overflow-hidden relative">
-                  <motion.div
-                    className="h-48"
-                    initial={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ type: "spring", stiffness: 300, damping: 10 }}
-                  >
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                  </motion.div>
+                <div className="overflow-hidden relative h-48">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                 </div>
                 
                 <div className="p-6 relative z-10">
@@ -353,8 +388,8 @@ export const Blog: React.FC = () => {
                 </div>
               </motion.article>
             ))}
-          </div>
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
 
         {/* Show More/Less Buttons */}
         {isMobile && filteredPosts.length > 3 && (

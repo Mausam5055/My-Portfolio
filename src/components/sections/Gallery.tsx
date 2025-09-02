@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 import type { GalleryImage } from "../types";
 
 const galleryImages: GalleryImage[] = [

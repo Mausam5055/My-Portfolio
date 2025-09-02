@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 import type { Journey } from "../types";
 
 const journeyEvents: Journey[] = [

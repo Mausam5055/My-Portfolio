@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from "../shared/utils";
 
 type GamingPost = {
   id: string;

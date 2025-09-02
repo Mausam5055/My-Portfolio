@@ -1,4 +1,4 @@
-import { cn } from '../lib/utils';
+import { cn } from '../../shared/utils';
 
 export const LoadingImageSkeleton = ({ className }: { className?: string }) => {
   return (

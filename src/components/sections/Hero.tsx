@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Github, Instagram, Linkedin, Send } from "lucide-react";
-import { useThemeStore } from "../store/theme";
+import { useThemeStore } from "../../store/theme";
 
 const names = [{ text: "Mausam Kar", lang: "English" }];
 

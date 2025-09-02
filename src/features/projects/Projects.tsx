@@ -3,8 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { FaGithub, FaExternalLinkAlt, FaChevronLeft, FaChevronRight, FaArrowRight } from 'react-icons/fa';
 import { Grid } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { projects } from '../data/projects';
-import { cn } from '../lib/utils';
+import { projects } from '../../data/projects';
+import { cn } from '../../shared/utils';
 
 const ITEMS_TO_SHOW = 3;
 

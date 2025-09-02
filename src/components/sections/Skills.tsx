@@ -17,7 +17,7 @@ import {
   Shield,
   Zap,
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 import type { Skill } from "../types";
 
 const skills: Skill[] = [

@@ -14,8 +14,8 @@ import {
   CheckCircle,
   Loader2,
 } from "lucide-react";
-import { cn } from "../lib/utils";
-import type { ContactInfo, FAQ } from "../types";
+import { cn } from '../../shared/utils';
+import type { ContactInfo, FAQ } from '../../shared/types';
 
 const contactInfo: ContactInfo = {
   title: "Let's Connect",

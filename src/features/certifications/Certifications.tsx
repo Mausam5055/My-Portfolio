@@ -12,7 +12,7 @@ import {
   Minus,
   X,
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 
 interface Certificate {
   id: string;

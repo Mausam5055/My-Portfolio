@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowLeft } from "lucide-react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { cn } from "../lib/utils";
-import type { GalleryImage } from "../types";
+import { cn } from "../shared/utils";
+import type { GalleryImage } from "../shared/types";
 
 // This would typically come from your data source
 const galleryImages: GalleryImage[] = [

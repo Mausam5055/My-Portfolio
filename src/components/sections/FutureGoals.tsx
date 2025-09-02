@@ -11,7 +11,7 @@ import {
   X,
   LucideIcon,
 } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 import type { Goal } from "../types";
 
 const goals: Goal[] = [

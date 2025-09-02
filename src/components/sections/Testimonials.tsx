@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useMediaQuery } from "react-responsive";
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "../lib/utils";
+import { cn } from '../../shared/utils';
 import type { Testimonial } from "../types";
 
 const testimonials: Testimonial[] = [

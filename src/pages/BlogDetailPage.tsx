@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Calendar, User, Clock, Tag } from 'lucide-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import { cn } from '../lib/utils';
+import { cn } from '../shared/utils';
 import type { BlogPost } from '../types';
 
 // This would typically come from an API or database
@@ -90,8 +90,8 @@ export const BlogDetailPage: React.FC = () => {
   const post = blogPosts.find(p => p.id === id);
 
   useEffect(() => {
-    // Direct scroll to top on mount without animation
-    window.scrollTo(0, 0);
+    // Smooth scroll to top on mount
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [id]);
 
   const handleBack = () => {
@@ -99,10 +99,6 @@ export const BlogDetailPage: React.FC = () => {
     
     // If coming from AllBlogs page
     if (state?.from === 'all-blogs') {
-      // Temporarily disable smooth scrolling
-      document.documentElement.style.scrollBehavior = 'auto';
-      
-      // Navigate back to AllBlogs page
       navigate('/blogs/all', { 
         state: { 
           directNavigation: true,
@@ -111,55 +107,17 @@ export const BlogDetailPage: React.FC = () => {
         },
         replace: false
       });
-      
-      // Force scroll to top first
-      window.scrollTo(0, 0);
-      
-      // Then restore the scroll position if available
-      const scrollPosition = state?.scrollPosition ?? 0;
-      requestAnimationFrame(() => {
-        window.scrollTo(0, scrollPosition);
-      });
-      
-      // Restore smooth scrolling after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 100);
     } else {
       // Default back navigation to blog section
-      // Temporarily disable smooth scrolling
-      document.documentElement.style.scrollBehavior = 'auto';
-      
-      // Navigate back to blog section
       navigate('/', { 
         state: { 
           directNavigation: true,
           forceSection: 'blog',
           scrollToSection: 'blog',
-          from: 'blog',
-          scrollPosition: state?.scrollPosition ?? 0
+          from: 'blog'
         },
         replace: false
       });
-      
-      // Force scroll to top first
-      window.scrollTo(0, 0);
-      
-      // Then scroll to blog section
-      requestAnimationFrame(() => {
-        const blogSection = document.getElementById('blog');
-        if (blogSection) {
-          blogSection.scrollIntoView({ behavior: 'instant' });
-          // Restore the scroll position if available
-          const scrollPosition = state?.scrollPosition ?? 0;
-          window.scrollTo(0, scrollPosition);
-        }
-      });
-      
-      // Restore smooth scrolling after navigation
-      setTimeout(() => {
-        document.documentElement.style.scrollBehavior = 'smooth';
-      }, 100);
     }
   };
 
@@ -183,36 +141,15 @@ export const BlogDetailPage: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-8">The blog post you're looking for doesn't exist.</p>
           <motion.button
             onClick={() => {
-              // Temporarily disable smooth scrolling
-              document.documentElement.style.scrollBehavior = 'auto';
-              
-              // Navigate back to blog section
               navigate('/', { 
                 state: { 
                   directNavigation: true,
                   forceSection: 'blog',
                   scrollToSection: 'blog',
-                  from: 'blog',
-                  scrollPosition: 0
+                  from: 'blog'
                 },
                 replace: false
               });
-              
-              // Force scroll to top first
-              window.scrollTo(0, 0);
-              
-              // Then scroll to blog section
-              requestAnimationFrame(() => {
-                const blogSection = document.getElementById('blog');
-                if (blogSection) {
-                  blogSection.scrollIntoView({ behavior: 'instant' });
-                }
-              });
-              
-              // Restore smooth scrolling after navigation
-              setTimeout(() => {
-                document.documentElement.style.scrollBehavior = 'smooth';
-              }, 100);
             }}
             className="px-6 py-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
             whileHover={{ scale: 1.05 }}
