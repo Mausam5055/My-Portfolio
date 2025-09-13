@@ -1,24 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useThemeStore } from './store/theme';
-import { SEO, Navbar, Footer, ThemeTransition } from './components/layout';
+import { SEO, Navbar, ThemeTransition } from './components/layout';
 import { FlashIntro } from './components/ui';
-import { Hero, ContentBoxes, About, Journey, Qualifications, Skills, Gallery, CubingContent, Blog, FutureGoals, FunFacts, Testimonials } from './components/sections';
+import { Hero, ContentBoxes, About, Journey, Qualifications, Skills, FutureGoals, FunFacts, Testimonials } from './components/sections';
 import { Education } from './features/education';
 import { Certifications } from './features/certifications';
-import { Gaming } from './features/gaming';
 import { Projects } from './features/projects';
 import { Contact } from './features/contact';
 import { BlogDetailPage } from './pages/BlogDetailPage';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import { ProjectDetails } from './pages/ProjectDetails';
-import { GameDetail } from './pages/GameDetail';
 import { GalleryDetail } from './pages/GalleryDetail';
 import { CubeDetails } from './pages/CubeDetails';
 import { AllCubingContent } from './pages/AllCubingContent';
 import { AllProjects } from './pages/AllProjects';
-import { Games } from './pages/Games';
 import { useGlobalBack } from './hooks/useGlobalBack';
 import { SectionType } from './shared/types';
 
@@ -41,20 +38,20 @@ function AppContent() {
     certifications: useRef<HTMLDivElement>(null),
     skills: useRef<HTMLDivElement>(null),
     education: useRef<HTMLDivElement>(null),
-    gallery: useRef<HTMLDivElement>(null),
-    cubing: useRef<HTMLDivElement>(null),
-    blog: useRef<HTMLDivElement>(null),
     futureGoals: useRef<HTMLDivElement>(null),
     funFacts: useRef<HTMLDivElement>(null),
-    Gaming: useRef<HTMLDivElement>(null),
     projects: useRef<HTMLDivElement>(null),
     testimonials: useRef<HTMLDivElement>(null),
     contact: useRef<HTMLDivElement>(null),
     profile: useRef<HTMLDivElement>(null),
-    'all-cubing-content': useRef<HTMLDivElement>(null)
+    'all-cubing-content': useRef<HTMLDivElement>(null),
+    gallery: useRef<HTMLDivElement>(null),
+    cubing: useRef<HTMLDivElement>(null),
+    blog: useRef<HTMLDivElement>(null),
+    Gaming: useRef<HTMLDivElement>(null)
   };
 
-  const { scrollToSection, handleBack } = useGlobalBack({
+  const { scrollToSection } = useGlobalBack({
     currentSection,
     setCurrentSection,
     sectionRefs,
@@ -179,21 +176,6 @@ function AppContent() {
       description: "Learn about my academic journey, educational qualifications, and how they have contributed to my professional development in web development and design.",
       keywords: "Education, Academic Qualifications, Web Development Education, UI/UX Design Education, Professional Training"
     },
-    gallery: {
-      title: "Portfolio Gallery",
-      description: "Explore a visual showcase of my web development and UI/UX design projects, demonstrating my creative approach and technical expertise.",
-      keywords: "Portfolio Gallery, Web Design Gallery, UI/UX Design Portfolio, Project Showcase, Visual Portfolio"
-    },
-    cubing: {
-      title: "Speed Cubing Achievements",
-      description: "Discover my passion for speed cubing, achievements, and how this hobby has enhanced my problem-solving skills and analytical thinking.",
-      keywords: "Speed Cubing, Rubik's Cube, Cube Solving, Problem Solving, Analytical Skills"
-    },
-    blog: {
-      title: "Blog - Web Development & UI/UX Insights",
-      description: "Explore my thoughts, insights, and experiences in web development, UI/UX design, and technology. Read about the latest trends, best practices, and creative solutions.",
-      keywords: "Web Development Blog, UI/UX Design Blog, Tech Blog, Web Development Tips, UI/UX Design Tips, Technology Insights, Web Development Articles"
-    },
     futureGoals: {
       title: "Future Goals & Aspirations",
       description: "Explore my vision for the future, professional goals, and how I plan to continue growing as a web developer and UI/UX designer.",
@@ -203,11 +185,6 @@ function AppContent() {
       title: "Fun Facts About Me",
       description: "Get to know me better through interesting facts about my journey, interests, and what makes me unique as a web developer and designer.",
       keywords: "Fun Facts, Personal Background, Professional Journey, Web Developer Profile, UI/UX Designer Profile"
-    },
-    Gaming: {
-      title: "Gaming & Interactive Development",
-      description: "Explore my interest in gaming, interactive development, and how it influences my approach to web development and user experience design.",
-      keywords: "Gaming, Interactive Development, Game Development, Web Gaming, Interactive Web Experiences"
     },
     projects: {
       title: "Portfolio Projects",
@@ -241,7 +218,7 @@ function AppContent() {
         <>
           <ThemeTransition isChanging={isChanging} isDark={isDark} />
           <div className={`min-h-screen bg-white dark:bg-black transition-colors duration-500 ${isChanging ? 'opacity-0' : 'opacity-100'}`}>
-            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} onBack={handleBack} />}
+            {!isDetailsPage && <Navbar isDark={isDark} toggleTheme={toggleTheme} scrollToSection={scrollToSection} />}
             <Routes>
               <Route path="/" element={
                 <>
@@ -252,17 +229,13 @@ function AppContent() {
                   <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
                   <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
                   <div id="skills" ref={sectionRefs.skills}><Skills /></div>
-                  <div id="education" ref={sectionRefs.education}><Education /></div>
-                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
-                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
-                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
-                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
-                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
                   <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
                   <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
                   <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
                   <div id="contact" ref={sectionRefs.contact}><Contact /></div>
-                  <Footer />
+
                 </>
               } />
               <Route path="/:section" element={
@@ -274,24 +247,18 @@ function AppContent() {
                   <div id="qualifications" ref={sectionRefs.qualifications}><Qualifications /></div>
                   <div id="certifications" ref={sectionRefs.certifications}><Certifications /></div>
                   <div id="skills" ref={sectionRefs.skills}><Skills /></div>
-                  <div id="education" ref={sectionRefs.education}><Education /></div>
-                  <div id="gallery" ref={sectionRefs.gallery}><Gallery /></div>
-                  <div id="cubing" ref={sectionRefs.cubing}><CubingContent /></div>
-                  <div id="blog" ref={sectionRefs.blog}><Blog /></div>
-                  <div id="Gaming" ref={sectionRefs.Gaming}><Gaming /></div>
-                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
                   <div id="projects" ref={sectionRefs.projects}><Projects /></div>
+                  <div id="education" ref={sectionRefs.education}><Education /></div>
+                  <div id="funFacts" ref={sectionRefs.funFacts}><FunFacts /></div>
                   <div id="futureGoals" ref={sectionRefs.futureGoals}><FutureGoals /></div>
                   <div id="testimonials" ref={sectionRefs.testimonials}><Testimonials /></div>
                   <div id="contact" ref={sectionRefs.contact}><Contact /></div>
-                  <Footer />
+
                 </>
               } />
               <Route path="/blog/:id" element={<BlogDetailPage />} />
               <Route path="/projects/:id" element={<ProjectDetails />} />
               <Route path="/projects/all" element={<AllProjects />} />
-              <Route path="/games" element={<Games />} />
-              <Route path="/games/:gameId" element={<GameDetail />} />
               <Route path="/gallery/:id" element={<GalleryDetail />} />
               <Route path="/cube/:id" element={<CubeDetails />} />
               <Route path="/all-cubing-content" element={<AllCubingContent />} />

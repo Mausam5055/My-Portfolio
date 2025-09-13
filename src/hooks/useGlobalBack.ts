@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SectionType } from '../types';
+import { SectionType } from '../shared/types';
 
 interface UseGlobalBackProps {
   currentSection: SectionType;
@@ -69,5 +69,10 @@ export const useGlobalBack = ({ currentSection, setCurrentSection, sectionRefs, 
     }
   };
 
-  return { scrollToSection };
-}; 
+  const handleBack = () => {
+    // For now, we'll just scroll to the top of the page
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  return { scrollToSection, handleBack };
+};

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
-import type { ContentBox } from '../types';
+import type { ContentBox } from '../../shared/types';
 
 const boxes: ContentBox[] = [
   {
@@ -40,40 +40,16 @@ const boxes: ContentBox[] = [
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2ODk1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
-    id: 7,
-    title: "Gallery",
-    description: "Visual showcase of my projects and achievements.",
-    image: "https://images.unsplash.com/photo-1497215728101-856f4ea42174?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ2OTQ1&ixlib=rb-1.2.1&q=80&w=400"
-  },
-  {
-    id: 8,
-    title: "Cubing Skills",
-    description: "Speedcubing achievements and competition history.",
-    image: "https://images.unsplash.com/photo-1567646303972-f7de3a9c0a05?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJ1YmlrJTIwY3ViZXxlbnwwfHwwfHx8MA%3D%3D"
-  },
-  {
     id: 9,
     title: "Projects",
     description: "Notable technical projects and implementations.",
     image: "https://images.unsplash.com/photo-1455849318743-b2233052fcff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MTI1&ixlib=rb-1.2.1&q=80&w=400"
   },
   {
-    id: 10,
-    title: "Gaming",
-    description: "Gameplay highlights and gaming achievements.",
-    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxfDB8MXxyYW5kb218fHx8fHx8fHwxNjM1ODQ3MzA1&ixlib=rb-1.2.1&q=80&w=400"
-  },
-  {
     id: 11,
     title: "Fun Facts",
     description: "Interesting personal trivia and quirks.",
     image: "https://images.unsplash.com/photo-1489367874814-f5d040621dd8?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  },
-  {
-    id: 12,
-    title: "Blog",
-    description: "Insights, tutorials, and thoughts on web development and technology.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?q=80&w=2046&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
   },
   {
     id: 13,
@@ -110,12 +86,8 @@ export default function ContentBoxes({ refs }: { refs: any }) {
       4: 'certifications',
       5: 'skills',
       6: 'education',
-      7: 'gallery',
-      8: 'cubing',
       9: 'projects',
-      10: 'Gaming',
       11: 'funFacts',
-      12: 'blog',
       13: 'futureGoals',
       14: 'testimonials',
       15: 'contact'

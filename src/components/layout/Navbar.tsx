@@ -1,48 +1,42 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Sun, Moon, User, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, User } from "lucide-react";
 
-type SectionType = 'about' | 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'gallery' | 'cubing' | 'blog' | 'futureGoals' | 'funFacts' | 'Gaming' | 'projects' | 'testimonials' | 'contact';
+type SectionType = 'journey' | 'qualifications' | 'certifications' | 'skills' | 'education' | 'projects' | 'contact';
 
 interface NavbarProps {
   isDark: boolean;
   toggleTheme: () => void;
   scrollToSection: (section: SectionType) => void;
-  onBack: () => void;
 }
 
 export default function Navbar({
   isDark,
   toggleTheme,
   scrollToSection,
-  onBack,
 }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<SectionType | null>(null);
-  const [isScrolling, setIsScrolling] = useState(false);
 
   // Updated to match sectionRefs keys from App.tsx
   const navItems: SectionType[] = [
-    "about",
     "journey",
+    "qualifications",
+    "certifications",
     "skills",
-    "gallery",
-    "cubing",
     "projects",
-    "Gaming",
-    "testimonials",
+    "education",
     "contact"
   ];
 
   useEffect(() => {
     let scrollTimeout: NodeJS.Timeout;
-    let isThemeChanging = false;
+    const isThemeChanging = false;
     
     const handleScroll = () => {
       if (isThemeChanging) return; // Skip scroll handling during theme change
       
-      setIsScrolling(true);
       const isScrolled = window.scrollY > 20;
       setScrolled(isScrolled);
 
@@ -68,7 +62,7 @@ export default function Navbar({
       
       // Set a new timeout
       scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
+        // This timeout is used to track when scrolling stops
       }, 150);
     };
 
@@ -81,20 +75,12 @@ export default function Navbar({
 
   const getDisplayName = (section: SectionType) => {
     const names: Record<SectionType, string> = {
-      about: "About",
       journey: "Journey",
       qualifications: "Qualifications",
       certifications: "Certifications",
       skills: "Skills",
       education: "Education",
-      gallery: "Gallery",
-      cubing: "Cubing",
-      blog: "Blog",
-      futureGoals: "Future Goals",
-      funFacts: "Fun Facts",
-      Gaming: "Gaming",
       projects: "Projects",
-      testimonials: "Testimonials",
       contact: "Contact"
     };
     return names[section] || section;
