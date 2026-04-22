@@ -140,6 +140,7 @@ export default function Hero() {
                 fetchPriority="high"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
+                  target.onerror = null;
                   target.src = "/assets/fallback-profile.jpg";
                 }}
               />
